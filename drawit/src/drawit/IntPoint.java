@@ -50,7 +50,7 @@ public class IntPoint {
 	}
 	
 	public IntPoint plus(IntVector vector) {
-		IntPoint result = new IntPoint(this.x + vector.x, this.y + vector.y);
+		IntPoint result = new IntPoint(this.x + vector.getX(), this.y + vector.getY());
 		return result;
 	}
 	
