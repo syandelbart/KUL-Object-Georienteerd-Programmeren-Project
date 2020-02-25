@@ -19,7 +19,7 @@ public class DoublePoint {
 	}
 	
 	public DoublePoint plus(DoubleVector other) {
-		DoublePoint result = new DoublePoint(other.x + this.x,other.y + this.y);
+		DoublePoint result = new DoublePoint(other.getX() + this.x,other.getY() + this.y);
 		return result;
 	}
 	
