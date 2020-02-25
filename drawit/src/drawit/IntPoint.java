@@ -32,6 +32,6 @@ public class IntPoint {
 	}
 	
 	public boolean isOnLineSegment(IntPoint b,IntPoint c) {
-		
+		b
 	}
 }
