@@ -53,7 +53,7 @@ public class RoundedPolygon {
 		PointArrays.update(vertices,index,point);
 	}
 	
-	public boolean contains(IntPoint point) { //er zijn randgevallen die niet kloppen//
+	public boolean contains(IntPoint point) {
 		int biggestX = vertices[0].getX();
 		for(int i = 0; i < vertices.length; i++) {
 			if (point.equals(vertices[i])) {
@@ -79,11 +79,17 @@ public class RoundedPolygon {
 			if (b > vertices.length - 1) {
 				b = b - vertices.length;
 			}
+			int c = i+2;
+			if (c > vertices.length - 1) {
+				c = c - vertices.length;
+			}
 			if (IntPoint.lineSegmentsIntersect(point,newPoint,vertices[a],vertices[b])) {
 				intersections += 1;
 			}
-			if (vertices[a].isOnLineSegment(point,newPoint)) {
-				intersections += 1;
+			if (vertices[b].isOnLineSegment(point,newPoint)) {
+				if ((point.getY() < vertices[a].getY() && point.getY() > vertices[c].getY()) || (point.getY() > vertices[a].getY() && point.getY() < vertices[c].getY())) {
+					intersections += 1;
+				}
 			}
 		}
 		if (intersections % 2 != 0) {
