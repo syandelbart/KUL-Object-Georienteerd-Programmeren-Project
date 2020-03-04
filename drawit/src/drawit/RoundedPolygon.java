@@ -22,7 +22,7 @@ public class RoundedPolygon {
 	
 	public void setVertices(IntPoint[] newVertices) {
 		if (PointArrays.checkDefinesProperPolygon(newVertices) != null) {
-			IllegalArgumentException();
+			throw new IllegalArgumentException();
 		}
 		else {
 			vertices = new IntPoint[newVertices.length];
@@ -34,7 +34,7 @@ public class RoundedPolygon {
 	
 	public void setRadius(int radius) {
 		if (radius < 0) {
-			IllegalArgumentException();
+			throw new IllegalArgumentException();
 		}
 		else {
 			this.radius = radius;
@@ -99,5 +99,52 @@ public class RoundedPolygon {
 	}
 	
 	
+	public String getDrawingCommands() {
+		if(this.vertices.length < 3) {
+			return "";
+		}
+		String result = "";
+		
+		for(int i = 0;i < this.vertices.length - 2;i++) {
+			IntPoint point1 = this.vertices[i];
+			IntPoint point2 = this.vertices[i+1];
+			IntPoint point3 = this.vertices[i+2];
+			
+			
+			if(point2.isOnLineSegment(point1, point3)) {
+				result += String.format("line %d %d %d %d \r\n", point1.getX(),point1.getY(),point3.getX(),point3.getY());
+			} else {
+				result += String.format("line %d %d %d %d \r\n", point1.getX(),point1.getY(),point2.getX(),point2.getY());
+				
+				double distancePoint2Point1 = Math.sqrt(Math.pow(point2.getX()-point1.getX(),2) + Math.pow(point2.getY()-point1.getY(),2));
+				double distancePoint2Point3 = Math.sqrt(Math.pow(point2.getX()-point3.getX(),2) + Math.pow(point2.getY()-point3.getY(),2));
+				double radiansCorner = distancePoint2Point1/distancePoint2Point3;
+				System.out.println(distancePoint2Point1);
+				
+				if(point2.getX() < point1.getX()) {
+					if(point2.getY() < point1.getY()) {
+						
+					} else {
+						
+					}
+				}
+				
+				
+				if(point1.getX() > point2.getX()) {
+					result += String.format("arc %d %d %d %f %f ",point1.getX(),point2.getY(),20,0.0,6.28);
+				} else {
+					result += String.format("arc %d %d %d %f %f ",point2.getX(),point2.getY(),20,0.0,6.28);
+				}
+				
+				
+				
+				result += String.format("line %d %d %d %d \r\n", point2.getX(),point2.getY(),point3.getX(),point3.getY());
+			}
+		}
+		
+		return result;
+
+	}
+ 	
 }
 
