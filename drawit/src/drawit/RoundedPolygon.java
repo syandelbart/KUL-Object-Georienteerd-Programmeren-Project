@@ -105,6 +105,11 @@ public class RoundedPolygon {
 		}
 		String result = "";
 		
+		for(int i=0;i < this.vertices.length;i++) {
+			System.out.print("(" + this.vertices[i].getX() + "-" + this.vertices[i].getY() + ") ");
+		}
+		System.out.println("");
+		
 		for(int i = 0;i < this.vertices.length - 2;i++) {
 			IntPoint point1 = this.vertices[i];
 			IntPoint point2 = this.vertices[i+1];
@@ -118,8 +123,8 @@ public class RoundedPolygon {
 				
 				double distancePoint2Point1 = Math.sqrt(Math.pow(point2.getX()-point1.getX(),2) + Math.pow(point2.getY()-point1.getY(),2));
 				double distancePoint2Point3 = Math.sqrt(Math.pow(point2.getX()-point3.getX(),2) + Math.pow(point2.getY()-point3.getY(),2));
+				//the var radiansCorner is the "value" cos must have??
 				double radiansCorner = distancePoint2Point1/distancePoint2Point3;
-				System.out.println(distancePoint2Point1);
 				
 				if(point2.getX() < point1.getX()) {
 					if(point2.getY() < point1.getY()) {

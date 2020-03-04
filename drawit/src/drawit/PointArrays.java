@@ -16,16 +16,22 @@ public class PointArrays {
 			if (d > points.length - 1) {
 				d = d - points.length;
 			}
+			
+			System.out.println(a + " " + b + " " + c + " " + d);
+			
+			
 			if (IntPoint.lineSegmentsIntersect(points[a],points[b],points[c],points[d]) == true) {
+				System.out.println("2 lines intersect");
 				return "2 lines intersect";
 			}
 			for(int j = 0; j < points.length; j++) {
 				if(j != i && points[i].getX() == points[j].getX() && points[i].getY() == points[j].getY()) {
+					System.out.println("2 points are the same");
 					return "2 points are the same";
 				}
 			}
 			if (points[b].isOnLineSegment(points[a],points[c])) {
-				return "a point is not a corner of the polygon";
+				//a point is not a corner of the polygon
 			}
 		}
 		return null;
