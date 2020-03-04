@@ -32,10 +32,11 @@ public class IntPoint {
 	}
 	
 	public boolean isOnLineSegment(IntPoint b,IntPoint c) {
-		int rico = (c.y - b.y)/(c.x - b.x);
-		if(this.equals(b) || this.equals(c)) {
+		if(this.equals(b) || this.equals(c) || b.equals(c)) {
 			return false;
 		}
+		
+		double rico = (double)(c.y - b.y)/(double)(c.x - b.x);
 		if(this.y-b.y == rico*(this.x - b.x)) {
 			return true;
 		}
