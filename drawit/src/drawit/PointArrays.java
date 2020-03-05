@@ -20,10 +20,18 @@ public class PointArrays {
 			System.out.println(a + " " + b + " " + c + " " + d);
 			
 			
-			if (IntPoint.lineSegmentsIntersect(points[a],points[b],points[c],points[d]) == true) {
-				System.out.println("2 lines intersect");
-				return "2 lines intersect";
+			for(int i2 = 0; i2 < points.length; i2++) {
+				int a2 = i2;
+				int b2 = i2+1;
+				if (b2 > points.length - 1) {
+					b2 = b2 - points.length;
+				}
+				if (IntPoint.lineSegmentsIntersect(points[a2],points[b2],points[a],points[b]) == true && a2 != a && b2 != b) {
+					System.out.println("2 lines intersect");
+					return "2 lines intersect";
+				}
 			}
+
 			for(int j = 0; j < points.length; j++) {
 				if(j != i && points[i].getX() == points[j].getX() && points[i].getY() == points[j].getY()) {
 					System.out.println("2 points are the same");

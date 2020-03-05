@@ -36,13 +36,19 @@ public class IntPoint {
 			return false;
 		}
 		
-		double rico = (double)(c.y - b.y)/(double)(c.x - b.x);
-		if(this.y-b.y == rico*(this.x - b.x)) {
-			return true;
+		if(b.getX() == c.getX()) {
+			if(this.x == b.getX() && ((this.getY() > b.getY() && this.getY() < c.getY()) || (this.getY() < b.getY() && this.getY() > c.getY()))) {
+				return true;
+			}
+		} else {
+			double rico = (double)(c.y - b.y)/(double)(c.x - b.x);
+			if(this.y-b.y == rico*(this.x - b.x)) {
+				return true;
+			}
 		}
-		else {
-			return false;
-		}
+		return false;
+		
+
 	}
 	
 	public DoublePoint asDoublePoint() {
