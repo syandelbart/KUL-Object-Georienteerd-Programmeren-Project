@@ -1,5 +1,7 @@
 package drawit;
 
+import java.lang.reflect.Array;
+
 public class RoundedPolygon {
 	private IntPoint[] vertices;
 	private int radius;
@@ -110,6 +112,7 @@ public class RoundedPolygon {
 		}
 		
 		System.out.println("");
+		DoublePoint[] pointArray = new DoublePoint[vertices.length * 2];;
 		for(int i = 0;i < this.vertices.length;i++) {
 			int index = i;
 			int indexPlusOne = i+1;
@@ -127,9 +130,9 @@ public class RoundedPolygon {
 				indexPlusTwo -= this.vertices.length;
 			}
 			
-			IntPoint pointA = this.vertices[index];
-			IntPoint pointB = this.vertices[indexPlusOne];
-			IntPoint pointC = this.vertices[indexPlusTwo];
+			DoublePoint pointA = this.vertices[index].asDoublePoint();
+			DoublePoint pointB = this.vertices[indexPlusOne].asDoublePoint();
+			DoublePoint pointC = this.vertices[indexPlusTwo].asDoublePoint();
 			
 			//calculating angle between 3 points (angle of B)
 			double distancepointApointB = Math.sqrt(Math.pow(pointB.getX()-pointA.getX(),2) + Math.pow(pointB.getY()-pointA.getY(),2));
@@ -139,10 +142,9 @@ public class RoundedPolygon {
 			double distancepointCpointA = Math.sqrt(Math.pow(pointC.getX()-pointA.getX(),2) + Math.pow(pointC.getY()-pointA.getY(),2));
 			double cosAngle = (Math.pow(distancepointCpointA, 2) - Math.pow(distancepointApointB, 2) - Math.pow(distancepointBpointC, 2)) / (2 * distancepointApointB * distancepointBpointC) * -1;
 			cosAngle = Math.acos(cosAngle);
-			System.out.println(cosAngle);
 			
-			IntPoint middleAB = new IntPoint((pointB.getX()-pointA.getX())/2,(pointB.getY()-pointA.getY())/2);
-			IntPoint middleBC = new IntPoint((pointB.getX()-pointC.getX())/2,(pointB.getY()-pointC.getY())/2);
+			DoublePoint middleAB = new DoublePoint((pointB.getX()-pointA.getX())/2,(pointB.getY()-pointA.getY())/2);
+			DoublePoint middleBC = new DoublePoint((pointB.getX()-pointC.getX())/2,(pointB.getY()-pointC.getY())/2);
 			
 			DoubleVector VectorBA = new DoubleVector(pointA.getX() - pointB.getX(),pointA.getY() - pointB.getY());
 			DoubleVector VectorBC = new DoubleVector(pointC.getX() - pointB.getX(),pointC.getY() - pointB.getY());
@@ -153,45 +155,57 @@ public class RoundedPolygon {
 			DoubleVector unitVectorBA = VectorBA.scale(scaleBA);
 			DoubleVector unitVectorBC = VectorBC.scale(scaleBC);
 			DoubleVector bissectrice = unitVectorBA.plus(unitVectorBC);
-			DoublePoint centre = pointB.asDoublePoint().plus(bissectrice);
-			double cutoff = 2 * bissectrice.dotProduct(unitVectorBA);
+			DoublePoint centre = pointB.plus(bissectrice);
+			double cutoff = bissectrice.dotProduct(unitVectorBA);
 			double smallRadius = bissectrice.crossProduct(unitVectorBA);
 			double finalscale1 = this.getRadius() / smallRadius;
 			double finalscale2 = shortestDistance / (2 * cutoff);
 			DoublePoint point1;
 			DoublePoint point2;
 			if (finalscale1 < finalscale2) {
-				centre = new DoublePoint(centre.getX() + (finalscale1 * bissectrice.getX()),centre.getY() + (finalscale1 * bissectrice.getY()));
+				cutoff = cutoff * finalscale1;
+				centre = new DoublePoint(centre.getX() + ((finalscale1-1) * bissectrice.getX()),centre.getY() + ((finalscale1-1) * bissectrice.getY()));
 				smallRadius = smallRadius * finalscale1;
-				point1 = new DoublePoint(pointB.getX() + unitVectorBA.scale(finalscale1).getX(), pointB.getY() + unitVectorBA.scale(finalscale1).getY());
-				point2 = new DoublePoint(pointB.getX() + unitVectorBC.scale(finalscale1).getX(), pointB.getY() + unitVectorBC.scale(finalscale1).getY());
+				point1 = new DoublePoint(pointB.getX() + cutoff*unitVectorBA.getX(), pointB.getY() + cutoff*unitVectorBA.getY());
+				point2 = new DoublePoint(pointB.getX() + cutoff*unitVectorBC.getX(), pointB.getY() + cutoff*unitVectorBC.getY());
 
 			}
 			else {
-				centre = new DoublePoint(centre.getX() + (finalscale2 * bissectrice.getX()),centre.getY() + (finalscale2 * bissectrice.getY()));
+				cutoff = cutoff * finalscale2;
+				centre = new DoublePoint(centre.getX() + ((finalscale2-1) * bissectrice.getX()),centre.getY() + ((finalscale2-1) * bissectrice.getY()));
 				smallRadius = smallRadius * finalscale2;
-				point1 = new DoublePoint(pointB.getX() + unitVectorBA.scale(finalscale2).getX(), pointB.getY() + unitVectorBA.scale(finalscale2).getY());
-				point2 = new DoublePoint(pointB.getX() + unitVectorBC.scale(finalscale2).getX(), pointB.getY() + unitVectorBC.scale(finalscale2).getY());
+				point1 = new DoublePoint(pointB.getX() + cutoff*unitVectorBA.getX(), pointB.getY() + cutoff*unitVectorBA.getY());
+				point2 = new DoublePoint(pointB.getX() + cutoff*unitVectorBC.getX(), pointB.getY() + cutoff*unitVectorBC.getY());			}
+			
+			DoubleVector fromMiddle1 = new DoubleVector(point1.getX() - centre.getX(),point1.getY() - centre.getY());
+			DoubleVector fromMiddle2 = new DoubleVector(point2.getX() - centre.getX(),point2.getY() - centre.getY());
+			double distance = Math.sqrt(Math.pow(point1.getX() - pointB.getX(), 2) + Math.pow(point1.getY() - pointB.getY(), 2));
+			pointArray[2 * i] = point1;
+			pointArray[(2 * i) + 1] = point2;
+			double startAngle = fromMiddle1.asAngle();
+			double endAngle = fromMiddle2.asAngle();
+			double extend = endAngle - startAngle;
+			if (extend > 3.14) {
+				extend -= 6.28;
 			}
-			DoubleVector toMiddle1 = new DoubleVector(centre.getX() - point1.getX(),centre.getY() - point1.getY());
-			DoubleVector toMiddle2 = new DoubleVector(centre.getX() - point2.getX(),centre.getY() - point2.getY());
-			double startAngle;
-			double extend;
-			if (toMiddle1.asAngle() < toMiddle2.asAngle()) {
-				startAngle = toMiddle1.asAngle() + 3.14;
-				extend = toMiddle2.asAngle() - toMiddle1.asAngle();
+			if (extend < -3.14) {
+				extend += 6.28;
 			}
-			else {
-				startAngle = toMiddle2.asAngle() + 3.14;
-				extend = toMiddle1.asAngle() - toMiddle2.asAngle();
-			}
-			System.out.println(extend);
 			System.out.println("----------------------------------------------");
 			result += "arc" + " " + centre.getX() + " " + centre.getY() + " " + smallRadius + " " + startAngle + " " + extend + "\n";
-			result += "line" + " " + pointA.getX() + " " + pointA.getY() + " " + pointB.getX() + " " + pointB.getY() + "\n";
-			result += "line" + " " + (pointB.getX() + 10 * bissectrice.getX()) + " " + (pointB.getY() + 10 * bissectrice.getY()) + " " + pointB.getX() + " " + pointB.getY() + "\n";
 			}
+		for (int i = 0; i < pointArray.length; i++) {
+			if (i % 2 != 0) {
+				int index = i;
+				int indexPlusOne = i+1;
+				if(indexPlusOne > pointArray.length-1) {
+					indexPlusOne -= pointArray.length;
+				}
+				result += "line" + " " + pointArray[index].getX() + " " + pointArray[index].getY() + " " + pointArray[indexPlusOne].getX() + " " + pointArray[indexPlusOne].getY() + "\n";
+			}
+		}
 		
+
 		return result;
 
 	}

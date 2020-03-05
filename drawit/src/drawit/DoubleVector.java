@@ -40,7 +40,8 @@ public class DoubleVector {
 	}
 	
 	public double asAngle() {
-		return Math.atan2(this.y, this.x);
+		double angle = Math.atan2(this.y, this.x);
+		return angle;
 	}
 }
 
