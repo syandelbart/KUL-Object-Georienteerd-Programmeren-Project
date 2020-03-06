@@ -65,7 +65,10 @@ public class IntPoint {
 		DoubleVector newVectorac = new DoubleVector(a.x-c.x,a.y-c.y);
 		DoubleVector newVectorab = new DoubleVector(a.x-b.x,a.y-b.y);
 		DoubleVector newVectorad = new DoubleVector(a.x-d.x,a.y-d.y);
-		if (Math.signum(newVectorac.crossProduct(newVectorab)) * Math.signum(newVectorad.crossProduct(newVectorab)) < 0) {
+		DoubleVector newVectorca = new DoubleVector(c.x-a.x,c.y-a.y);
+		DoubleVector newVectorcb = new DoubleVector(c.x-b.x,c.y-b.y);
+		DoubleVector newVectorcd = new DoubleVector(c.x-d.x,c.y-d.y);
+		if (Math.signum(newVectorac.crossProduct(newVectorab)) * Math.signum(newVectorad.crossProduct(newVectorab)) < 0 && Math.signum(newVectorca.crossProduct(newVectorcd)) * Math.signum(newVectorcb.crossProduct(newVectorcd)) < 0) {
 			return true;
 		}
 		else {

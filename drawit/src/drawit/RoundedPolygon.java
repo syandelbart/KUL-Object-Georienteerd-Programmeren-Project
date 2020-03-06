@@ -155,9 +155,13 @@ public class RoundedPolygon {
 			DoubleVector unitVectorBA = VectorBA.scale(scaleBA);
 			DoubleVector unitVectorBC = VectorBC.scale(scaleBC);
 			DoubleVector bissectrice = unitVectorBA.plus(unitVectorBC);
+			//result += "line" + " " + pointB.getX() + " " + pointB.getY() + " " + (pointB.getX() + 10 * bissectrice.getX()) + " " + (pointB.getY() + 10 * bissectrice.getY()) + "\n";
 			DoublePoint centre = pointB.plus(bissectrice);
 			double cutoff = bissectrice.dotProduct(unitVectorBA);
 			double smallRadius = bissectrice.crossProduct(unitVectorBA);
+			if (smallRadius < 0) {
+				smallRadius = smallRadius * -1;
+			}
 			double finalscale1 = this.getRadius() / smallRadius;
 			double finalscale2 = shortestDistance / (2 * cutoff);
 			DoublePoint point1;
@@ -176,7 +180,7 @@ public class RoundedPolygon {
 				smallRadius = smallRadius * finalscale2;
 				point1 = new DoublePoint(pointB.getX() + cutoff*unitVectorBA.getX(), pointB.getY() + cutoff*unitVectorBA.getY());
 				point2 = new DoublePoint(pointB.getX() + cutoff*unitVectorBC.getX(), pointB.getY() + cutoff*unitVectorBC.getY());			}
-			
+			result += "line" + " " + pointB.getX() + " " + pointB.getY() + " " + centre.getX() + " " + centre.getY() + "\n";
 			DoubleVector fromMiddle1 = new DoubleVector(point1.getX() - centre.getX(),point1.getY() - centre.getY());
 			DoubleVector fromMiddle2 = new DoubleVector(point2.getX() - centre.getX(),point2.getY() - centre.getY());
 			double distance = Math.sqrt(Math.pow(point1.getX() - pointB.getX(), 2) + Math.pow(point1.getY() - pointB.getY(), 2));
