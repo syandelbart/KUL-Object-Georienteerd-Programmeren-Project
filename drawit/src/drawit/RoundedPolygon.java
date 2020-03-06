@@ -44,15 +44,15 @@ public class RoundedPolygon {
 	}
 	
 	public void insert(int index,IntPoint point) {
-		PointArrays.insert(this.vertices,index,point);
+		vertices = PointArrays.insert(this.vertices,index,point);
 	}
 	
 	public void remove(int index) {
-		PointArrays.remove(vertices,index);
+		vertices = PointArrays.remove(vertices,index);
 	}
 	
 	public void update(int index,IntPoint point) {
-		PointArrays.update(vertices,index,point);
+		vertices = PointArrays.update(vertices,index,point);
 	}
 	
 	public boolean contains(IntPoint point) {

@@ -35,7 +35,21 @@ public class IntPoint {
 		if(this.equals(b) || this.equals(c) || b.equals(c)) {
 			return false;
 		}
-		
+		double biggestX = b.getX();
+		double smallestX = c.getX();
+		if (smallestX > biggestX) {
+			biggestX = c.getX();
+			smallestX = b.getX();
+		}
+		double biggestY = b.getY();
+		double smallestY = c.getY();
+		if (smallestY > biggestY) {
+			biggestY = c.getY();
+			smallestY = b.getY();
+		}
+		if (this.x > biggestX || this.x < smallestX || this.y < smallestY || this.y > biggestY) {
+			return false;
+		}
 		if(b.getX() == c.getX()) {
 			if(this.x == b.getX() && ((this.getY() > b.getY() && this.getY() < c.getY()) || (this.getY() < b.getY() && this.getY() > c.getY()))) {
 				return true;
