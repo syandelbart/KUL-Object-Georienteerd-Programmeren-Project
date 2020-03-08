@@ -1,8 +1,8 @@
 package drawit;
 
 public class DoubleVector {
-	private double x;
-	private double y;
+	private final double x;
+	private final double y;
 	
 	public double getX() {
 		return this.x;

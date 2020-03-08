@@ -1,13 +1,42 @@
 package drawit;
 
+/**
+ * An instance of this class is a mutable abstraction storing a rounded polygon defined by a set of 2D points with integer coordinates and a nonnegative corner radius.
+ * 
+ * @invar This object's radius is not smaller than zero
+ * 	| 0 <= getRadius()
+ */
+
 public class RoundedPolygon {
+	
+	/**
+	 * @invar | 0 <= radius
+	 * @invar | vertices != null
+	 * @invar | Arrays.stream(vertices).allMatch(e -> e != null)
+	 */
 	private IntPoint[] vertices;
 	private int radius;
 	
+	/** 
+	 * Initializes the polygon with an empty list of points and a corner radius of 0.
+	 * @mutates | this
+	 * @post This object has an empty list of vertices
+	 * 	| vertices.length == 0
+	 * @post This object has a radius of 0.
+	 * 	| radius == 0
+	 */
 	public RoundedPolygon() {
-		vertices = new IntPoint[0];
+		this.vertices = new IntPoint[0];
+		this.radius = 0;
+		
 	}
 	
+	/** 
+	 * Returns a new array whose elements are the vertices of this rounded polygon.
+	 * @creates | result
+	 * @post The result's elements are not {@code null}
+	 * 	| Arrays.stream(result).allMatch(e -> e != null)
+	 */
 	public IntPoint[] getVertices() {
 		IntPoint[] result = new IntPoint[vertices.length];
 		for (int i = 0; i < vertices.length; i++) {
@@ -16,12 +45,20 @@ public class RoundedPolygon {
 		return result;
 	}
 	
+	/**
+	 * Returns the radius of the corners of this rounded polygon.
+	 */
 	public int getRadius() {
 		return this.radius;
 	}
 	
+	/**
+	 * Sets the vertices of this rounded polygon to be equal to the elements of the given array.
+	 * @throws IllegalArgumentException if the given array of vertices does not resemble a valid polygon
+	 * 	| !(PointArrays.checkDefinesProperPolygon(newVertices) == null)
+	 */
 	public void setVertices(IntPoint[] newVertices) {
-		if (PointArrays.checkDefinesProperPolygon(newVertices) != null) {
+		if (!(PointArrays.checkDefinesProperPolygon(newVertices) == null)) {
 			throw new IllegalArgumentException();
 		}
 		else {
@@ -32,8 +69,13 @@ public class RoundedPolygon {
 		}
 	}
 	
+	/**
+	 * 
+	 * @throws IllegalArgumentException if the given radius is smaller than 0
+	 * 	| !(0 <= radius)
+	 */
 	public void setRadius(int radius) {
-		if (radius < 0) {
+		if (!(0 <= radius)) {
 			throw new IllegalArgumentException();
 		}
 		else {
@@ -41,16 +83,44 @@ public class RoundedPolygon {
 		}
 	}
 	
+	
+	/**
+	 * 
+	 * @throws IllegalArgumentException if the given index is greater than the length of the array
+	 * 	| !(index <= this.vertices.length)
+	 */
 	public void insert(int index,IntPoint point) {
-		vertices = PointArrays.insert(this.vertices,index,point);
+		if(!(index <= this.vertices.length)) {
+			throw new IllegalArgumentException();
+		} else {
+			this.vertices = PointArrays.insert(this.vertices,index,point);
+		}
 	}
 	
+	/**
+	 * 
+	 * @throws IllegalArgumentException if the given index is greater than the length of the array minus one
+	 * 	| !(index <= this.vertices.length-1)
+	 */
 	public void remove(int index) {
-		vertices = PointArrays.remove(vertices,index);
+		if(!(index <= this.vertices.length-1)) {
+			throw new IllegalArgumentException();
+		} else {
+			this.vertices = PointArrays.remove(vertices,index);
+		}
 	}
 	
+	/** Test
+	 * 
+	 * @throws IllegalArgumentException if the given index is greater than the length of the array minus one
+	 * | !(index <= this.vertices.length-1)
+	 */
 	public void update(int index,IntPoint point) {
-		vertices = PointArrays.update(vertices,index,point);
+		if(!(index <= this.vertices.length-1)) {
+			throw new IllegalArgumentException();
+		} else {
+			vertices = PointArrays.update(vertices,index,point);
+		}
 	}
 	
 	public boolean contains(IntPoint point) {
