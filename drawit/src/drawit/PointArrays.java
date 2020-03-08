@@ -30,9 +30,6 @@ public class PointArrays {
 				d = d - points.length;
 			}
 			
-			System.out.println(a + " " + b + " " + c + " " + d);
-			
-			
 			for(int i2 = 0; i2 < points.length; i2++) {
 				int a2 = i2;
 				int b2 = i2+1;
@@ -143,8 +140,8 @@ public class PointArrays {
 	 */
 	public static IntPoint[] update(IntPoint[] points,int index,IntPoint value) {
 		IntPoint[] result = PointArrays.copy(points);
-		PointArrays.remove(points, index);
-		PointArrays.insert(points, index, value);
+		result = PointArrays.remove(result, index);
+		result = PointArrays.insert(result, index, value);
 		return result;
 	}
 }

@@ -61,8 +61,7 @@ public class RoundedPolygon {
 	public void setVertices(IntPoint[] newVertices) {
 		if (!(PointArrays.checkDefinesProperPolygon(newVertices) == null)) {
 			throw new IllegalArgumentException();
-		}
-		else {
+		} else {
 			vertices = new IntPoint[newVertices.length];
 			for (int i = 0; i < newVertices.length; i++) {
 				vertices[i] = newVertices[i];
@@ -78,8 +77,7 @@ public class RoundedPolygon {
 	public void setRadius(int radius) {
 		if (!(0 <= radius)) {
 			throw new IllegalArgumentException();
-		}
-		else {
+		} else {
 			this.radius = radius;
 		}
 	}
@@ -102,17 +100,19 @@ public class RoundedPolygon {
 	 * 
 	 * @throws IllegalArgumentException if the given index is greater than the length of the array minus one
 	 * 	| !(index <= this.vertices.length-1)
+	 * @throws IllegalArgumentException if one of the last 3 points is to be removed, this we do since it would make an invalid polygon
+	 *  | !(this.vertices.length > 3)
 	 */
 	public void remove(int index) {
-		if(!(index <= this.vertices.length-1)) {
+		if(!(index <= this.vertices.length-1) || !(this.vertices.length > 3)) {
 			throw new IllegalArgumentException();
 		} else {
-			this.vertices = PointArrays.remove(vertices,index);
+			this.vertices = PointArrays.remove(this.vertices,index);
 		}
 		
 	}
 	
-	/** Test
+	/** 
 	 * 
 	 * @throws IllegalArgumentException if the given index is greater than the length of the array minus one
 	 * | !(index <= this.vertices.length-1)
@@ -209,13 +209,7 @@ public class RoundedPolygon {
 			double scaleBA = 1 / distancepointApointB;
 			double distancepointBpointC = Math.sqrt(Math.pow(pointB.getX()-pointC.getX(),2) + Math.pow(pointB.getY()-pointC.getY(),2));
 			double scaleBC = 1 / distancepointBpointC;
-			double distancepointCpointA = Math.sqrt(Math.pow(pointC.getX()-pointA.getX(),2) + Math.pow(pointC.getY()-pointA.getY(),2));
-			double cosAngle = (Math.pow(distancepointCpointA, 2) - Math.pow(distancepointApointB, 2) - Math.pow(distancepointBpointC, 2)) / (2 * distancepointApointB * distancepointBpointC) * -1;
-			cosAngle = Math.acos(cosAngle);
-			
-			DoublePoint middleAB = new DoublePoint((pointB.getX()-pointA.getX())/2,(pointB.getY()-pointA.getY())/2);
-			DoublePoint middleBC = new DoublePoint((pointB.getX()-pointC.getX())/2,(pointB.getY()-pointC.getY())/2);
-			
+
 			DoubleVector VectorBA = new DoubleVector(pointA.getX() - pointB.getX(),pointA.getY() - pointB.getY());
 			DoubleVector VectorBC = new DoubleVector(pointC.getX() - pointB.getX(),pointC.getY() - pointB.getY());
 			double shortestDistance = distancepointApointB;
@@ -250,10 +244,10 @@ public class RoundedPolygon {
 				smallRadius = smallRadius * finalscale2;
 				point1 = new DoublePoint(pointB.getX() + cutoff*unitVectorBA.getX(), pointB.getY() + cutoff*unitVectorBA.getY());
 				point2 = new DoublePoint(pointB.getX() + cutoff*unitVectorBC.getX(), pointB.getY() + cutoff*unitVectorBC.getY());			}
-			result += "line" + " " + pointB.getX() + " " + pointB.getY() + " " + centre.getX() + " " + centre.getY() + "\n";
+			// this will show lines from B to centre
+			//result += "line" + " " + pointB.getX() + " " + pointB.getY() + " " + centre.getX() + " " + centre.getY() + "\n";
 			DoubleVector fromMiddle1 = new DoubleVector(point1.getX() - centre.getX(),point1.getY() - centre.getY());
 			DoubleVector fromMiddle2 = new DoubleVector(point2.getX() - centre.getX(),point2.getY() - centre.getY());
-			double distance = Math.sqrt(Math.pow(point1.getX() - pointB.getX(), 2) + Math.pow(point1.getY() - pointB.getY(), 2));
 			pointArray[2 * i] = point1;
 			pointArray[(2 * i) + 1] = point2;
 			double startAngle = fromMiddle1.asAngle();
@@ -265,7 +259,6 @@ public class RoundedPolygon {
 			if (extend < -3.14) {
 				extend += 6.28;
 			}
-			System.out.println("----------------------------------------------");
 			result += "arc" + " " + centre.getX() + " " + centre.getY() + " " + smallRadius + " " + startAngle + " " + extend + "\n";
 			}
 		for (int i = 0; i < pointArray.length; i++) {
