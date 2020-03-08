@@ -24,7 +24,7 @@ public class DoublePoint {
 	}
 	
 	public DoubleVector minus(DoublePoint other) {
-		DoubleVector result = new DoubleVector(other.x - this.x,other.y - this.y);
+		DoubleVector result = new DoubleVector(this.x - other.x,this.y - other.y);
 		return result;
 	}
 	
