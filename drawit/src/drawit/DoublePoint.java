@@ -1,8 +1,8 @@
 package drawit;
 
 public class DoublePoint {
-	private double x;
-	private double y;
+	private final double x;
+	private final double y;
 	
 	
 	public DoublePoint(double x,double y) {
