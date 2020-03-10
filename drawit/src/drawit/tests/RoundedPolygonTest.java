@@ -1,4 +1,7 @@
-package drawit;
+package drawit.tests;
+import drawit.RoundedPolygon;
+import drawit.PointArrays;
+import drawit.IntPoint;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -104,20 +107,20 @@ class RoundedPolygonTest {
 							"arc 4.0 8.0 0.0 0.0 0.0\n" +
 							"arc 2.0 8.0 0.0 0.0 0.0\n" +
 							"arc 2.0 4.0 0.0 0.0 0.0\n" +
-							"line 4.0 4.0 4.0 8.0\n" +
-							"line 4.0 8.0 2.0 8.0\n" +
-							"line 2.0 8.0 2.0 4.0\n" +
-							"line 2.0 4.0 4.0 4.0\n",roundedPolygonTest.getDrawingCommands());
+							"line 4 4 4 8\n" +
+							"line 4 8 2 8\n" +
+							"line 2 8 2 4\n" +
+							"line 2 4 4 4\n",roundedPolygonTest.getDrawingCommands());
 					//testing getDrawingCommands with radius of 10
 					roundedPolygonTest.setRadius(10);
 					assertEquals("arc 3.0 5.0 1.0 -1.5707963267948966 1.5707963267948966\n" +
 							"arc 3.0 7.0 1.0 0.0 1.5707963267948966\n" +
 							"arc 3.0 7.0 1.0 1.5707963267948966 1.5707963267948966\n" +
 							"arc 3.0 5.0 1.0 3.141592653589793 1.5676110196153106\n" +
-							"line 4.0 5.0 4.0 7.0\n" +
-							"line 3.0 8.0 3.0 8.0\n" +
-							"line 2.0 7.0 2.0 5.0\n" +
-							"line 3.0 4.0 3.0 4.0\n",roundedPolygonTest.getDrawingCommands());
+							"line 4 5 4 7\n" +
+							"line 3 8 3 8\n" +
+							"line 2 7 2 5\n" +
+							"line 3 4 3 4\n",roundedPolygonTest.getDrawingCommands());
 			//testing setVertices
 					IntPoint[] testArray1 = new IntPoint[0];
 					testArray1 = PointArrays.insert(testArray1, 0, pointA);

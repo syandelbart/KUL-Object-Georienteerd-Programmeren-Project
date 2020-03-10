@@ -1,4 +1,5 @@
 package drawit;
+import java.util.stream.IntStream;
 
 /**
  * Declares a number of methods useful for working with arrays of <code>IntPoint</code> objects.
@@ -36,18 +37,22 @@ public class PointArrays {
 				if (b2 > points.length - 1) {
 					b2 = b2 - points.length;
 				}
+				if (points[a].isOnLineSegment(points[a2],points[b2])) {
+					return "vertex is on edge";
+				}
 				if (IntPoint.lineSegmentsIntersect(points[a2],points[b2],points[a],points[b]) == true && a2 != a && b2 != b) {
-					System.out.println("2 lines intersect");
 					return "2 lines intersect";
 				}
 			}
 
 			for(int j = 0; j < points.length; j++) {
 				if(j != i && points[i].getX() == points[j].getX() && points[i].getY() == points[j].getY()) {
-					System.out.println("2 points are the same");
 					return "2 points are the same";
 				}
+				
 			}
+
+			
 			if (points[b].isOnLineSegment(points[a],points[c])) {
 				//a point is not a corner of the polygon
 			}
@@ -59,7 +64,7 @@ public class PointArrays {
 	 * @post The length of the resulting array should be the same as the length of the initial array
 	 * 	| result.length == points.length
 	 * @post Every element of the initial array should have the same value as the resulting array
-	 * 	| IntStream.range(0, result.length).allMatch(i -> points[i].equals(result[i])
+	 * 	| IntStream.range(0, result.length).allMatch(i -> points[i].equals(result[i]))
 	 */
 	public static IntPoint[] copy(IntPoint[] points) {
 		IntPoint[] result = new IntPoint[points.length];
@@ -77,17 +82,13 @@ public class PointArrays {
 	 * @post Since a point has been added to the array, the array should be 1 longer than the initial length of the input array.
 	 * 	| result.length == points.length + 1
 	 * @post Every point that comes before index should remain the same
-	 * 	| IntStream.range(0, index).allMatch(i -> points[i].equals(result[i])
+	 * 	| IntStream.range(0, index).allMatch(i -> points[i].equals(result[i]))
 	 * @post The point at the index should be the point that has been provided as a parameter.
 	 * 	| result[index].equals(point)
 	 * @post Every point that comes after the index should have an index that is 1 higher than initially.
-	 * 	| IntStream.range(index+1, result.length).allMatch(i -> points[i-1].equals(result[i])
+	 * 	| IntStream.range(index+1, result.length).allMatch(i -> points[i-1].equals(result[i]))
 	 */
 	public static IntPoint[] insert(IntPoint[] points,int index,IntPoint point) {
-		if(!(index <= points.length)) {
-			return PointArrays.copy(points);
-		}
-		
 		IntPoint[] result = new IntPoint[points.length+1];
 		for(int i = 0; i < index; i++) {
 			result[i] = points[i];
@@ -107,9 +108,9 @@ public class PointArrays {
 	 * @post Since a point has been removed from the array, the array should be 1 shorter than the initial length of the input array.
 	 * 	| result.length == points.length - 1
 	 * @post Every point that comes before index should remain the same
-	 * 	| IntStream.range(0, index).allMatch(i -> points[i].equals(result[i])
+	 * 	| IntStream.range(0, index).allMatch(i -> points[i].equals(result[i]))
 	 * @post Every point that comes after the index should have an index that is 1 smaller than initially.
-	 * 	| IntStream.range(index, result.length).allMatch(i -> points[i+1].equals(result[i])
+	 * 	| IntStream.range(index, result.length).allMatch(i -> points[i+1].equals(result[i]))
 	 */
 	public static IntPoint[] remove(IntPoint[] points,int index) {
 		IntPoint[] result = new IntPoint[points.length-1];
@@ -132,11 +133,11 @@ public class PointArrays {
 	 * @post The length of the resulting array should be the same as the length of the initial array.
 	 * 	| result.length == points.length
 	 * @post Every point that comes before index should remain the same
-	 * 	| IntStream.range(0, index).allMatch(i -> points[i].equals(result[i])
+	 * 	| IntStream.range(0, index).allMatch(i -> points[i].equals(result[i]))
 	 * @post The point at index should be updated with the provided parameter value
 	 * 	| result[index].equals(value)
 	 * @post Every point that comes after the index should remain the same.
-	 * 	| IntStream.range(index, result.length).allMatch(i -> points[i].equals(result[i])
+	 * 	| IntStream.range(index, result.length).allMatch(i -> points[i].equals(result[i]))
 	 */
 	public static IntPoint[] update(IntPoint[] points,int index,IntPoint value) {
 		IntPoint[] result = PointArrays.copy(points);

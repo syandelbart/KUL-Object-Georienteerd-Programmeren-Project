@@ -1,5 +1,6 @@
-
 package drawit;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 /**
  * An instance of this class is a mutable abstraction storing a rounded polygon defined by a set of 2D points with integer coordinates and a nonnegative corner radius.
@@ -35,7 +36,7 @@ public class RoundedPolygon {
 	
 	/**Returns a new array whose elements are the vertices of this rounded polygon.
 	 * @post The result's elements are not null
-	 * 	| Arrays.stream(result).allMatch(e -> e != null)
+	 *	| Arrays.stream(result).allMatch(e -> e != null)
 	 */
 	public IntPoint[] getVertices() {
 		IntPoint[] result = new IntPoint[vertices.length];
@@ -53,15 +54,22 @@ public class RoundedPolygon {
 	}
 	
 	/**Sets the vertices of this rounded polygon to be equal to the elements of the given array.
+	 * @mutates | this
+	 * @inspects | other
+	 * 
 	 * @throws IllegalArgumentException if the given array of vertices does not resemble a valid polygon
 	 * 	| !(PointArrays.checkDefinesProperPolygon(newVertices) == null)
+	 * @throws IllegalArgumentException if the given point is a null pointer
+	 * | !(newVertices != null)
 	 * @post The objects vertices should be equal to that of the argument newVertices
-	 * 	| IntStream.range(0, newVertices.length).allMatch(i -> newVertices[i].equals(getVertices()[i])
+	 * 	| IntStream.range(0, newVertices.length).allMatch(i -> newVertices[i].equals(getVertices()[i]))
 	 * @post The amount of vertices for the object should be the same as the length of the argument newVertices
 	 * 	| getVertices().length == newVertices.length
 	 */
 	public void setVertices(IntPoint[] newVertices) {
 		if (!(PointArrays.checkDefinesProperPolygon(newVertices) == null)) {
+			throw new IllegalArgumentException();
+		} else if(!(newVertices != null)) {
 			throw new IllegalArgumentException();
 		} else {
 			vertices = new IntPoint[newVertices.length];
@@ -72,6 +80,9 @@ public class RoundedPolygon {
 	}
 	
 	/**Sets this rounded polygon's corner radius to the given value.
+	 * @mutates | this
+	 * @inspects | radius
+	 * 
 	 * @throws IllegalArgumentException if the given radius is smaller than 0
 	 * 	| !(0 <= radius)
 	 * @post The radius of this object should have been changed to the argument radius
@@ -87,35 +98,41 @@ public class RoundedPolygon {
 	
 	
 	/** Inserts a given point at given index of the vertices.
+	 * @mutates | this
+	 * @inspects | index
 	 * 
+	 * @throws IllegalArgumentException if the given index is smaller than 0
+	 * | !(0 <= index)
 	 * @throws IllegalArgumentException if the given index is greater than the length of the array
 	 * 	| !(index <= this.vertices.length)
-	 * @post The object's new length should be one more than before.
-	 * 	| old(getVertices().length) == getVertices().length-1
-	 * @post Every point that comes before index should remain the same
-	 * 	| IntStream.range(0, index).allMatch(i -> old(getVertices()[i]).equals(getVertices()[i])
+	 * @throws IllegalArgumentException if the given point is a null pointer
+	 * | !(point != null)
+
+
 	 * @post The point at the index should be the point that has been provided as a parameter.
 	 * 	| getVertices()[index].equals(point)
-	 * @post Every point that comes after the index should have an index that is 1 higher than initially.
-	 * 	| IntStream.range(index+1, getVertices().length).allMatch(i -> old(getVertices()[i-1]).equals(getVertices()[i])
+
 	 */
 	public void insert(int index,IntPoint point) {
-		if(!(index <= this.vertices.length)) {
+		if(!(index <= this.vertices.length) || !(0 <= index)) {
+			throw new IllegalArgumentException();
+		} else if(!(point != null)) {
 			throw new IllegalArgumentException();
 		} else {
-			this.vertices = PointArrays.insert(this.vertices,index,point);
+			this.vertices = PointArrays.insert(vertices, index, point);
 		}
 	}
 	
 	/**
-	 * 
+	 * @throws IllegalArgumentException if the given index is smaller than 0
+	 * | !(0 <= index)
 	 * @throws IllegalArgumentException if the given index is greater than the length of the array minus one
 	 * 	| !(index <= getVertices().length-1)
 	 * @throws IllegalArgumentException if one of the last 3 points is to be removed, this we do since it would make an invalid polygon
 	 *  | !(getVertices().length > 3)
 	 */
 	public void remove(int index) {
-		if(!(index <= this.vertices.length-1) || !(this.vertices.length > 3)) {
+		if(!(index <= this.vertices.length-1) || !(this.vertices.length > 3) || !(0 <= index)) {
 			throw new IllegalArgumentException();
 		} else {
 			this.vertices = PointArrays.remove(this.vertices,index);
@@ -124,20 +141,25 @@ public class RoundedPolygon {
 	}
 	
 	/** Updates a point at a given index to the given point.
-	 * 
+	 * @throws IllegalArgumentException if the given index is smaller than 0
+	 * | !(0 <= index)
 	 * @throws IllegalArgumentException if the given index is greater than the length of the array minus one
 	 * | !(index <= this.vertices.length-1)
+	 * @throws IllegalArgumentException if the given point is a null pointer
+	 * | !(point != null)
 	 * @post The object's new length should be the same as before
-	 * | old(getVertices().length) == getVertices().length
+	 * | old(getVertices()).length == getVertices().length
 	 * @post Every point that comes before index should remain the same
-	 * 	| IntStream.range(0, index).allMatch(i -> old(getVertices()[i]).equals(getVertices()[i])
+	 * 	| IntStream.range(0, index).allMatch(i -> old(getVertices())[i].equals(getVertices()[i]))
 	 * @post The point at the index should be the point that has been provided as a parameter.
 	 * 	| getVertices()[index].equals(point)
 	 * @post Every point that comes after the index should remain the same
-	 * 	| IntStream.range(index+1, getVertices().length).allMatch(i -> old(getVertices()[i]).equals(getVertices()[i])
+	 * 	| IntStream.range(index+1, getVertices().length).allMatch(i -> old(getVertices())[i].equals(getVertices()[i]))
 	 */
 	public void update(int index,IntPoint point) {
-		if(!(index <= this.vertices.length-1)) {
+		if(!(index <= this.vertices.length-1) || !(0 <= index)) {
+			throw new IllegalArgumentException();
+		} else if(!(point != null)) {
 			throw new IllegalArgumentException();
 		} else {
 			vertices = PointArrays.update(vertices,index,point);
@@ -147,10 +169,14 @@ public class RoundedPolygon {
 	/**Returns true iff the given point is contained by the (non-rounded) polygon defined by this rounded polygon's vertices. 
 	 * This method does not take into account this rounded polygon's corner radius; it assumes a corner radius of zero.
 	 * A point is contained by a polygon if it coincides with one of its vertices, or if it is on one of its edges, or if it is in the polygon's interior.
-	 * @pre Argument point is not null
-	 * 	| point != null
+	 * @throws IllegalArgumentException if the given point is a null pointer
+	 *  | !(point != null)
 	 */
 	public boolean contains(IntPoint point) {
+		if(!(point != null)) {
+			throw new IllegalArgumentException();
+		}
+		
 		int biggestX = vertices[0].getX();
 		for(int i = 0; i < vertices.length; i++) {
 			if (point.equals(vertices[i])) {
@@ -201,13 +227,8 @@ public class RoundedPolygon {
 			return "";
 		}
 		String result = "";
-		
-		for(int i=0;i < this.vertices.length;i++) {
-			System.out.print("(" + this.vertices[i].getX() + "-" + this.vertices[i].getY() + ") ");
-		}
-		
-		System.out.println("");
-		IntPoint[] pointArray = new IntPoint[0];;
+
+		IntPoint[] pointArray = new IntPoint[0];
 		for(int i = 0;i < this.vertices.length;i++) {
 			int index = i;
 			int indexPlusOne = i+1;
@@ -307,4 +328,5 @@ public class RoundedPolygon {
 	}
  	
 }
+
 

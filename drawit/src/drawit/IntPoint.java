@@ -45,9 +45,10 @@ public class IntPoint {
 	/** Returns an IntVector object representing the displacement from other to this.
 	 * @pre Argument other should not be null
 	 * 	| other != null
-	 * @post The resulting IntVector is this object minus the object other.
+	 * @post The resulting IntVector's X-coordinate is this object's X-coordinate minus the others X-coordinate
 	 * 	| result.getX() == this.getX() - other.getX()
-	 * 	| result.getX() == this.getY() - other.getY();
+	 * @post The resulting IntVector's Y-coordinate is this object's Y-coordinate minus the others Y-coordinate
+	 * 	| result.getY() == this.getY() - other.getY()
 	 */
 	public IntVector minus(IntPoint other) {
 		return new IntVector(this.getX()-other.getX(),this.getY()-other.getY());
@@ -103,12 +104,14 @@ public class IntPoint {
 	/** Returns an IntPoint object representing the point obtained by displacing this point by the given vector.
 	 * @pre Argument vector should not be null
 	 * 	| vector != null
-	 * @post The resulting IntPoint is this object plus the object vector.
+	 * @post The result's X-coordinate should be the same as this object's X-coordinate
 	 * 	| result.getX() == this.getX() + vector.getX()
-	 * 	| result.getX() == this.getY() + vector.getY();
+	 * @post The result's Y-coordinate should be the same as this object's Y-coordinate
+	 * 	| result.getY() == this.getY() + vector.getY()
 	 */
 	public IntPoint plus(IntVector vector) {
-		return new IntPoint(this.x + vector.getX(), this.y + vector.getY());
+		IntPoint result =  new IntPoint(this.x + vector.getX(), this.y + vector.getY());
+		return result;
 	}
 	
 	/** Returns true iff the open line segment ab intersects the open line segment cd.
