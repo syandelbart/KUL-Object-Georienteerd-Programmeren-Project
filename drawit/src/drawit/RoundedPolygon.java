@@ -107,11 +107,14 @@ public class RoundedPolygon {
 	 * 	| !(index <= this.vertices.length)
 	 * @throws IllegalArgumentException if the given point is a null pointer
 	 * | !(point != null)
-
-
+	 * @post The object's new length should be one more than before.
+	 * 	| getVertices().length == old(getVertices()).length + 1
+	 * @post Every point that comes before index should remain the same
+	 *  | Arrays.equals(getVertices(), 0, index,old(getVertices()), 0, index)
 	 * @post The point at the index should be the point that has been provided as a parameter.
 	 * 	| getVertices()[index].equals(point)
-
+	 * @post Every point that comes after the index should have an index that is 1 higher than initially.
+	 *  | Arrays.equals(old(getVertices()), index, old(getVertices()).length, getVertices(), index+1, getVertices().length)
 	 */
 	public void insert(int index,IntPoint point) {
 		if(!(index <= this.vertices.length) || !(0 <= index)) {
