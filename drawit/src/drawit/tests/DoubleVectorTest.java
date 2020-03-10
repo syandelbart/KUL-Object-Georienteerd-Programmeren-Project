@@ -1,8 +1,10 @@
-package drawit;
+package drawit.tests;
+import drawit.DoubleVector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
 
 class DoubleVectorTest {
 

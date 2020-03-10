@@ -1,4 +1,7 @@
-package drawit;
+package drawit.tests;
+import drawit.DoublePoint;
+import drawit.IntPoint;
+import drawit.DoubleVector;
 
 import static org.junit.jupiter.api.Assertions.*;
 

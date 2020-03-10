@@ -1,4 +1,6 @@
-package drawit;
+package drawit.tests;
+import drawit.IntPoint;
+import drawit.PointArrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,7 +103,10 @@ class PointArraysTest {
 				//so that our polygon would be defined as AB-BD-DC-CA (where BD should intersect with CA)
 				testArrayUpdate = PointArrays.update(testArray, 2, pointDupdate);
 				testArrayUpdate = PointArrays.update(testArrayUpdate,3,pointCupdate);
-				assertEquals("2 lines intersect",PointArrays.checkDefinesProperPolygon(testArrayUpdate));		
+				assertEquals("2 lines intersect",PointArrays.checkDefinesProperPolygon(testArrayUpdate));
+				testArrayUpdate = PointArrays.insert(testArray, 0, new IntPoint(3,4));
+				assertEquals("vertex is on edge",PointArrays.checkDefinesProperPolygon(testArrayUpdate));
+				
 	}
 
 }

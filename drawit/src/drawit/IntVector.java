@@ -13,9 +13,9 @@ public class IntVector {
 	 * @mutates | this
 	 * 
 	 * @post The object's X-coordinate is equal to the given X-coordinate
-	 * 	| getX() == x
+	 * 	| this.getX() == x
 	 * @post The object's Y-coordinate is equal to the given Y-coordinate
-	 * 	| getY() == y
+	 * 	| this.getY() == y
 	 */
 	public IntVector(int x, int y) {
 		this.x = x;
