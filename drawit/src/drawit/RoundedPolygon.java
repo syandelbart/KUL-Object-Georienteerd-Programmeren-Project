@@ -100,6 +100,7 @@ public class RoundedPolygon {
 	/** Inserts a given point at given index of the vertices.
 	 * @mutates | this
 	 * @inspects | index
+	 * @inspects | point
 	 * 
 	 * @throws IllegalArgumentException if the given index is smaller than 0
 	 * | !(0 <= index)
@@ -107,6 +108,8 @@ public class RoundedPolygon {
 	 * 	| !(index <= this.vertices.length)
 	 * @throws IllegalArgumentException if the given point is a null pointer
 	 * | !(point != null)
+	 * @throws IllegalArgumentException if the inserted point makes the polygon improper (this will also result in a "reset" of the polygon to its original form)
+	 * | !(PointArrays.checkDefinesProperPolygon(this.getVertices()) == null)
 	 * @post The object's new length should be one more than before.
 	 * 	| getVertices().length == old(getVertices()).length + 1
 	 * @post Every point that comes before index should remain the same
@@ -122,7 +125,11 @@ public class RoundedPolygon {
 		} else if(!(point != null)) {
 			throw new IllegalArgumentException();
 		} else {
-			this.vertices = PointArrays.insert(vertices, index, point);
+			this.setVertices(PointArrays.insert(this.getVertices(), index, point));
+			if(!(PointArrays.checkDefinesProperPolygon(this.getVertices()) == null)) {
+				this.setVertices(PointArrays.remove(this.getVertices(), index));
+				throw new IllegalArgumentException();
+			}
 		}
 	}
 	
