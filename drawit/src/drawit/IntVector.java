@@ -36,7 +36,7 @@ public class IntVector {
 	 * @pre Argument other should not be null
 	 * 	| other != null
 	 * @post The result should be x1*y2 - x2*y1
-	 * 	| result == this.getX() * other.getY() - this.getY() * other.getX()
+	 * 	| result == getX() * other.getY() - getY() * other.getX()
 	 */
 	public long crossProduct(IntVector other) {
 		return (long)this.getX() * other.getY() - (long)this.getY() * other.getX();
@@ -46,7 +46,7 @@ public class IntVector {
 	 * @pre Argument other should not be null
 	 * 	| other != null
 	 * @post result is true if the crossproduct of this object with other is 0
-	 * 	| result == (this.crossProduct(other) == 0)
+	 * 	| result == (crossProduct(other) == 0)
 	 */
 	public boolean isCollinearWith(IntVector other) {
 		return this.crossProduct(other) == 0;
@@ -56,17 +56,19 @@ public class IntVector {
 	 * @pre Argument other should not be null
 	 * 	| other != null
 	 * @post The result should be x1*x2 + y1*y2
-	 * 	| result == this.getX() * other.getY() - this.getY() * other.getX()
+	 * 	| result == getX() * other.getX() + getY() * other.getY()
 	 */
 	public long dotProduct(IntVector other) {
 		return (long)this.getX() * other.getX() + (long)this.getY() * other.getY();
 	}
 	
 	/** Returns a DoubleVector object that represents the same vector represented by this IntVector object.
+	 * @creates | still have to fill in
+	 * 
 	 * @post The result's X-coordinate should be the same as this object's X-coordinate
-	 * 	| result.getX() == this.getX()
+	 * 	| result.getX() == getX()
 	 * @post The result's Y-coordinate should be the same as this object's Y-coordinate
-	 * 	| result.getY() == this.getY()
+	 * 	| result.getY() == getY()
 	 */
 	public DoubleVector asDoubleVector() {
 		return new DoubleVector(this.x,this.y);

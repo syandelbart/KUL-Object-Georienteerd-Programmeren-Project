@@ -13,9 +13,9 @@ public class IntPoint {
 	 * @mutates | this
 	 * 
 	 * @post The object's X-coordinate is equal to the given X-coordinate
-	 * 	| this.getX() == x
+	 * 	| getX() == x
 	 * @post The object's Y-coordinate is equal to the given Y-coordinate
-	 * 	| this.getY() == y
+	 * 	| getY() == y
 	 */
 	public IntPoint(int x, int y) {
 		this.x = x;
@@ -36,25 +36,27 @@ public class IntPoint {
 	 * @pre Argument other should not be null
 	 * 	| other != null
 	 * @post The result is true if the point is equal, else false
-	 * 	| result == this.equals(other)
+	 * 	| result == (getX() == other.getX() && getY() == other.getY())
 	 */
 	public boolean equals(IntPoint other) {
-		return other.x == this.x && other.y == this.y;
+		return this.getX() == other.getX() && this.getY() == other.getY();
 	}
 	
 	/** Returns an IntVector object representing the displacement from other to this.
 	 * @pre Argument other should not be null
 	 * 	| other != null
 	 * @post The resulting IntVector's X-coordinate is this object's X-coordinate minus the others X-coordinate
-	 * 	| result.getX() == this.getX() - other.getX()
+	 * 	| result.getX() == getX() - other.getX()
 	 * @post The resulting IntVector's Y-coordinate is this object's Y-coordinate minus the others Y-coordinate
-	 * 	| result.getY() == this.getY() - other.getY()
+	 * 	| result.getY() == getY() - other.getY()
 	 */
 	public IntVector minus(IntPoint other) {
 		return new IntVector(this.getX()-other.getX(),this.getY()-other.getY());
 	}
 	
-	/** Returns true iff this point is on open line segment bc. An open line segment does not include its endpoints.
+	/** Returns true if point is on open line segment bc. An open line segment does not include its endpoints.
+	 * @pre Arguments b and c define proper IntPoints
+	 * 	| b != null && c != null
 	 */
 	public boolean isOnLineSegment(IntPoint b,IntPoint c) {
 		if(this.equals(b) || this.equals(c) || b.equals(c)) {
@@ -91,10 +93,12 @@ public class IntPoint {
 	}
 	
 	/** Returns a DoublePoint object that represents the same 2D point represented by this IntPoint object.
+	 * @creates | DoublePoint
+	 * 
 	 * @post The result's X-coordinate should be the same as this object's X-coordinate
-	 * 	| result.getX() == this.getX()
+	 * 	| result.getX() == getX()
 	 * @post The result's Y-coordinate should be the same as this object's Y-coordinate
-	 * 	| result.getY() == this.getY()
+	 * 	| result.getY() == getY()
 	 */
 	public DoublePoint asDoublePoint() {
 		return new DoublePoint(this.getX(),this.getY());
@@ -105,9 +109,9 @@ public class IntPoint {
 	 * @pre Argument vector should not be null
 	 * 	| vector != null
 	 * @post The result's X-coordinate should be the same as this object's X-coordinate
-	 * 	| result.getX() == this.getX() + vector.getX()
+	 * 	| result.getX() == getX() + vector.getX()
 	 * @post The result's Y-coordinate should be the same as this object's Y-coordinate
-	 * 	| result.getY() == this.getY() + vector.getY()
+	 * 	| result.getY() == getY() + vector.getY()
 	 */
 	public IntPoint plus(IntVector vector) {
 		IntPoint result =  new IntPoint(this.x + vector.getX(), this.y + vector.getY());

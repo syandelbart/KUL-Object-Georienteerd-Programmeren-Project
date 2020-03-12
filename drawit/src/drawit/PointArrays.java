@@ -15,6 +15,11 @@ public class PointArrays {
 	 *  If there are exactly two points, the polygon is not proper. Notice that if there are more than two points and no two vertices coincide and no vertex is on any edge, then no two edges intersect at more than one point.
 	 */
 	public static String checkDefinesProperPolygon(IntPoint[] points) {
+		if(points.length < 3) {
+			//not enough points to determine whether the polygon is proper,
+			//since having less than 3 points is not enough to form a polygon, we return null
+			return null;
+		}
 		
 		for(int i = 0; i < points.length; i++) {
 			int a = i;
@@ -38,15 +43,18 @@ public class PointArrays {
 					b2 = b2 - points.length;
 				}
 				if (points[a].isOnLineSegment(points[a2],points[b2])) {
+					System.out.println("Vertex is on edge");
 					return "vertex is on edge";
 				}
 				if (IntPoint.lineSegmentsIntersect(points[a2],points[b2],points[a],points[b]) == true && a2 != a && b2 != b) {
+					System.out.println("2 lines intersect");
 					return "2 lines intersect";
 				}
 			}
 
 			for(int j = 0; j < points.length; j++) {
 				if(j != i && points[i].getX() == points[j].getX() && points[i].getY() == points[j].getY()) {
+					System.out.println("2 points are the same");
 					return "2 points are the same";
 				}
 				
@@ -137,7 +145,7 @@ public class PointArrays {
 	 * @post The point at index should be updated with the provided parameter value
 	 * 	| result[index].equals(value)
 	 * @post Every point that comes after the index should remain the same.
-	 * 	| IntStream.range(index, result.length).allMatch(i -> points[i].equals(result[i]))
+	 * 	| IntStream.range(index+1, result.length).allMatch(i -> points[i].equals(result[i]))
 	 */
 	public static IntPoint[] update(IntPoint[] points,int index,IntPoint value) {
 		IntPoint[] result = PointArrays.copy(points);
