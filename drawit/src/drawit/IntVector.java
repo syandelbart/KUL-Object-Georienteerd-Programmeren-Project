@@ -63,7 +63,7 @@ public class IntVector {
 	}
 	
 	/** Returns a DoubleVector object that represents the same vector represented by this IntVector object.
-	 * @creates | still have to fill in
+	 * @creates | result
 	 * 
 	 * @post The result's X-coordinate should be the same as this object's X-coordinate
 	 * 	| result.getX() == getX()

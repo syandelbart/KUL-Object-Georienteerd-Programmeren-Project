@@ -93,7 +93,7 @@ public class IntPoint {
 	}
 	
 	/** Returns a DoublePoint object that represents the same 2D point represented by this IntPoint object.
-	 * @creates | DoublePoint
+	 * @creates | result
 	 * 
 	 * @post The result's X-coordinate should be the same as this object's X-coordinate
 	 * 	| result.getX() == getX()
@@ -106,6 +106,8 @@ public class IntPoint {
 	
 	
 	/** Returns an IntPoint object representing the point obtained by displacing this point by the given vector.
+	 * @creates | result
+	 * 
 	 * @pre Argument vector should not be null
 	 * 	| vector != null
 	 * @post The result's X-coordinate should be the same as this object's X-coordinate

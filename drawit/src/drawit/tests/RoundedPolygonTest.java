@@ -41,22 +41,14 @@ class RoundedPolygonTest {
 				//setting radius to test the setRadius function
 			roundedPolygonTest.setRadius(10);
 			assertEquals(10,roundedPolygonTest.getRadius());
+		// Creating a list of vertices and setting that list as the vertices of the object roundedPolygonTest
+		// we suppose that every instance of roundedPolygon is either empty or valid, therefor we must inesrt a valid list of points to begin with
+			IntPoint[] toBeInsertedArray = new IntPoint[0];
+			toBeInsertedArray = PointArrays.insert(toBeInsertedArray, 0, pointB);
+			toBeInsertedArray = PointArrays.insert(toBeInsertedArray, 0, pointA);
+			toBeInsertedArray = PointArrays.insert(toBeInsertedArray, 2, pointToBeRemoved);
+			roundedPolygonTest.setVertices(toBeInsertedArray);
 			//testing insert function of array
-				roundedPolygonTest.insert(0, pointB);
-					//validating array
-					assertEquals(1,roundedPolygonTest.getVertices().length);
-					assertEquals(true,roundedPolygonTest.getVertices()[0].equals(pointB));
-				roundedPolygonTest.insert(0, pointA);
-					//validating array
-					assertEquals(2,roundedPolygonTest.getVertices().length);
-					assertEquals(true,roundedPolygonTest.getVertices()[0].equals(pointA));
-					assertEquals(true,roundedPolygonTest.getVertices()[1].equals(pointB));
-				roundedPolygonTest.insert(2, pointToBeRemoved);
-					//validating array
-					assertEquals(3,roundedPolygonTest.getVertices().length);
-					assertEquals(true,roundedPolygonTest.getVertices()[0].equals(pointA));
-					assertEquals(true,roundedPolygonTest.getVertices()[1].equals(pointB));
-					assertEquals(true,roundedPolygonTest.getVertices()[2].equals(pointToBeRemoved));
 				roundedPolygonTest.insert(3, pointC);
 					//validating array
 					assertEquals(4,roundedPolygonTest.getVertices().length);
@@ -75,6 +67,9 @@ class RoundedPolygonTest {
 			//testing remove function of array (remove pointToBeRemoved from array at index 2)
 					//testing if pointToBeRemoved is index 2 in the array
 					assertEquals(true,roundedPolygonTest.getVertices()[2] == pointToBeRemoved);
+					//testing if a point above the triangle (which is formed by pointToBeRemoved
+					//is part of the polygon
+					assertEquals(false,roundedPolygonTest.contains(pointOutsideTriangleOnRightOfPolygon));
 				//removing it from the array
 				roundedPolygonTest.remove(2);
 					//testing if array kept its structure whilst removing the element at index 2

@@ -16,9 +16,8 @@ public class PointArrays {
 	 */
 	public static String checkDefinesProperPolygon(IntPoint[] points) {
 		if(points.length < 3) {
-			//not enough points to determine whether the polygon is proper,
-			//since having less than 3 points is not enough to form a polygon, we return null
-			return null;
+			//not enough points so makes the roundedpolygon improper
+			return "not enough points";
 		}
 		
 		for(int i = 0; i < points.length; i++) {
@@ -43,18 +42,15 @@ public class PointArrays {
 					b2 = b2 - points.length;
 				}
 				if (points[a].isOnLineSegment(points[a2],points[b2])) {
-					System.out.println("Vertex is on edge");
 					return "vertex is on edge";
 				}
 				if (IntPoint.lineSegmentsIntersect(points[a2],points[b2],points[a],points[b]) == true && a2 != a && b2 != b) {
-					System.out.println("2 lines intersect");
 					return "2 lines intersect";
 				}
 			}
 
 			for(int j = 0; j < points.length; j++) {
 				if(j != i && points[i].getX() == points[j].getX() && points[i].getY() == points[j].getY()) {
-					System.out.println("2 points are the same");
 					return "2 points are the same";
 				}
 				
@@ -63,12 +59,15 @@ public class PointArrays {
 			
 			if (points[b].isOnLineSegment(points[a],points[c])) {
 				//a point is not a corner of the polygon
+				return "cannot place point on corner";
 			}
 		}
 		return null;
 	}
 	
 	/** Returns a new array with the same contents as the given array.
+	 * @creates | result
+	 * 
 	 * @post The length of the resulting array should be the same as the length of the initial array
 	 * 	| result.length == points.length
 	 * @post Every element of the initial array should have the same value as the resulting array
@@ -83,6 +82,8 @@ public class PointArrays {
 	}
 	
 	/** Returns a new array whose elements are the elements of the given array with the given point inserted at the given index.
+	 * @creates | result
+	 * 
 	 * @pre Argument index is not bigger than the length of the array.
 	 * 	| 0 <= index && index <= points.length
 	 * @pre Argument point is not null
@@ -109,6 +110,8 @@ public class PointArrays {
 	}
 	
 	/** Returns a new array whose elements are the elements of the given array with the element at the given index removed.
+	 * @creates | result
+	 * 
 	 * @pre Argument points's size is bigger than 0
 	 * 	| 0 < points.length 
 	 * @pre Argument index is not bigger than the size of the array minus one.
@@ -132,6 +135,8 @@ public class PointArrays {
 	}
 	
 	/** Returns a new array whose elements are the elements of the given array with the element at the given index replaced by the given point.
+	 * @creates | result
+	 * 
 	 * @pre Argument points's size is bigger than 0
 	 * 	| 0 < points.length 
 	 * @pre Argument index is not bigger than the size of the array minus one.

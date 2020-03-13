@@ -83,7 +83,6 @@ public class RoundedPolygon {
 	
 	/**Sets this rounded polygon's corner radius to the given value.
 	 * @mutates | this
-	 * @inspects | radius
 	 * 
 	 * @throws IllegalArgumentException if the given radius is smaller than 0
 	 * 	| !(0 <= radius)
@@ -101,8 +100,6 @@ public class RoundedPolygon {
 	
 	/** Inserts a given point at given index of the vertices.
 	 * @mutates | this
-	 * @inspects | index
-	 * @inspects | point
 	 * 
 	 * @throws IllegalArgumentException if the given index is smaller than 0
 	 * | !(0 <= index)
@@ -131,18 +128,24 @@ public class RoundedPolygon {
 		}
 	}
 	
-	/**
+	/** Removes a point at the given index
+	 * @mutates | this
+	 * 
 	 * @throws IllegalArgumentException if the given index is smaller than 0
 	 * | !(0 <= index)
 	 * @throws IllegalArgumentException if the given index is greater than the length of the array minus one
 	 * 	| !(index <= getVertices().length-1)
-	 * @throws IllegalArgumentException if one of the last 3 points is to be removed, this we do since it would make an invalid polygon
-	 *  | !(getVertices().length > 3)
 	 * @throws IllegalArgumentException if the removed point makes the polygon improper
 	 * 	| !(PointArrays.checkDefinesProperPolygon(PointArrays.remove(this.getVertices(), index)) == null)
+	 * @post The object's new length should be one less than before.
+	 * 	| getVertices().length == old(getVertices()).length - 1
+	 * @post Every point that comes before index should remain the same
+	 *  | Arrays.equals(getVertices(), 0, index,old(getVertices()), 0, index)
+	 * @post Every point that comes after the index should have an index that is 1 less than initially.
+	 *  | Arrays.equals(old(getVertices()), index+1, old(getVertices()).length, getVertices(), index, getVertices().length)
 	 */
 	public void remove(int index) {
-		if(!(index <= this.vertices.length-1) || !(this.vertices.length > 3) || !(0 <= index) || !(PointArrays.checkDefinesProperPolygon(PointArrays.remove(this.getVertices(), index)) == null)) {
+		if(!(index <= this.vertices.length-1) || !(0 <= index) || !(PointArrays.checkDefinesProperPolygon(PointArrays.remove(this.getVertices(), index)) == null)) {
 			throw new IllegalArgumentException();
 		} else {
 			this.setVertices(PointArrays.remove(this.getVertices(),index));
@@ -151,6 +154,8 @@ public class RoundedPolygon {
 	}
 	
 	/** Updates a point at a given index to the given point.
+	 * @mutates | this
+	 * 
 	 * @throws IllegalArgumentException if the given index is smaller than 0
 	 * | !(0 <= index)
 	 * @throws IllegalArgumentException if the given index is greater than the length of the array minus one
