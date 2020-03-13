@@ -15,9 +15,9 @@ public class PointArrays {
 	 *  If there are exactly two points, the polygon is not proper. Notice that if there are more than two points and no two vertices coincide and no vertex is on any edge, then no two edges intersect at more than one point.
 	 */
 	public static String checkDefinesProperPolygon(IntPoint[] points) {
-		if(points.length < 3) {
+		if(points.length == 2) {
 			//not enough points so makes the roundedpolygon improper
-			return "not enough points";
+			return "polygon has only 2 points";
 		}
 		
 		for(int i = 0; i < points.length; i++) {
@@ -54,12 +54,6 @@ public class PointArrays {
 					return "2 points are the same";
 				}
 				
-			}
-
-			
-			if (points[b].isOnLineSegment(points[a],points[c])) {
-				//a point is not a corner of the polygon
-				return "cannot place point on corner";
 			}
 		}
 		return null;
