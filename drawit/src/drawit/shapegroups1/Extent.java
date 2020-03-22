@@ -3,10 +3,10 @@ package drawit.shapegroups1;
 import drawit.IntPoint;
 
 public class Extent {
-	private int left;
-	private int top;
-	private int right;
-	private int bottom ;
+	public int left;
+	public int top;
+	public int right;
+	public int bottom ;
 	
 	public int getLeft() {
 		return this.left;
