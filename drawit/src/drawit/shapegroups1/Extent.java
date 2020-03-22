@@ -6,7 +6,7 @@ public class Extent {
 	private int left;
 	private int top;
 	private int right;
-	private int bottom;
+	private int bottom ;
 	
 	public int getLeft() {
 		return this.left;
