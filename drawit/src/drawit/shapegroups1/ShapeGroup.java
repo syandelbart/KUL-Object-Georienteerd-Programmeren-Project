@@ -122,7 +122,9 @@ public class ShapeGroup {
 		return result;
 	}
 	
-	
+	public ShapeGroup getSubgroupAt​(IntPoint innerCoordinates) {
+		
+	}
 }
 
 
