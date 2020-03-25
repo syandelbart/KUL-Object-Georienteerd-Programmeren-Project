@@ -1,2 +1,6 @@
 eclipse.preferences.version=1
+<<<<<<< HEAD
 encoding//src/drawit/shapegroups1/ShapeGroup.java=UTF-8
+=======
+encoding//src/drawit/shapegroups2/Extent.java=UTF-8
+>>>>>>> branch 'master' of https://github.com/Syantje/java-project-p1

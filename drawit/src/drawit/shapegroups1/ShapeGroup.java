@@ -1,4 +1,5 @@
 package drawit.shapegroups1;
+import drawit.IntPoint;
 
 import java.util.ArrayList;
 
@@ -44,43 +45,33 @@ public class ShapeGroup {
 					minimumY = this.shape.getVertices()[i].getY();
 				}
 			}
-			Extent result = new Extent();
-			result.left = minimumX;
-			result.right = maximumX;
-			result.top = maximumY;
-			result.bottom = minimumY;
-			return result;
+			return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
 		}
 		else {
 			Extent[] extentArray = new Extent[subGroups.length];
 			for(int i = 0; i < subGroups.length ; i++) {
 				extentArray[i] = subGroups[i].getExtent();
 			}
-			int minimumX = extentArray[0].left;
-			int maximumX = extentArray[0].right;
-			int minimumY = extentArray[0].bottom;
-			int maximumY = extentArray[0].top;
+			int minimumX = extentArray[0].getLeft();
+			int maximumX = extentArray[0].getRight();
+			int minimumY = extentArray[0].getTop();
+			int maximumY = extentArray[0].getBottom();
 			for(int i = 0; i < extentArray.length ; i++) {
 				extentArray[i] = subGroups[i].getExtent();
-				if(extentArray[i].left < minimumX) {
-					minimumX = extentArray[i].left;
+				if(extentArray[i].getLeft() < minimumX) {
+					minimumX = extentArray[i].getLeft();
 				}
-				if(extentArray[i].right > maximumX) {
-					maximumX = extentArray[i].right;
+				if(extentArray[i].getRight() > maximumX) {
+					maximumX = extentArray[i].getRight();
 				}
-				if(extentArray[i].top > maximumY) {
-					maximumY = extentArray[i].top;
+				if(extentArray[i].getBottom() > maximumY) {
+					maximumY = extentArray[i].getBottom();
 				}
-				if(extentArray[i].bottom < minimumY) {
-					minimumY = extentArray[i].bottom;
+				if(extentArray[i].getTop() < minimumY) {
+					minimumY = extentArray[i].getTop();
 				}
 			}
-			Extent result = new Extent();
-			result.left = minimumX;
-			result.right = maximumX;
-			result.top = maximumY;
-			result.bottom = minimumY;
-			return result;
+			return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
 		}
 	}
 	
@@ -113,17 +104,64 @@ public class ShapeGroup {
 	}
 	
 	public IntPoint toInnerCoordinates(IntPoint globalCoordinates) {
-		IntPoint result = new IntPoint(globalCoordinates.getX() + this.getExtent().bottom - this.getOriginalExtent().bottom,globalCoordinates.getY() + this.getExtent().left - this.getOriginalExtent().left);
+		IntPoint result = new IntPoint(globalCoordinates.getX() + this.getOriginalExtent().getLeft() - this.getExtent().getLeft(),globalCoordinates.getY() + this.getOriginalExtent().getBottom() - this.getExtent().getBottom());
 		return result;
 	}
 	
 	public IntPoint toGlobalCoordinates(IntPoint innerCoordinates) {
-		IntPoint result = new IntPoint(innerCoordinates.getX() - this.getExtent().bottom + this.getOriginalExtent().bottom,innerCoordinates.getY() - this.getExtent().left + this.getOriginalExtent().left);
+		IntPoint result = new IntPoint(innerCoordinates.getX() - this.getOriginalExtent().getLeft() + this.getExtent().getLeft(),innerCoordinates.getY() - this.getOriginalExtent().getBottom() + this.getExtent().getBottom());
 		return result;
 	}
 	
-	public ShapeGroup getSubgroupAt​(IntPoint innerCoordinates) {
-		
+	public ShapeGroup getSubgroupAt(IntPoint innerCoordinates) {
+		for(int i = 0; i < this.getSubgroupCount(); i++) {
+			if(this.subGroups[i].getExtent().contains(innerCoordinates)) {
+				return this.subGroups[i];
+			}
+		}
+		return null;
+	}
+	
+	public void setExtent(Extent newExtent){
+		for(int i = 0; i < shape.getVertices().length; i++) {
+			shape.getVertices()[i] = new IntPoint(shape.getVertices()[i].getX() - this.getExtent().getLeft() + newExtent.getLeft(),shape.getVertices()[i].getY() - this.getExtent().getTop() + newExtent.getTop());
+		}
+	}
+	
+	public void bringToFront() {
+		int location = 0;
+		for(int i = 0; i < this.getParentGroup().getSubgroupCount(); i++) {
+			if(this == this.getParentGroup().getSubgroup(i)) {
+				location = i;
+			}
+		}
+		ShapeGroup random = new ShapeGroup(this.getParentGroup().getSubgroup(location).shape);
+		random.subGroups = new ShapeGroup[this.getParentGroup().getSubgroup(location).getSubgroupCount()];
+		for(int i = 0; i < random.getSubgroupCount(); i++) {
+			random.subGroups[i] = this.getParentGroup().getSubgroup(location).getSubgroup(i);
+		}
+		random.parentGroup = this.getParentGroup().getSubgroup(location).getParentGroup();
+		random.originalExtent = this.getParentGroup().getSubgroup(location).getOriginalExtent();
+		this.getParentGroup().subGroups[location] = this.getParentGroup().subGroups[0];
+		this.getParentGroup().subGroups[0] = random;
+	}
+	
+	public void sendToBack() {
+		int location = 0;
+		for(int i = 0; i < this.getParentGroup().getSubgroupCount(); i++) {
+			if(this == this.getParentGroup().getSubgroup(i)) {
+				location = i;
+			}
+		}
+		ShapeGroup random = new ShapeGroup(this.getParentGroup().getSubgroup(location).shape);
+		random.subGroups = new ShapeGroup[this.getParentGroup().getSubgroup(location).getSubgroupCount()];
+		for(int i = 0; i < random.getSubgroupCount(); i++) {
+			random.subGroups[i] = this.getParentGroup().getSubgroup(location).getSubgroup(i);
+		}
+		random.parentGroup = this.getParentGroup().getSubgroup(location).getParentGroup();
+		random.originalExtent = this.getParentGroup().getSubgroup(location).getOriginalExtent();
+		this.getParentGroup().subGroups[location] = this.getParentGroup().subGroups[-1];
+		this.getParentGroup().subGroups[-1] = random;
 	}
 }
 
