@@ -163,6 +163,10 @@ public class ShapeGroup {
 		this.getParentGroup().subGroups[location] = this.getParentGroup().subGroups[-1];
 		this.getParentGroup().subGroups[-1] = random;
 	}
+	
+	public java.lang.String getDrawingCommands(){
+		
+	}
 }
 
 
