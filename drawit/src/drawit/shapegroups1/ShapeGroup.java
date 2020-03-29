@@ -11,10 +11,12 @@ public class ShapeGroup {
 	private ShapeGroup[] subGroups;
 	private ShapeGroup parentGroup;
 	private Extent originalExtent;
+	private Extent extent;
 	
 	public ShapeGroup(RoundedPolygon shape) {
 		this.shape = shape;
-		originalExtent = this.getExtent();
+		this.originalExtent = this.getExtent();
+		this.extent = this.getExtent();
 	}
 	
 	public ShapeGroup(ShapeGroup[] subgroups) {
@@ -23,57 +25,65 @@ public class ShapeGroup {
 			this.subGroups[i] = subgroups[i];
 			this.subGroups[i].parentGroup = this;
 		}
+		this.originalExtent = this.getExtent();
+		this.extent = this.getExtent();
 	}
 	
 	public Extent getExtent() {
-		if(this.subGroups == null) {
-			int minimumX = this.shape.getVertices()[0].getX();
-			int maximumX = this.shape.getVertices()[0].getX();
-			int minimumY = this.shape.getVertices()[0].getY();
-			int maximumY = this.shape.getVertices()[0].getY();
-			for(int i = 0; i < this.shape.getVertices().length; i++) {
-				if(this.shape.getVertices()[i].getX() < minimumX) {
-					minimumX = this.shape.getVertices()[i].getX();
+		if(extent == null) {
+			if(this.subGroups == null) {
+				int minimumX = this.shape.getVertices()[0].getX();
+				int maximumX = this.shape.getVertices()[0].getX();
+				int minimumY = this.shape.getVertices()[0].getY();
+				int maximumY = this.shape.getVertices()[0].getY();
+				for(int i = 0; i < this.shape.getVertices().length; i++) {
+					if(this.shape.getVertices()[i].getX() < minimumX) {
+						minimumX = this.shape.getVertices()[i].getX();
+					}
+					if(this.shape.getVertices()[i].getX() > maximumX) {
+						maximumX = this.shape.getVertices()[i].getX();
+					}
+					if(this.shape.getVertices()[0].getY() > maximumY) {
+						maximumY = this.shape.getVertices()[i].getY();
+					}
+					if(this.shape.getVertices()[0].getY() < minimumY) {
+						minimumY = this.shape.getVertices()[i].getY();
+					}
 				}
-				if(this.shape.getVertices()[i].getX() > maximumX) {
-					maximumX = this.shape.getVertices()[i].getX();
-				}
-				if(this.shape.getVertices()[0].getY() > maximumY) {
-					maximumY = this.shape.getVertices()[i].getY();
-				}
-				if(this.shape.getVertices()[0].getY() < minimumY) {
-					minimumY = this.shape.getVertices()[i].getY();
-				}
+				return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
 			}
-			return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
+			else {
+				Extent[] extentArray = new Extent[subGroups.length];
+				for(int i = 0; i < subGroups.length ; i++) {
+					extentArray[i] = subGroups[i].getExtent();
+				}
+				int minimumX = extentArray[0].getLeft();
+				int maximumX = extentArray[0].getRight();
+				int minimumY = extentArray[0].getTop();
+				int maximumY = extentArray[0].getBottom();
+				for(int i = 0; i < extentArray.length ; i++) {
+					extentArray[i] = subGroups[i].getExtent();
+					if(extentArray[i].getLeft() < minimumX) {
+						minimumX = extentArray[i].getLeft();
+					}
+					if(extentArray[i].getRight() > maximumX) {
+						maximumX = extentArray[i].getRight();
+					}
+					if(extentArray[i].getBottom() > maximumY) {
+						maximumY = extentArray[i].getBottom();
+					}
+					if(extentArray[i].getTop() < minimumY) {
+						minimumY = extentArray[i].getTop();
+					}
+				}
+				return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
+			}
 		}
 		else {
-			Extent[] extentArray = new Extent[subGroups.length];
-			for(int i = 0; i < subGroups.length ; i++) {
-				extentArray[i] = subGroups[i].getExtent();
-			}
-			int minimumX = extentArray[0].getLeft();
-			int maximumX = extentArray[0].getRight();
-			int minimumY = extentArray[0].getTop();
-			int maximumY = extentArray[0].getBottom();
-			for(int i = 0; i < extentArray.length ; i++) {
-				extentArray[i] = subGroups[i].getExtent();
-				if(extentArray[i].getLeft() < minimumX) {
-					minimumX = extentArray[i].getLeft();
-				}
-				if(extentArray[i].getRight() > maximumX) {
-					maximumX = extentArray[i].getRight();
-				}
-				if(extentArray[i].getBottom() > maximumY) {
-					maximumY = extentArray[i].getBottom();
-				}
-				if(extentArray[i].getTop() < minimumY) {
-					minimumY = extentArray[i].getTop();
-				}
-			}
-			return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
+			return this.extent;
 		}
 	}
+		
 	
 	public Extent getOriginalExtent() {
 		return this.originalExtent;
@@ -123,9 +133,7 @@ public class ShapeGroup {
 	}
 	
 	public void setExtent(Extent newExtent){
-		for(int i = 0; i < shape.getVertices().length; i++) {
-			shape.getVertices()[i] = new IntPoint(shape.getVertices()[i].getX() - this.getExtent().getLeft() + newExtent.getLeft(),shape.getVertices()[i].getY() - this.getExtent().getTop() + newExtent.getTop());
-		}
+		this.extent = newExtent;
 	}
 	
 	public void bringToFront() {
