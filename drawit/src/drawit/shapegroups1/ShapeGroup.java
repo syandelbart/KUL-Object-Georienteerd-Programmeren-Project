@@ -173,7 +173,17 @@ public class ShapeGroup {
 	}
 	
 	public java.lang.String getDrawingCommands(){
-		
+		StringBuilder string = new StringBuilder();
+		int scaleX = this.getExtent().getWidth() / this.getOriginalExtent().getWidth();
+		int scaleY = this.getExtent().getHeight() / this.getOriginalExtent().getHeight();
+		int translateX = -1 * this.getOriginalExtent().getLeft();
+		int translateY = -1 * this.getOriginalExtent().getTop();
+		string.append("pushTranslate" + " " + translateX + " " + translateY);
+		string.append("pushScale" + " " + scaleX + " " + scaleY);
+		string.append(this.shape.getDrawingCommands());
+		string.append("popTransform");
+		string.append("popTransform");
+		return string.toString();
 	}
 }
 
