@@ -174,19 +174,30 @@ public class ShapeGroup {
 	
 	public java.lang.String getDrawingCommands(){
 		StringBuilder string = new StringBuilder();
-		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
-		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		if(this.getOriginalExtent().getTop() == this.getExtent().getTop()) {
-			double translateX = -1 * (scaleX - 1) * (double)this.getOriginalExtent().getLeft();
-			double translateY = -1 * (scaleY - 1) * (double)this.getOriginalExtent().getTop();
+		if(shape == null) {
+			double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+			double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+			double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
+			double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
+			string.append("pushTranslate" + " " + translateX + " " + translateY + "\n");
+			string.append("pushScale" + " " + scaleX + " " + scaleY + "\n");
+			for(int i = this.getSubgroupCount() - 1; i >= 0; i--) {
+				string.append(this.getSubgroup(i).getDrawingCommands());
+			}
+			string.append("popTransform" + "\n");
+			string.append("popTransform" + "\n");
 		}
-		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
-		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
-		string.append("pushTranslate" + " " + translateX + " " + translateY + "\n");
-		string.append("pushScale" + " " + scaleX + " " + scaleY + "\n");
-		string.append(this.shape.getDrawingCommands());
-		string.append("popTransform" + "\n");
-		string.append("popTransform" + "\n");
+		else{
+			double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+			double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+			double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
+			double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
+			string.append("pushTranslate" + " " + translateX + " " + translateY + "\n");
+			string.append("pushScale" + " " + scaleX + " " + scaleY + "\n");
+			string.append(this.shape.getDrawingCommands());
+			string.append("popTransform" + "\n");
+			string.append("popTransform" + "\n");
+		}
 		return string.toString();
 	}
 }
