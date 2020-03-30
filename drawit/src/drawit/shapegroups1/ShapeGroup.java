@@ -43,10 +43,10 @@ public class ShapeGroup {
 					if(this.shape.getVertices()[i].getX() > maximumX) {
 						maximumX = this.shape.getVertices()[i].getX();
 					}
-					if(this.shape.getVertices()[0].getY() > maximumY) {
+					if(this.shape.getVertices()[i].getY() > maximumY) {
 						maximumY = this.shape.getVertices()[i].getY();
 					}
-					if(this.shape.getVertices()[0].getY() < minimumY) {
+					if(this.shape.getVertices()[i].getY() < minimumY) {
 						minimumY = this.shape.getVertices()[i].getY();
 					}
 				}
@@ -174,15 +174,15 @@ public class ShapeGroup {
 	
 	public java.lang.String getDrawingCommands(){
 		StringBuilder string = new StringBuilder();
-		int scaleX = this.getExtent().getWidth() / this.getOriginalExtent().getWidth();
-		int scaleY = this.getExtent().getHeight() / this.getOriginalExtent().getHeight();
-		int translateX = -1 * this.getOriginalExtent().getLeft();
-		int translateY = -1 * this.getOriginalExtent().getTop();
-		string.append("pushTranslate" + " " + translateX + " " + translateY);
-		string.append("pushScale" + " " + scaleX + " " + scaleY);
+		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+		double translateX = -1 * (scaleX - 1) * (double)this.getOriginalExtent().getLeft();
+		double translateY = -1 * (scaleY - 1) * (double)this.getOriginalExtent().getTop();
+		string.append("pushTranslate" + " " + translateX + " " + translateY + "\n");
+		string.append("pushScale" + " " + scaleX + " " + scaleY + "\n");
 		string.append(this.shape.getDrawingCommands());
-		string.append("popTransform");
-		string.append("popTransform");
+		string.append("popTransform" + "\n");
+		string.append("popTransform" + "\n");
 		return string.toString();
 	}
 }
