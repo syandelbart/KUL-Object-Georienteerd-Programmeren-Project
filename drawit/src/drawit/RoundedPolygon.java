@@ -24,7 +24,7 @@ public class RoundedPolygon {
 	 */
 	private IntPoint[] vertices = new IntPoint[0];
 	private int radius;
-	private Color color = new Color(0,0,0);
+	private Color color;
 	
 	/**
 	 * Returns a new array whose elements are the vertices of this rounded polygon.
@@ -45,7 +45,9 @@ public class RoundedPolygon {
 	 * @post | getVertices().length == 0
 	 * @post | getRadius() == 0
 	 */
-	public RoundedPolygon() {}
+	public RoundedPolygon() {
+		color = new Color(255,255,0);
+	}
 	
 	/**
 	 * Sets the vertices of this rounded polygon to be equal to the elements of the given array.

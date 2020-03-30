@@ -123,12 +123,17 @@ public class ShapeGroup {
 	}
 	
 	public IntPoint toGlobalCoordinates(IntPoint innerCoordinates) {
-		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
-		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
-		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
-		IntPoint result = new IntPoint((int)((innerCoordinates.getX() * scaleX) + translateX),(int)((innerCoordinates.getY() * scaleY) + translateY));
-		return result;
+		if(this.getParentGroup() == null) {
+			double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+			double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+			double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
+			double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
+			IntPoint result = new IntPoint((int)((innerCoordinates.getX() * scaleX) + translateX),(int)((innerCoordinates.getY() * scaleY) + translateY));
+			return result;
+		}
+		else {
+			
+		}
 	}
 	
 	public IntVector toInnerCoordinates(IntVector relativeGlobalCoordinates) {

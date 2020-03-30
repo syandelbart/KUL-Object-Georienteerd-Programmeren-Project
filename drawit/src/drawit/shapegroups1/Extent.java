@@ -113,8 +113,8 @@ public class Extent {
 	public Extent withHeight(int newHeight) {
 		Extent result = new Extent();
 		result.left = this.getLeft();
-		result.top = this.getTop();
-		result.bottom = this.getTop() - newHeight;
+		result.top = this.getBottom() - newHeight;
+		result.bottom = this.getBottom();
 		result.right = this.getRight();
 		return result;
 	}
