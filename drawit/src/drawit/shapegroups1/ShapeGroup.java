@@ -176,8 +176,12 @@ public class ShapeGroup {
 		StringBuilder string = new StringBuilder();
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		double translateX = -1 * (scaleX - 1) * (double)this.getOriginalExtent().getLeft();
-		double translateY = -1 * (scaleY - 1) * (double)this.getOriginalExtent().getTop();
+		if(this.getOriginalExtent().getTop() == this.getExtent().getTop()) {
+			double translateX = -1 * (scaleX - 1) * (double)this.getOriginalExtent().getLeft();
+			double translateY = -1 * (scaleY - 1) * (double)this.getOriginalExtent().getTop();
+		}
+		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
+		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
 		string.append("pushTranslate" + " " + translateX + " " + translateY + "\n");
 		string.append("pushScale" + " " + scaleX + " " + scaleY + "\n");
 		string.append(this.shape.getDrawingCommands());
