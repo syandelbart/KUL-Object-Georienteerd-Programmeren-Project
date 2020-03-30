@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import drawit.IntPoint;
 import drawit.RoundedPolygon;
-
+import drawit.IntVector;
 public class ShapeGroup {
 	private RoundedPolygon shape;
 	private ShapeGroup[] subGroups;
@@ -114,12 +114,29 @@ public class ShapeGroup {
 	}
 	
 	public IntPoint toInnerCoordinates(IntPoint globalCoordinates) {
-		IntPoint result = new IntPoint(globalCoordinates.getX() + this.getOriginalExtent().getLeft() - this.getExtent().getLeft(),globalCoordinates.getY() + this.getOriginalExtent().getBottom() - this.getExtent().getBottom());
+		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
+		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
+		IntPoint result = new IntPoint((int)((globalCoordinates.getX() - translateX) / scaleX), (int)((globalCoordinates.getY() - translateY) / scaleY));
 		return result;
 	}
 	
 	public IntPoint toGlobalCoordinates(IntPoint innerCoordinates) {
-		IntPoint result = new IntPoint(innerCoordinates.getX() - this.getOriginalExtent().getLeft() + this.getExtent().getLeft(),innerCoordinates.getY() - this.getOriginalExtent().getBottom() + this.getExtent().getBottom());
+		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
+		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
+		IntPoint result = new IntPoint((int)((innerCoordinates.getX() * scaleX) + translateX),(int)((innerCoordinates.getY() * scaleY) + translateY));
+		return result;
+	}
+	
+	public IntVector toInnerCoordinates(IntVector relativeGlobalCoordinates) {
+		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
+		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
+		IntVector result = new IntVector((int)((relativeGlobalCoordinates.getX()) / scaleX), (int)((relativeGlobalCoordinates.getY()) / scaleY));
 		return result;
 	}
 	
@@ -201,5 +218,6 @@ public class ShapeGroup {
 		return string.toString();
 	}
 }
+
 
 
