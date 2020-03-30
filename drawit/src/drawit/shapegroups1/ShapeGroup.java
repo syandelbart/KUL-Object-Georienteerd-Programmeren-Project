@@ -160,15 +160,8 @@ public class ShapeGroup {
 				location = i;
 			}
 		}
-		ShapeGroup random = new ShapeGroup(this.getParentGroup().getSubgroup(location).shape);
-		random.subGroups = new ShapeGroup[this.getParentGroup().getSubgroup(location).getSubgroupCount()];
-		for(int i = 0; i < random.getSubgroupCount(); i++) {
-			random.subGroups[i] = this.getParentGroup().getSubgroup(location).getSubgroup(i);
-		}
-		random.parentGroup = this.getParentGroup().getSubgroup(location).getParentGroup();
-		random.originalExtent = this.getParentGroup().getSubgroup(location).getOriginalExtent();
 		this.getParentGroup().subGroups[location] = this.getParentGroup().subGroups[0];
-		this.getParentGroup().subGroups[0] = random;
+		this.getParentGroup().subGroups[0] = this;
 	}
 	
 	public void sendToBack() {
@@ -178,15 +171,8 @@ public class ShapeGroup {
 				location = i;
 			}
 		}
-		ShapeGroup random = new ShapeGroup(this.getParentGroup().getSubgroup(location).shape);
-		random.subGroups = new ShapeGroup[this.getParentGroup().getSubgroup(location).getSubgroupCount()];
-		for(int i = 0; i < random.getSubgroupCount(); i++) {
-			random.subGroups[i] = this.getParentGroup().getSubgroup(location).getSubgroup(i);
-		}
-		random.parentGroup = this.getParentGroup().getSubgroup(location).getParentGroup();
-		random.originalExtent = this.getParentGroup().getSubgroup(location).getOriginalExtent();
-		this.getParentGroup().subGroups[location] = this.getParentGroup().subGroups[-1];
-		this.getParentGroup().subGroups[-1] = random;
+		this.getParentGroup().subGroups[location] = this.getParentGroup().subGroups[this.getParentGroup().getSubgroupCount()-1];
+		this.getParentGroup().subGroups[this.getParentGroup().getSubgroupCount()-1] = this;
 	}
 	
 	public java.lang.String getDrawingCommands(){
