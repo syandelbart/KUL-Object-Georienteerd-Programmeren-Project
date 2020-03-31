@@ -43,7 +43,25 @@ public class Extent {
 	}
 	
 	public boolean contains(IntPoint point) {
-		boolean result = (point.getX() >= this.getTopLeft().getX() && point.getX() <= this.getBottomRight().getX() && point.getY() >= this.getTopLeft().getY() && point.getY() <= this.getBottomRight().getY());
+		int initialLeft = this.getLeft();
+		int initialRight = this.getRight();
+		int initialTop = this.getTop();
+		int initialBottom = this.getBottom();
+		if(this.left > this.right) {
+			int random = this.left;
+			this.left = this.right;
+			this.right = random;
+		}
+		if(this.top > this.bottom) {
+			int random = this.top;
+			this.top = this.bottom;
+			this.bottom = random;
+		}
+		boolean result = (point.getX() >= this.getLeft() && point.getX() <= this.getRight() && point.getY() >= this.getTop() && point.getY() <= this.getBottom());
+		this.left = initialLeft;
+		this.right = initialRight;
+		this.bottom = initialBottom;
+		this.top = initialTop;
 		return result;
 	}
 	
