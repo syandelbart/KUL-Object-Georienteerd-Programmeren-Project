@@ -75,6 +75,18 @@ public class ShapeGroup {
 					if(extentArray[i].getTop() < minimumY) {
 						minimumY = extentArray[i].getTop();
 					}
+					if(extentArray[i].getRight() < minimumX) {
+						minimumX = extentArray[i].getRight();
+					}
+					if(extentArray[i].getLeft() > maximumX) {
+						maximumX = extentArray[i].getLeft();
+					}
+					if(extentArray[i].getTop() > maximumY) {
+						maximumY = extentArray[i].getTop();
+					}
+					if(extentArray[i].getBottom() < minimumY) {
+						minimumY = extentArray[i].getBottom();
+					}
 				}
 				return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
 			}
@@ -150,14 +162,22 @@ public class ShapeGroup {
 	}
 	
 	public IntVector toInnerCoordinates(IntVector relativeGlobalCoordinates) {
+		IntVector result;
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
-		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
-		IntVector result = new IntVector((int)((relativeGlobalCoordinates.getX()) / scaleX), (int)((relativeGlobalCoordinates.getY()) / scaleY));
 		if(this.getParentGroup() != null) {
-			result = this.getParentGroup().toInnerCoordinates(result);
+			result = this.getParentGroup().toInnerCoordinates(relativeGlobalCoordinates);
+			result = new IntVector((int)((result.getX()) / scaleX), (int)((result.getY()) / scaleY));
 		}
+		else {
+			result = new IntVector((int)((relativeGlobalCoordinates.getX()) / scaleX), (int)((relativeGlobalCoordinates.getY()) / scaleY));
+		}
+		//double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+		//double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+		//IntVector result = new IntVector((int)((relativeGlobalCoordinates.getX()) / scaleX), (int)((relativeGlobalCoordinates.getY()) / scaleY));
+		//if(this.getParentGroup() != null) {
+		//result = this.getParentGroup().toInnerCoordinates(result);
+		//}
 		return result;
 	}
 	
