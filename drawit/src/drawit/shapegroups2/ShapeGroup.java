@@ -135,7 +135,7 @@ public class ShapeGroup {
 		return shape;
 	}
 	
-	public java.util.List<ShapeGroup> getsubgroups(){
+	public java.util.List<ShapeGroup> getSubgroups(){
 		ArrayList<ShapeGroup> result = new ArrayList<ShapeGroup>();
 		for(int i = 0; i < this.subgroups.length; i++) {
 			result.add(this.subgroups[i]);
