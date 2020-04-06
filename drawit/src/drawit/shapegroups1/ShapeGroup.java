@@ -1,5 +1,4 @@
 package drawit.shapegroups1;
-import drawit.IntPoint;
 
 import java.util.ArrayList;
 
