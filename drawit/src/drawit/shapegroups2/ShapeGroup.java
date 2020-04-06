@@ -17,12 +17,6 @@ public class ShapeGroup {
 		this.shape = shape;
 		this.originalExtent = this.getExtent();
 		this.extent = this.getExtent();
-		
-		for(int i = 0; i < this.getParentGroup().getSubgroupCount(); i++) {
-			if(this == this.getParentGroup().getSubgroup(i)) {
-				this.location = i;
-			}
-		}
 	}
 	
 	public ShapeGroup(ShapeGroup[] subgroups) {
@@ -30,20 +24,15 @@ public class ShapeGroup {
 		for(int i = 0; i < subgroups.length; i++) {
 			this.subgroups[i] = subgroups[i];
 			this.subgroups[i].parentGroup = this;
+			this.subgroups[i].location = i;
 		}
 		this.originalExtent = this.getExtent();
 		this.extent = this.getExtent();
-		
-		for(int i = 0; i < this.getParentGroup().getSubgroupCount(); i++) {
-			if(this == this.getParentGroup().getSubgroup(i)) {
-				this.location = i;
-			}
-		}
 	}
 	
 	public Extent getExtent() {
-		if(extent == null) {
-			if(subgroups.length == 0) {
+		if(this.extent == null) {
+			if(this.subgroups == null) {
 				IntPoint[] shapeVertices = this.shape.getVertices();
 				IntPoint cursor = shapeVertices[0];
 				int Xlow = cursor.getX();
@@ -78,10 +67,8 @@ public class ShapeGroup {
 				return Extent.ofLeftTopRightBottom(Xlow, Ylow, Xhigh, Yhigh);
 			} else {
 				Extent[] subgroupExtentArray = new Extent[this.subgroups.length];
-				for(int subgroupcounter = 0;subgroupcounter<this.subgroups.length;subgroupcounter++) {
-					for(int i = 0; i < this.subgroups.length ; i++) {
-						subgroupExtentArray[i] = this.subgroups[subgroupcounter].getExtent();
-					}
+				for(int i = 0; i < this.subgroups.length ; i++) {
+					subgroupExtentArray[i] = this.subgroups[i].getExtent();
 				}
 				Extent cursor = subgroupExtentArray[0];
 				int Xlow = cursor.getLeft();
@@ -97,9 +84,17 @@ public class ShapeGroup {
 						Xlow = cursor.getLeft();
 					}
 					
+					if(cursor.getRight() < Xlow) {
+						Xlow = cursor.getRight();
+					}
+					
 					//if point has higher X-coordinate than stored highest X-coordinate
 					if(cursor.getRight() > Xhigh) {
 						Xhigh = cursor.getRight();
+					}
+					
+					if(cursor.getLeft() > Xhigh) {
+						Xhigh = cursor.getLeft();
 					}
 					
 					//if point has lower Y-coordinate than stored lowest Y-coordinate
@@ -107,10 +102,18 @@ public class ShapeGroup {
 						Ylow = cursor.getTop();
 					}
 					
+					if(cursor.getBottom() < Ylow) {
+						Ylow = cursor.getBottom();
+					}
+					
 					//if point has higher Y-coordinate than stored highest Y-coordinate
 					if(cursor.getBottom() > Yhigh) {
 						Yhigh = cursor.getBottom();
-					}	
+					}
+					
+					if(cursor.getTop() > Yhigh) {
+						Yhigh = cursor.getTop();
+					}
 				}
 				
 				return Extent.ofLeftTopRightBottom(Xlow, Ylow, Xhigh, Yhigh);

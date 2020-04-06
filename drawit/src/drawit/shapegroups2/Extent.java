@@ -41,7 +41,24 @@ public class Extent {
 	
 	
 	public boolean contains(IntPoint point) {
-		return (point.getX() < this.getRight() && point.getX() > this.getLeft()) && (point.getY() < this.getBottom() && point.getY() > this.getTop());
+		int initialLeft = this.getLeft();
+		int initialTop = this.getTop();
+		int initialWidth = this.getWidth();
+		int initialHeight = this.getHeight();
+		if(this.width < 0) {
+			this.left = this.left + this.width;
+			this.width = this.width * -1;
+		}
+		if(this.height < 0) {
+			this.top = this.top + this.height;
+			this.height = this.height * -1;
+		}
+		boolean result = (point.getX() >= this.getLeft() && point.getX() <= this.getRight() && point.getY() >= this.getTop() && point.getY() <= this.getBottom());
+		this.left = initialLeft;
+		this.width = initialWidth;
+		this.height = initialHeight;
+		this.top = initialTop;
+		return result;
 	}
 	
 	public static Extent ofLeftTopWidthHeight(int left,int top,int width,int height) {
@@ -62,7 +79,7 @@ public class Extent {
 		return res;
 	}
 
-	public Extent withLeft​(int newLeft) {
+	public Extent withLeft(int newLeft) {
 		return ofLeftTopRightBottom(newLeft,this.getTop(),this.getRight(),this.getBottom());
 	}
 
@@ -86,3 +103,4 @@ public class Extent {
 		return ofLeftTopWidthHeight(this.getLeft(),this.getTop(),this.getWidth(),newHeight);
 	}
 }
+

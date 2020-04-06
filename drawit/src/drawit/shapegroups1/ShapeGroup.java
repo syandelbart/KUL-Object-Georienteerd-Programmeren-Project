@@ -13,12 +13,32 @@ public class ShapeGroup {
 	private Extent originalExtent;
 	private Extent extent;
 	
+	/**	Initializes this ShapeGroup with the given shape and calculates the extent and originalExtent.
+	 * @mutates | this
+	 * @post The object's shape is equal to the given shape.
+	 * 	| getShape() == shape
+	 * @post The object's extent is equal to getExtent().
+	 * 	
+	 * @post The object's originalExtent is equal to getExtent().
+	 * 	
+	 */
 	public ShapeGroup(RoundedPolygon shape) {
 		this.shape = shape;
 		this.originalExtent = this.getExtent();
 		this.extent = this.getExtent();
 	}
 	
+	/**	Initializes this ShapeGroup with the given subGroups, sets each subGroups element parentGroup to this and calculates the extent and originalExtent.
+	 * @mutates | this
+	 * @post The object's subGroups is equal to the given subGroups.
+	 * 	
+	 * @post The each subGroups element has this as parentGroup.
+	 * 	
+	 * @post The object's extent is equal to getExtent().
+	 * 	
+	 * @post The object's originalExtent is equal to getExtent().
+	 * 	
+	 */
 	public ShapeGroup(ShapeGroup[] subgroups) {
 		this.subGroups = new ShapeGroup[subgroups.length];
 		for(int i = 0; i < subgroups.length; i++) {
@@ -29,6 +49,11 @@ public class ShapeGroup {
 		this.extent = this.getExtent();
 	}
 	
+	/** Returns the extent of this shape group, expressed in its outer coordinate system.
+	 * @post The returned extent contains the shape or the shapes of the subgroups of this object.
+	 * 	
+	 *
+	 */
 	public Extent getExtent() {
 		if(extent == null) {
 			if(this.subGroups == null) {
@@ -54,8 +79,8 @@ public class ShapeGroup {
 			}
 			else {
 				Extent[] extentArray = new Extent[subGroups.length];
-				for(int i = 0; i < subGroups.length ; i++) {
-					extentArray[i] = subGroups[i].getExtent();
+				for(int i = 0; i < this.subGroups.length ; i++) {
+					extentArray[i] = this.subGroups[i].getExtent();
 				}
 				int minimumX = extentArray[0].getLeft();
 				int maximumX = extentArray[0].getRight();
