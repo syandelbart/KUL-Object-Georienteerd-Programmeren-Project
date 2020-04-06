@@ -163,14 +163,6 @@ public class ShapeGroup {
 		else {
 			result = new IntPoint((int)((globalCoordinates.getX() - translateX) / scaleX), (int)((globalCoordinates.getY() - translateY) / scaleY));
 		}
-		//double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
-		//double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		//double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
-		//double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
-		//IntPoint result = new IntPoint((int)((globalCoordinates.getX() - translateX) / scaleX), (int)((globalCoordinates.getY() - translateY) / scaleY));
-		//if(this.getParentGroup() != null) {
-		//result = this.getParentGroup().toInnerCoordinates(result);
-		//}
 		return result;
 	}
 	
@@ -197,12 +189,6 @@ public class ShapeGroup {
 		else {
 			result = new IntVector((int)((relativeGlobalCoordinates.getX()) / scaleX), (int)((relativeGlobalCoordinates.getY()) / scaleY));
 		}
-		//double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
-		//double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		//IntVector result = new IntVector((int)((relativeGlobalCoordinates.getX()) / scaleX), (int)((relativeGlobalCoordinates.getY()) / scaleY));
-		//if(this.getParentGroup() != null) {
-		//result = this.getParentGroup().toInnerCoordinates(result);
-		//}
 		return result;
 	}
 	
