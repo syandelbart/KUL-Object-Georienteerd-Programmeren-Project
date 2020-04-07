@@ -12,7 +12,7 @@ public class ShapeGroup {
 	/**
 	 * @representationObject
 	 * @invar | (shape != null) || (subgroups != null)
-	 * @invar | Arrays.stream(vertices).allMatch(v -> v != null)
+	 * @invar | Arrays.stream(subgroups).allMatch(v -> v != null)
 	 */
 	
 	
