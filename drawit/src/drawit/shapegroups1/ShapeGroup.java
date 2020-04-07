@@ -248,8 +248,6 @@ public class ShapeGroup {
 	 * @throws IllegalArgumentException
 	 * 	| !(innerCoordinates != null)
 	 * @creates result
-	 * @post The returned ShapeGroup's extent should contain the given innerCoordinates
-	 * 	| result.getExtent().contains(innerCoordinates)
 	 */
 	public ShapeGroup getSubgroupAt(IntPoint innerCoordinates) {
 		if(!(innerCoordinates != null)) {
