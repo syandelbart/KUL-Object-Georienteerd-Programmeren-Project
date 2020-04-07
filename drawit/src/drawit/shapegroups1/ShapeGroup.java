@@ -18,7 +18,7 @@ public class ShapeGroup {
 	 * 	| getShape() == shape
 	 * @post The object's extent is equal to getExtent().
 	 * 	
-	 * @post The object's originalExtent is equal to getExtent().
+	 * @post The object's getOriginalExtent() is equal to getExtent().
 	 * 	
 	 */
 	public ShapeGroup(RoundedPolygon shape) {
