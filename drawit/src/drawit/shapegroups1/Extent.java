@@ -54,7 +54,6 @@ public class Extent {
 	 *  @throws IllegalArgumentException
 	 *  | point == null 
 	 *  @post returns true if this extent contains the given point, returns false otherwise.
-	 *  | result == true || false 
 	 */
 	public boolean contains(IntPoint point) {
 		if(point == null) {

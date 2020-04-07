@@ -50,9 +50,11 @@ public class Extent {
 	 *  @throws IllegalArgumentException
 	 *  | point == null 
 	 *  @post returns true if this extent contains the given point, returns false otherwise.
-	 *  | result == true || false 
 	 */
 	public boolean contains(IntPoint point) {
+		if(point == null) {
+			throw new IllegalArgumentException("point is null");
+		}
 		int initialLeft = this.getLeft();
 		int initialTop = this.getTop();
 		int initialWidth = this.getWidth();

@@ -31,7 +31,6 @@ public class ShapeGroup {
 	 * @post The object's shape is equal to the given shape.
 	 * 	| getShape().equals(shape)
 	 * @post The object's original extent is equal to the extent.
-	 * 	| getOriginalExtent().equals(getExtent())
 	 */
 	public ShapeGroup(RoundedPolygon shape) {
 		if(!(shape != null)) {
@@ -53,7 +52,6 @@ public class ShapeGroup {
 	 * @post The object's subgroups should be equal to the subgroups argument.
 	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(subgroups[i]))
 	 * @post The object's original extent is equal to the extent.
-	 * 	| getOriginalExtent().equals(getExtent())
 	 */
 	public ShapeGroup(ShapeGroup[] subgroups) {
 		if(!(subgroups != null)) {
@@ -72,6 +70,11 @@ public class ShapeGroup {
 		this.extent = this.getExtent();
 	}
 	
+	/** Returns the extent of this shape group, expressed in its outer coordinate system.
+	 * @post The returned extent contains the shape or the shapes of the subGroups of this object.
+	 * 	
+	 *
+	 */
 	public Extent getExtent() {
 		if(this.extent == null) {
 			if(this.subgroups == null) {
@@ -108,8 +111,8 @@ public class ShapeGroup {
 				
 				return Extent.ofLeftTopRightBottom(Xlow, Ylow, Xhigh, Yhigh);
 			} else {
-				Extent[] subgroupExtentArray = new Extent[this.subgroups.length];
-				for(int i = 0; i < this.subgroups.length ; i++) {
+				Extent[] subgroupExtentArray = new Extent[this.getSubgroupCount()];
+				for(int i = 0; i < this.getSubgroupCount() ; i++) {
 					subgroupExtentArray[i] = this.subgroups[i].getExtent();
 				}
 				Extent cursor = subgroupExtentArray[0];
@@ -181,19 +184,22 @@ public class ShapeGroup {
 	/** Returns the list of subgroups of this shape group, or null if this is a leaf shape group.
 	 * @creates result
 	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
-	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(result.get(i)))
+	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroup(i).equals(result.get(i)))
 	 * @post The returned list of ShapeGroups should remain the same length as the object's list of ShapeGroups.
 	 * 	| result.size() == getSubgroupCount()
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
 		ArrayList<ShapeGroup> result = new ArrayList<ShapeGroup>();
-		for(int i = 0; i < this.subgroups.length; i++) {
+		for(int i = 0; i < this.getSubgroupCount(); i++) {
 			result.add(this.subgroups[i]);
 		}
 		return result;
 	}
 	
 	public int getSubgroupCount() {
+		if(this.subgroups == null) {
+			return 0;
+		}
 		return this.subgroups.length;
 	}
 	
@@ -236,6 +242,10 @@ public class ShapeGroup {
 	}
 	
 	public IntPoint toGlobalCoordinates(IntPoint innerCoordinates) {
+		if(!(innerCoordinates != null)) {
+			throw new IllegalArgumentException("innerCoordinates is null");
+		}
+		
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
 		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
@@ -248,6 +258,10 @@ public class ShapeGroup {
 	}
 	
 	public IntVector toInnerCoordinates(IntVector relativeGlobalCoordinates) {
+		if(!(relativeGlobalCoordinates != null)) {
+			throw new IllegalArgumentException("relativeGlobalCoordinates is null");
+		}
+		
 		IntVector result;
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
@@ -300,16 +314,24 @@ public class ShapeGroup {
 	 * 
 	 */
 	public void bringToFront() {
-		this.getParentGroup().subgroups[location] = this.getParentGroup().subgroups[0];
-		this.getParentGroup().subgroups[0] = this;
+		if(this.location != 0) {
+			this.getParentGroup().subgroups[this.location] = this.getParentGroup().subgroups[0];
+			this.getParentGroup().subgroups[0].location = this.location;
+			this.getParentGroup().subgroups[0] = this;
+			this.location = 0;
+		}
 	}
 	
 	/** Moves this shape group to the back of its parent's list of subgroups.
 	 * 
 	 */
 	public void sendToBack() {
-		this.getParentGroup().subgroups[location] = this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1];
-		this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1] = this;
+		if(this.location != this.getSubgroupCount() - 1) {
+			this.getParentGroup().subgroups[this.location] = this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1];
+			this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1].location = this.location;
+			this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1] = this;
+			this.location = this.getParentGroup().getSubgroupCount()-1;
+		}
 	}
 	
 	public java.lang.String getDrawingCommands(){
