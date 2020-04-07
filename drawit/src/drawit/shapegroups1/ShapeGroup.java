@@ -287,8 +287,15 @@ public class ShapeGroup {
 				location = i;
 			}
 		}
-		this.getParentGroup().subgroups[location] = this.getParentGroup().subgroups[0];
-		this.getParentGroup().subgroups[0] = this;
+		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
+		for(int i = 0; i < location; i++) {
+			result[i+1] = this.getParentGroup().getSubgroup(i);
+		}
+		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
+			result[i] = this.getParentGroup().getSubgroup(i);
+		}
+		result[0] = this;
+		this.getParentGroup().subgroups = result;
 	}
 	
 	/** Moves this shape group to the back of its parent's list of subgroups.
@@ -301,8 +308,15 @@ public class ShapeGroup {
 				location = i;
 			}
 		}
-		this.getParentGroup().subgroups[location] = this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1];
-		this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1] = this;
+		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
+		for(int i = 0; i < location; i++) {
+			result[i] = this.getParentGroup().getSubgroup(i);
+		}
+		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
+			result[i - 1] = this.getParentGroup().getSubgroup(i);
+		}
+		result[this.getParentGroup().getSubgroupCount() - 1] = this;
+		this.getParentGroup().subgroups = result;
 	}
 	
 	public java.lang.String getDrawingCommands(){

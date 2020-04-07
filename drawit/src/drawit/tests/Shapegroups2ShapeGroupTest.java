@@ -3,12 +3,14 @@ package drawit.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 
+
 import org.junit.jupiter.api.Test;
 
 import drawit.shapegroups2.Extent;
 import drawit.shapegroups2.ShapeGroup;
 import drawit.RoundedPolygon;
-import drawit.*;
+import drawit.IntPoint;
+import drawit.IntVector;
 
 
 class Shapegroups2ShapeGroupTest {
@@ -195,8 +197,8 @@ class Shapegroups2ShapeGroupTest {
 					parentShapeGroup.getSubgroup(2).bringToFront();
 				//testing object values
 					assertEquals(true,thirdShapeGroup.equals(parentShapeGroup.getSubgroup(0)));
-					assertEquals(true,secondShapeGroup.equals(parentShapeGroup.getSubgroup(1)));
-					assertEquals(true,firstShapeGroup.equals(parentShapeGroup.getSubgroup(2)));
+					assertEquals(true,secondShapeGroup.equals(parentShapeGroup.getSubgroup(2)));
+					assertEquals(true,firstShapeGroup.equals(parentShapeGroup.getSubgroup(1)));
 					
 				
 			//sendToBack()
@@ -205,30 +207,13 @@ class Shapegroups2ShapeGroupTest {
 					parentShapeGroup.getSubgroup(1).sendToBack();
 				//testing object values
 					assertEquals(true,thirdShapeGroup.equals(parentShapeGroup.getSubgroup(0)));
-					assertEquals(true,firstShapeGroup.equals(parentShapeGroup.getSubgroup(1)));
-					assertEquals(true,secondShapeGroup.equals(parentShapeGroup.getSubgroup(2)));
+					assertEquals(true,firstShapeGroup.equals(parentShapeGroup.getSubgroup(2)));
+					assertEquals(true,secondShapeGroup.equals(parentShapeGroup.getSubgroup(1)));
 			
 			
 			//getDrawingCommands()
 					assertEquals("pushTranslate -0.0 -0.0\n" +
 							"pushScale 2.0 2.0\n" +
-							"pushTranslate -0.0 -0.0\n" +
-							"pushScale 1.0 1.0\n" +
-							"line 5 10 5 5\n" +
-							"arc 5 5 0 0.0 0.0\n" +
-							"line 5 5 10 5\n" +
-							"line 10 5 15 5\n" +
-							"arc 15 5 0 0.0 0.0\n" +
-							"line 15 5 15 10\n" +
-							"line 15 10 15 15\n" +
-							"arc 15 15 0 0.0 0.0\n" +
-							"line 15 15 10 15\n" +
-							"line 10 15 5 15\n" +
-							"arc 5 15 0 0.0 0.0\n" +
-							"line 5 15 5 10\n" +
-							"fill 255 255 0\n" +
-							"popTransform\n" +
-							"popTransform\n" +
 							"pushTranslate -0.0 -0.0\n" +
 							"pushScale 1.0 1.0\n" +
 							"line 0 5 0 0\n" +
@@ -243,6 +228,23 @@ class Shapegroups2ShapeGroupTest {
 							"line 5 10 0 10\n" +
 							"arc 0 10 0 0.0 0.0\n" +
 							"line 0 10 0 5\n" +
+							"fill 255 255 0\n" +
+							"popTransform\n" +
+							"popTransform\n" +
+							"pushTranslate -0.0 -0.0\n" +
+							"pushScale 1.0 1.0\n" +
+							"line 5 10 5 5\n" +
+							"arc 5 5 0 0.0 0.0\n" +
+							"line 5 5 10 5\n" +
+							"line 10 5 15 5\n" +
+							"arc 15 5 0 0.0 0.0\n" +
+							"line 15 5 15 10\n" +
+							"line 15 10 15 15\n" +
+							"arc 15 15 0 0.0 0.0\n" +
+							"line 15 15 10 15\n" +
+							"line 10 15 5 15\n" +
+							"arc 5 15 0 0.0 0.0\n" +
+							"line 5 15 5 10\n" +
 							"fill 255 255 0\n" +
 							"popTransform\n" +
 							"popTransform\n" +

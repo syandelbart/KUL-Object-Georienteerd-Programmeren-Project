@@ -1,5 +1,6 @@
 package drawit.shapegroups2;
 import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -11,17 +12,18 @@ public class ShapeGroup {
 	
 	/**
 	 * @representationObject
-	 * @invar | (shape != null) || (subgroups != null)
-	 * @invar | Arrays.stream(subgroups).allMatch(v -> v != null)
+	 * @invar | (shape != null) || (getSubgroups() != null)
 	 */
 	
 	
 	private RoundedPolygon shape;
-	private ShapeGroup[] subgroups;
 	private ShapeGroup parentGroup;
 	private Extent originalExtent;
 	private Extent extent;
-	private int location;
+	private ShapeGroup nextSibling;
+	private ShapeGroup previousSibling;
+	private ShapeGroup firstChild;
+	private ShapeGroup lastChild;
 	
 	/**	Initializes this ShapeGroup with the given shape and calculates the extent and originalExtent.
 	 * @mutates | this
@@ -59,12 +61,24 @@ public class ShapeGroup {
 		} else if(Arrays.stream(subgroups).anyMatch(v -> v == null)) {
 			throw new IllegalArgumentException("subgroups contains a null element");
 		}
-		
-		this.subgroups = new ShapeGroup[subgroups.length];
-		for(int i = 0; i < subgroups.length; i++) {
-			this.subgroups[i] = subgroups[i];
-			this.subgroups[i].parentGroup = this;
-			this.subgroups[i].location = i;
+		if(subgroups.length == 1) {
+			this.firstChild = subgroups[0];
+			this.firstChild.parentGroup = this;
+		}
+		else if(subgroups.length > 1) {
+			this.firstChild = subgroups[0];
+			this.firstChild.nextSibling = subgroups[1];
+			this.firstChild.parentGroup = this;
+			this.lastChild = subgroups[subgroups.length - 1];
+			this.lastChild.previousSibling = subgroups[subgroups.length - 2];
+			this.lastChild.parentGroup = this;
+			ShapeGroup current = firstChild.nextSibling;
+			for(int i = 1; i < subgroups.length - 1; i++) {
+				current.nextSibling = subgroups[i + 1];
+				current.previousSibling = subgroups[i - 1];
+				current.parentGroup = this;
+				current = current.nextSibling;
+			}
 		}
 		this.originalExtent = this.getExtent();
 		this.extent = this.getExtent();
@@ -77,93 +91,67 @@ public class ShapeGroup {
 	 */
 	public Extent getExtent() {
 		if(this.extent == null) {
-			if(this.subgroups == null) {
-				IntPoint[] shapeVertices = this.shape.getVertices();
-				IntPoint cursor = shapeVertices[0];
-				int Xlow = cursor.getX();
-				int Xhigh = cursor.getX();
-				int Ylow = cursor.getY();
-				int Yhigh = cursor.getY();
-				for(int i=1;i<shapeVertices.length;i++) {
-					cursor = shapeVertices[i];
-					
-					//if point has lower X-coordinate than stored lowest X-coordinate
-					if(cursor.getX() < Xlow) {
-						Xlow = cursor.getX();
+			if(this.firstChild == null) {
+				int minimumX = this.shape.getVertices()[0].getX();
+				int maximumX = this.shape.getVertices()[0].getX();
+				int minimumY = this.shape.getVertices()[0].getY();
+				int maximumY = this.shape.getVertices()[0].getY();
+				for(int i = 0; i < this.shape.getVertices().length; i++) {
+					if(this.shape.getVertices()[i].getX() < minimumX) {
+						minimumX = this.shape.getVertices()[i].getX();
 					}
-					
-					//if point has higher X-coordinate than stored highest X-coordinate
-					if(cursor.getX() > Xhigh) {
-						Xhigh = cursor.getX();
+					if(this.shape.getVertices()[i].getX() > maximumX) {
+						maximumX = this.shape.getVertices()[i].getX();
 					}
-					
-					//if point has lower Y-coordinate than stored lowest Y-coordinate
-					if(cursor.getY() < Ylow) {
-						Ylow = cursor.getY();
+					if(this.shape.getVertices()[i].getY() > maximumY) {
+						maximumY = this.shape.getVertices()[i].getY();
 					}
-					
-					//if point has higher Y-coordinate than stored highest Y-coordinate
-					if(cursor.getY() > Yhigh) {
-						Yhigh = cursor.getY();
+					if(this.shape.getVertices()[i].getY() < minimumY) {
+						minimumY = this.shape.getVertices()[i].getY();
 					}
-					
 				}
-				
-				return Extent.ofLeftTopRightBottom(Xlow, Ylow, Xhigh, Yhigh);
-			} else {
-				Extent[] subgroupExtentArray = new Extent[this.getSubgroupCount()];
+				return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
+			} 
+			else {
+				Extent[] extentArray = new Extent[this.getSubgroupCount()];
 				for(int i = 0; i < this.getSubgroupCount() ; i++) {
-					subgroupExtentArray[i] = this.subgroups[i].getExtent();
+					extentArray[i] = this.getSubgroup(i).getExtent();
 				}
-				Extent cursor = subgroupExtentArray[0];
-				int Xlow = cursor.getLeft();
-				int Xhigh = cursor.getRight();
-				int Ylow = cursor.getTop();
-				int Yhigh = cursor.getBottom();
-				
-				for(int i=1;i<subgroupExtentArray.length;i++) {
-					cursor = subgroupExtentArray[i];
-					
-					//if point has lower X-coordinate than stored lowest X-coordinate
-					if(cursor.getLeft() < Xlow) {
-						Xlow = cursor.getLeft();
+				int minimumX = extentArray[0].getLeft();
+				int maximumX = extentArray[0].getRight();
+				int minimumY = extentArray[0].getTop();
+				int maximumY = extentArray[0].getBottom();
+				for(int i = 0; i < extentArray.length ; i++) {
+					extentArray[i] = getSubgroup(i).getExtent();
+					if(extentArray[i].getLeft() < minimumX) {
+						minimumX = extentArray[i].getLeft();
 					}
-					
-					if(cursor.getRight() < Xlow) {
-						Xlow = cursor.getRight();
+					if(extentArray[i].getRight() > maximumX) {
+						maximumX = extentArray[i].getRight();
 					}
-					
-					//if point has higher X-coordinate than stored highest X-coordinate
-					if(cursor.getRight() > Xhigh) {
-						Xhigh = cursor.getRight();
+					if(extentArray[i].getBottom() > maximumY) {
+						maximumY = extentArray[i].getBottom();
 					}
-					
-					if(cursor.getLeft() > Xhigh) {
-						Xhigh = cursor.getLeft();
+					if(extentArray[i].getTop() < minimumY) {
+						minimumY = extentArray[i].getTop();
 					}
-					
-					//if point has lower Y-coordinate than stored lowest Y-coordinate
-					if(cursor.getTop() < Ylow) {
-						Ylow = cursor.getTop();
+					if(extentArray[i].getRight() < minimumX) {
+						minimumX = extentArray[i].getRight();
 					}
-					
-					if(cursor.getBottom() < Ylow) {
-						Ylow = cursor.getBottom();
+					if(extentArray[i].getLeft() > maximumX) {
+						maximumX = extentArray[i].getLeft();
 					}
-					
-					//if point has higher Y-coordinate than stored highest Y-coordinate
-					if(cursor.getBottom() > Yhigh) {
-						Yhigh = cursor.getBottom();
+					if(extentArray[i].getTop() > maximumY) {
+						maximumY = extentArray[i].getTop();
 					}
-					
-					if(cursor.getTop() > Yhigh) {
-						Yhigh = cursor.getTop();
+					if(extentArray[i].getBottom() < minimumY) {
+						minimumY = extentArray[i].getBottom();
 					}
 				}
-				
-				return Extent.ofLeftTopRightBottom(Xlow, Ylow, Xhigh, Yhigh);
+				return Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY);
 			}
-		} else {
+		}
+		else {
 			return this.extent;
 		}
 	}
@@ -190,17 +178,25 @@ public class ShapeGroup {
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
 		ArrayList<ShapeGroup> result = new ArrayList<ShapeGroup>();
-		for(int i = 0; i < this.getSubgroupCount(); i++) {
-			result.add(this.subgroups[i]);
+		ShapeGroup current = this.firstChild;
+		while(current != null) {
+			result.add(current);
+			current = current.nextSibling;
 		}
 		return result;
 	}
 	
 	public int getSubgroupCount() {
-		if(this.subgroups == null) {
+		if(this.firstChild == null) {
 			return 0;
 		}
-		return this.subgroups.length;
+		int counter = 0;
+		ShapeGroup current = this.firstChild;
+		while(current != null) {
+			counter += 1;
+			current = current.nextSibling;
+		}
+		return counter;
 	}
 	
 	/** Returns the subgroup at the given (zero-based) index in this non-leaf shape group's list of subgroups.
@@ -211,7 +207,13 @@ public class ShapeGroup {
 		if(!((0 <= index) && (index < getSubgroupCount()))) {
 			throw new IllegalArgumentException("index is out of bounds");
 		}
-		return this.subgroups[index];
+		ShapeGroup current = this.firstChild;
+		int counter = 0;
+		while(counter != index) {
+			counter += 1;
+			current = current.nextSibling;
+		}
+		return current;
 	}
 	
 	/** Returns the coordinates in this shape group's inner coordinate system of the point whose coordinates in the global coordinate system are the given coordinates.
@@ -286,8 +288,8 @@ public class ShapeGroup {
 		}
 		
 		for(int i = 0; i < this.getSubgroupCount(); i++) {
-			if(this.subgroups[i].getExtent().contains(innerCoordinates)) {
-				return this.subgroups[i];
+			if(this.getSubgroup(i).getExtent().contains(innerCoordinates)) {
+				return this.getSubgroup(i);
 			}
 		}
 		return null;
@@ -312,23 +314,54 @@ public class ShapeGroup {
 	 * 
 	 */
 	public void bringToFront() {
-		if(this.location != 0) {
-			this.getParentGroup().subgroups[this.location] = this.getParentGroup().subgroups[0];
-			this.getParentGroup().subgroups[0].location = this.location;
-			this.getParentGroup().subgroups[0] = this;
-			this.location = 0;
+		if(this.getParentGroup() == null) {
+			throw new IllegalArgumentException("parentgroup is null");
 		}
+		if(this.getParentGroup().firstChild != this) {
+			if(this.getParentGroup().lastChild == this) {
+				this.previousSibling.nextSibling = null;
+				this.getParentGroup().lastChild = this.previousSibling;
+				this.previousSibling = null;
+				this.nextSibling = this.getParentGroup().firstChild;
+				this.getParentGroup().firstChild.previousSibling = this;
+				this.getParentGroup().firstChild = this;
+			}
+			else {
+				this.nextSibling.previousSibling = this.previousSibling;
+				this.previousSibling.nextSibling = this.nextSibling;
+				this.nextSibling = this.parentGroup.firstChild;
+				this.parentGroup.firstChild.previousSibling = this;
+				this.parentGroup.firstChild = this;
+				this.previousSibling = null;
+			}
+		}
+		
 	}
 	
 	/** Moves this shape group to the back of its parent's list of subgroups.
 	 * 
 	 */
 	public void sendToBack() {
-		if(this.location != this.getSubgroupCount() - 1) {
-			this.getParentGroup().subgroups[this.location] = this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1];
-			this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1].location = this.location;
-			this.getParentGroup().subgroups[this.getParentGroup().getSubgroupCount()-1] = this;
-			this.location = this.getParentGroup().getSubgroupCount()-1;
+		if(this.getParentGroup() == null) {
+			throw new IllegalArgumentException("parentgroup is null");
+		}
+		if(this.getParentGroup().lastChild != this) {
+			if(this.getParentGroup().firstChild == this) {
+				this.nextSibling.previousSibling = null;
+				this.getParentGroup().firstChild = this.nextSibling;
+				this.nextSibling = null;
+				this.previousSibling = this.getParentGroup().lastChild;
+				this.getParentGroup().lastChild.nextSibling = this;
+				this.getParentGroup().lastChild = this;
+			}
+			else {
+				this.previousSibling.nextSibling = this.nextSibling;
+				this.nextSibling.previousSibling = this.previousSibling;
+				this.previousSibling = this.parentGroup.lastChild;
+				this.parentGroup.lastChild.nextSibling = this;
+				this.parentGroup.lastChild = this;
+				this.nextSibling = null;
+			}
 		}
 	}
 	
