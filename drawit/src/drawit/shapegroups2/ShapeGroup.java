@@ -177,6 +177,7 @@ public class ShapeGroup {
 		return shape;
 	}
 	
+
 	/**
 	 * @creates result
 	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
