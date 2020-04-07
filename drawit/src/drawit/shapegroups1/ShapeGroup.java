@@ -2,6 +2,7 @@ package drawit.shapegroups1;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import drawit.IntPoint;
 import drawit.RoundedPolygon;
@@ -10,8 +11,8 @@ public class ShapeGroup {
 	
 	/**
 	 * @representationObject
-	 * @invar | (shape != null) || (subgroups != null)
-	 * @invar | Arrays.stream(subgroups).allMatch(v -> v != null)
+	 * @invar | (shape != null) || (subGroups != null)
+	 * @invar | Arrays.stream(subGroups).allMatch(v -> v != null)
 	 */
 	
 	private RoundedPolygon shape;
@@ -36,22 +37,22 @@ public class ShapeGroup {
 		this.extent = this.getExtent();
 	}
 	
-	/** Initializes this object to represent a non-leaf shape group that directly contains the given subgroups, in the given order.
+	/** Initializes this object to represent a non-leaf shape group that directly contains the given subGroups, in the given order.
 	 * @mutates | this
-	 * @throws IllegalArgumentException if the argument subgroups is null
-	 * 	| !(subgroups != null)
-	 * @throws IllegalArgumentException if any ShapeGroup contained by the subgroups array is null
-	 * 	| Arrays.stream(subgroups).anyMatch(v -> v == null)
+	 * @throws IllegalArgumentException if the argument subGroups is null
+	 * 	| !(subGroups != null)
+	 * @throws IllegalArgumentException if any ShapeGroup contained by the subGroups array is null
+	 * 	| Arrays.stream(subGroups).anyMatch(v -> v == null)
 	 * 
-	 * @post The object's subgroups should be equal to the subgroups argument.
-	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(subgroups[i]))
+	 * @post The object's subGroups should be equal to the subGroups argument.
+	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(subGroups[i]))
 	 * @post The object's original extent is equal to the extent.
 	 * 	| getOriginalExtent().equals(getExtent())
 	 */
-	public ShapeGroup(ShapeGroup[] subgroups) {
-		this.subGroups = new ShapeGroup[subgroups.length];
-		for(int i = 0; i < subgroups.length; i++) {
-			this.subGroups[i] = subgroups[i];
+	public ShapeGroup(ShapeGroup[] subGroups) {
+		this.subGroups = new ShapeGroup[subGroups.length];
+		for(int i = 0; i < subGroups.length; i++) {
+			this.subGroups[i] = subGroups[i];
 			this.subGroups[i].parentGroup = this;
 		}
 		this.originalExtent = this.getExtent();
@@ -59,7 +60,7 @@ public class ShapeGroup {
 	}
 	
 	/** Returns the extent of this shape group, expressed in its outer coordinate system.
-	 * @post The returned extent contains the shape or the shapes of the subgroups of this object.
+	 * @post The returned extent contains the shape or the shapes of the subGroups of this object.
 	 * 	
 	 *
 	 */
@@ -143,9 +144,9 @@ public class ShapeGroup {
 		return shape;
 	}
 	
-	/** Returns the list of subgroups of this shape group, or null if this is a leaf shape group.
+	/** Returns the list of subGroups of this shape group, or null if this is a leaf shape group.
 	 * @creates result
-	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
+	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subGroups).
 	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(result.get(i)))
 	 * @post The returned list of ShapeGroups should remain the same length as the object's list of ShapeGroups.
 	 * 	| result.size() == getSubgroupCount()
@@ -162,7 +163,7 @@ public class ShapeGroup {
 		return this.subGroups.length;
 	}
 	
-	/** Returns the subgroup at the given (zero-based) index in this non-leaf shape group's list of subgroups.
+	/** Returns the subgroup at the given (zero-based) index in this non-leaf shape group's list of subGroups.
 	 * @throws IllegalArgumentException
 	 * 	| !((0 <= index) && (index < getSubgroupCount()))
 	 */
@@ -218,7 +219,7 @@ public class ShapeGroup {
 		}
 		return result;
 	}
-	/** Return the first subgroup in this non-leaf shape group's list of subgroups whose extent contains the given point, expressed in this shape group's inner coordinate system.
+	/** Return the first subgroup in this non-leaf shape group's list of subGroups whose extent contains the given point, expressed in this shape group's inner coordinate system.
 	 * @throws IllegalArgumentException
 	 * 	| !(innerCoordinates != null)
 	 * @creates result
@@ -245,7 +246,7 @@ public class ShapeGroup {
 		this.extent = newExtent;
 	}
 	
-	/** Moves this shape group to the front of its parent's list of subgroups.
+	/** Moves this shape group to the front of its parent's list of subGroups.
 	 * 
 	 */
 	public void bringToFront() {
@@ -259,7 +260,7 @@ public class ShapeGroup {
 		this.getParentGroup().subGroups[0] = this;
 	}
 	
-	/** Moves this shape group to the back of its parent's list of subgroups.
+	/** Moves this shape group to the back of its parent's list of subGroups.
 	 * 
 	 */
 	public void sendToBack() {

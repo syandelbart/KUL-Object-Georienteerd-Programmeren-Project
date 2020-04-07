@@ -174,7 +174,7 @@ public class ShapeGroup {
 	}
 	
 	public RoundedPolygon getShape() {
-		return shape;
+		return this.shape;
 	}
 	
 
