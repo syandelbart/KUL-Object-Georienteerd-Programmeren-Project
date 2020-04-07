@@ -1,8 +1,6 @@
 package drawit;
 
 import java.util.Arrays;
-import java.util.stream.IntStream;
-import java.util.Random;
 import java.awt.Color;
 /**
  * An instance of this class is a mutable abstraction storing a rounded polygon defined by a set of 2D points with integer coordinates
