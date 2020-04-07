@@ -43,7 +43,7 @@ public class ShapeGroup {
 		this.extent = this.getExtent();
 	}
 	
-	/**
+	/** Initializes this object to represent a non-leaf shape group that directly contains the given subgroups, in the given order.
 	 * @mutates | this
 	 * @throws IllegalArgumentException if the argument subgroups is null
 	 * 	| !(subgroups != null)
@@ -178,7 +178,7 @@ public class ShapeGroup {
 	}
 	
 
-	/**
+	/** Returns the list of subgroups of this shape group, or null if this is a leaf shape group.
 	 * @creates result
 	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
 	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(result.get(i)))
@@ -197,7 +197,7 @@ public class ShapeGroup {
 		return this.subgroups.length;
 	}
 	
-	/**
+	/** Returns the subgroup at the given (zero-based) index in this non-leaf shape group's list of subgroups.
 	 * @throws IllegalArgumentException
 	 * 	| !((0 <= index) && (index < getSubgroupCount()))
 	 */
@@ -208,7 +208,7 @@ public class ShapeGroup {
 		return this.subgroups[index];
 	}
 	
-	/**
+	/** Returns the coordinates in this shape group's inner coordinate system of the point whose coordinates in the global coordinate system are the given coordinates.
 	 * @throws IllegalArgumentException
 	 * 	| !(globalCoordinates != null)
 	 * 
@@ -261,7 +261,7 @@ public class ShapeGroup {
 		return result;
 	}
 	
-	/**
+	/** Return the first subgroup in this non-leaf shape group's list of subgroups whose extent contains the given point, expressed in this shape group's inner coordinate system.
 	 * @throws IllegalArgumentException
 	 * 	| !(innerCoordinates != null)
 	 * @creates result
@@ -281,7 +281,7 @@ public class ShapeGroup {
 		return null;
 	}
 	
-	/**
+	/** Registers the given extent as this shape group's extent, expressed in this shape group's outer coordinate system.
 	 * @throws IllegalArgumentException
 	 * 	| !(newExtent != null)
 	 * 
@@ -296,7 +296,7 @@ public class ShapeGroup {
 		this.extent = newExtent;
 	}
 	
-	/**
+	/** Moves this shape group to the front of its parent's list of subgroups.
 	 * 
 	 */
 	public void bringToFront() {
@@ -304,7 +304,7 @@ public class ShapeGroup {
 		this.getParentGroup().subgroups[0] = this;
 	}
 	
-	/**
+	/** Moves this shape group to the back of its parent's list of subgroups.
 	 * 
 	 */
 	public void sendToBack() {
