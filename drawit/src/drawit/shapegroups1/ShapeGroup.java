@@ -1,11 +1,19 @@
 package drawit.shapegroups1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import drawit.IntPoint;
 import drawit.RoundedPolygon;
 import drawit.IntVector;
 public class ShapeGroup {
+	
+	/**
+	 * @representationObject
+	 * @invar | (shape != null) || (subgroups != null)
+	 * @invar | Arrays.stream(subgroups).allMatch(v -> v != null)
+	 */
+	
 	private RoundedPolygon shape;
 	private ShapeGroup[] subGroups;
 	private ShapeGroup parentGroup;
@@ -14,12 +22,13 @@ public class ShapeGroup {
 	
 	/**	Initializes this ShapeGroup with the given shape and calculates the extent and originalExtent.
 	 * @mutates | this
+	 * @throws IllegalArgumentException if the argument shape is null
+	 * 	| !(shape != null)
+	 * 
 	 * @post The object's shape is equal to the given shape.
-	 * 	| getShape() == shape
-	 * @post The object's extent is equal to getExtent().
-	 * 	
-	 * @post The object's getOriginalExtent() is equal to getExtent().
-	 * 	
+	 * 	| getShape().equals(shape)
+	 * @post The object's original extent is equal to the extent.
+	 * 	| getOriginalExtent().equals(getExtent())
 	 */
 	public ShapeGroup(RoundedPolygon shape) {
 		this.shape = shape;
@@ -27,16 +36,17 @@ public class ShapeGroup {
 		this.extent = this.getExtent();
 	}
 	
-	/**	Initializes this ShapeGroup with the given subGroups, sets each subGroups element parentGroup to this and calculates the extent and originalExtent.
+	/**
 	 * @mutates | this
-	 * @post The object's subGroups is equal to the given subGroups.
-	 * 	
-	 * @post The each subGroups element has this as parentGroup.
-	 * 	
-	 * @post The object's extent is equal to getExtent().
-	 * 	
-	 * @post The object's originalExtent is equal to getExtent().
-	 * 	
+	 * @throws IllegalArgumentException if the argument subgroups is null
+	 * 	| !(subgroups != null)
+	 * @throws IllegalArgumentException if any ShapeGroup contained by the subgroups array is null
+	 * 	| Arrays.stream(subgroups).anyMatch(v -> v == null)
+	 * 
+	 * @post The object's subgroups should be equal to the subgroups argument.
+	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(subgroups[i]))
+	 * @post The object's original extent is equal to the extent.
+	 * 	| getOriginalExtent().equals(getExtent())
 	 */
 	public ShapeGroup(ShapeGroup[] subgroups) {
 		this.subGroups = new ShapeGroup[subgroups.length];
@@ -133,6 +143,13 @@ public class ShapeGroup {
 		return shape;
 	}
 	
+	/**
+	 * @creates result
+	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
+	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(result.get(i)))
+	 * @post The returned list of ShapeGroups should remain the same length as the object's list of ShapeGroups.
+	 * 	| result.size() == getSubgroupCount()
+	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
 		ArrayList<ShapeGroup> result = new ArrayList<ShapeGroup>();
 		for(int i = 0; i < this.subGroups.length; i++) {
@@ -145,10 +162,21 @@ public class ShapeGroup {
 		return this.subGroups.length;
 	}
 	
+	/**
+	 * @throws IllegalArgumentException
+	 * 	| !((0 <= index) && (index < getSubgroupCount()))
+	 */
 	public ShapeGroup getSubgroup(int index) {
 		return this.subGroups[index];
 	}
 	
+	/**
+	 * @throws IllegalArgumentException
+	 * 	| !(globalCoordinates != null)
+	 * 
+	 * @creates result
+	 * 
+	 */
 	public IntPoint toInnerCoordinates(IntPoint globalCoordinates) {
 		IntPoint result;
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
@@ -190,7 +218,13 @@ public class ShapeGroup {
 		}
 		return result;
 	}
-	
+	/**
+	 * @throws IllegalArgumentException
+	 * 	| !(innerCoordinates != null)
+	 * @creates result
+	 * @post The returned ShapeGroup's extent should contain the given innerCoordinates
+	 * 	| result.getExtent().contains(innerCoordinates)
+	 */
 	public ShapeGroup getSubgroupAt(IntPoint innerCoordinates) {
 		for(int i = 0; i < this.getSubgroupCount(); i++) {
 			if(this.subGroups[i].getExtent().contains(innerCoordinates)) {
@@ -200,10 +234,20 @@ public class ShapeGroup {
 		return null;
 	}
 	
+	/**
+	 * @throws IllegalArgumentException
+	 * 	| !(newExtent != null)
+	 * 
+	 * @post The object's extent should be the newExtent
+	 * 	| getExtent().equals(newExtent)
+	 */
 	public void setExtent(Extent newExtent){
 		this.extent = newExtent;
 	}
 	
+	/**
+	 * 
+	 */
 	public void bringToFront() {
 		int location = 0;
 		for(int i = 0; i < this.getParentGroup().getSubgroupCount(); i++) {
@@ -215,6 +259,9 @@ public class ShapeGroup {
 		this.getParentGroup().subGroups[0] = this;
 	}
 	
+	/**
+	 * 
+	 */
 	public void sendToBack() {
 		int location = 0;
 		for(int i = 0; i < this.getParentGroup().getSubgroupCount(); i++) {
