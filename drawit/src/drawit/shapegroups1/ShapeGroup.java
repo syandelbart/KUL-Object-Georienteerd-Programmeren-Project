@@ -30,6 +30,10 @@ public class ShapeGroup {
 	 * @post The object's shape is equal to the given shape.
 	 * 	| getShape().equals(shape)
 	 * @post The object's original extent is equal to the extent.
+	 * 	| getOriginalExtent().getTop() == getExtent().getTop()
+	 * 	| && getOriginalExtent().getLeft() == getExtent().getLeft()
+	 * 	| && getOriginalExtent().getBottom() == getExtent().getBottom()
+	 * 	| && getOriginalExtent().getRight() == getExtent().getRight()
 	 */
 	public ShapeGroup(RoundedPolygon shape) {
 		if(!(shape != null)) {
@@ -51,6 +55,10 @@ public class ShapeGroup {
 	 * @post The object's subgroups should be equal to the subgroups argument.
 	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroups().get(i).equals(subgroups[i]))
 	 * @post The object's original extent is equal to the extent.
+	 * 	| getOriginalExtent().getTop() == getExtent().getTop()
+	 * 	| && getOriginalExtent().getLeft() == getExtent().getLeft()
+	 * 	| && getOriginalExtent().getBottom() == getExtent().getBottom()
+	 * 	| && getOriginalExtent().getRight() == getExtent().getRight()
 	 */
 	public ShapeGroup(ShapeGroup[] subgroups) {
 		if(!(subgroups != null)) {
@@ -69,9 +77,11 @@ public class ShapeGroup {
 	}
 	
 	/** Returns the extent of this shape group, expressed in its outer coordinate system.
-	 * @post The returned extent contains the shape or the shapes of the subgroups of this object.
-	 * 	
-	 *
+	 * @creates result
+	 * 
+	 * @post The result can't be null
+	 * 	|result != null
+	 * @post The returned extent contains the shape or subgroups' shapes of this object.
 	 */
 	public Extent getExtent() {
 		if(extent == null) {
@@ -140,15 +150,17 @@ public class ShapeGroup {
 		}
 	}
 		
-	
+	/** Returns the extent of this shape group, expressed in its inner coordinate system. This coincides with the extent expressed in outer coordinates at the time of creation of the shape group. The shape transformation defined by this shape group is the one that transforms the original extent to the current extent. This method returns an equal result throughout the lifetime of this object.*/
 	public Extent getOriginalExtent() {
 		return this.originalExtent;
 	}
 	
+	/** Returns the shape group that directly contains this shape group, or null if no shape group directly contains this shape group.*/
 	public ShapeGroup getParentGroup() {
 		return this.parentGroup;
 	}
 	
+	/** Returns the shape directly contained by this shape group, or null if this is a non-leaf shape group.*/
 	public RoundedPolygon getShape() {
 		return shape;
 	}
@@ -170,6 +182,7 @@ public class ShapeGroup {
 		return result;
 	}
 	
+	/** Returns the number of subgroups of this non-leaf shape group. */
 	public int getSubgroupCount() {
 		if(this.subgroups == null) {
 			return 0;
@@ -180,6 +193,8 @@ public class ShapeGroup {
 	/** Returns the subgroup at the given (zero-based) index in this non-leaf shape group's list of subgroups.
 	 * @throws IllegalArgumentException
 	 * 	| !((0 <= index) && (index < getSubgroupCount()))
+	 * @post result can't be null.
+	 * 	| result != null
 	 */
 	public ShapeGroup getSubgroup(int index) {
 		if(!((0 <= index) && (index < getSubgroupCount()))) {
@@ -188,13 +203,7 @@ public class ShapeGroup {
 		return this.subgroups[index];
 	}
 	
-	/** Returns the coordinates in this shape group's inner coordinate system of the point whose coordinates in the global coordinate system are the given coordinates.
-	 * @throws IllegalArgumentException
-	 * 	| !(globalCoordinates != null)
-	 * 
-	 * @creates result
-	 * 
-	 */
+	/** Returns the coordinates in this shape group's inner coordinate system of the point whose coordinates in the global coordinate system are the given coordinates.*/
 	public IntPoint toInnerCoordinates(IntPoint globalCoordinates) {
 		if(!(globalCoordinates != null)) {
 			throw new IllegalArgumentException("globalCoordinates is null");
@@ -215,6 +224,7 @@ public class ShapeGroup {
 		return result;
 	}
 	
+	/** Returns the coordinates in the global coordinate system of the point whose coordinates in this shape group's inner coordinate system are the given coordinates. */
 	public IntPoint toGlobalCoordinates(IntPoint innerCoordinates) {
 		if(!(innerCoordinates != null)) {
 			throw new IllegalArgumentException("innerCoordinates is null");
@@ -231,6 +241,7 @@ public class ShapeGroup {
 		return result;
 	}
 	
+	/** Returns the coordinates in this shape group's inner coordinate system of the vector whose coordinates in the global coordinate system are the given coordinates. This transformation is affected only by mutations of the width or height of this shape group's extent, not by mutations of this shape group's extent that preserve its width and height. */
 	public IntVector toInnerCoordinates(IntVector relativeGlobalCoordinates) {
 		if(!(relativeGlobalCoordinates != null)) {
 			throw new IllegalArgumentException("relativeGlobalCoordinates is null");
@@ -251,7 +262,6 @@ public class ShapeGroup {
 	/** Return the first subgroup in this non-leaf shape group's list of subgroups whose extent contains the given point, expressed in this shape group's inner coordinate system.
 	 * @throws IllegalArgumentException
 	 * 	| !(innerCoordinates != null)
-	 * @creates result
 	 */
 	public ShapeGroup getSubgroupAt(IntPoint innerCoordinates) {
 		if(!(innerCoordinates != null)) {
@@ -281,16 +291,30 @@ public class ShapeGroup {
 		this.extent = newExtent;
 	}
 	
+	private int getLocation() {
+		int counter = 0;
+		while(!this.getParentGroup().getSubgroup(counter).equals(this)) {
+			counter++;
+		}
+		return counter;
+	}
 	/** Moves this shape group to the front of its parent's list of subgroups.
+	 * @mutates this
 	 * 
+	 * @throws IllegalArgumentException
+	 * 	| getParentGroup() == null
+	 * 
+	 * @post This object is the first child of its getParentGroup().
+	 * 	| getParentGroup().getSubgroup(0) == this
+	 * 
+	 * @post The indexes of the children of getParentGroup that were in front of this object are incremented by one.
+	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i + 1)))
+	 * 
+	 * @post The indexes of the children of getParentGroup that were behind this object are the same.
+	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
 	 */
 	public void bringToFront() {
-		int location = 0;
-		for(int i = 0; i < this.getParentGroup().getSubgroupCount(); i++) {
-			if(this == this.getParentGroup().getSubgroup(i)) {
-				location = i;
-			}
-		}
+		int location = this.getLocation();
 		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
 		for(int i = 0; i < location; i++) {
 			result[i+1] = this.getParentGroup().getSubgroup(i);
@@ -303,15 +327,22 @@ public class ShapeGroup {
 	}
 	
 	/** Moves this shape group to the back of its parent's list of subgroups.
+	 * @mutates this
 	 * 
+	 * @throws IllegalArgumentException
+	 * 	| getParentGroup() == null
+	 * 
+	 * @post This object is the last child of its getParentGroup().
+	 * 	| getParentGroup().getSubgroup(getParentGroup().getSubgroupCount() - 1) == this
+	 * 
+	 * @post The indexes of the children of getParentGroup that were in front of this object are the same.
+	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
+	 * 
+	 * @post The indexes of the children of getParentGroup that were behind this object are decremented by one.
+	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroups().get(i - 1)))
 	 */
 	public void sendToBack() {
-		int location = 0;
-		for(int i = 0; i < this.getParentGroup().getSubgroupCount(); i++) {
-			if(this == this.getParentGroup().getSubgroup(i)) {
-				location = i;
-			}
-		}
+		int location = this.getLocation();
 		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
 		for(int i = 0; i < location; i++) {
 			result[i] = this.getParentGroup().getSubgroup(i);
@@ -323,6 +354,11 @@ public class ShapeGroup {
 		this.getParentGroup().subgroups = result;
 	}
 	
+	/** Returns a textual representation of a sequence of drawing commands for drawing the shapes contained directly or indirectly by this shape group, expressed in this shape group's outer coordinate system. For the syntax of the drawing commands, see RoundedPolygon.getDrawingCommands().
+	 * @inspects | this
+	 * @mutates nothing |
+	 * @post | result != null
+	 */
 	public java.lang.String getDrawingCommands(){
 		StringBuilder string = new StringBuilder();
 		if(shape == null) {

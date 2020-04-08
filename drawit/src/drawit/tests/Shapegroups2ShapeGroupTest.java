@@ -1,11 +1,7 @@
 package drawit.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-
-
 import org.junit.jupiter.api.Test;
-
 import drawit.shapegroups2.Extent;
 import drawit.shapegroups2.ShapeGroup;
 import drawit.RoundedPolygon;

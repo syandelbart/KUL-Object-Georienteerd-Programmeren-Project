@@ -28,23 +28,41 @@ public class Extent {
 		return this.bottom;
 	}
 	
-	/** Returns the width of this extent. */
+	/** Returns the width of this extent. 
+	 * @post The width is equal to getRight() - getLeft().
+	 * 	| result == getRight() - getLeft()
+	 */
 	public int getWidth() {
 		return this.getRight() - this.getLeft();
 	}
 	
-	/** Returns the height of this extent. */
+	/** Returns the height of this extent.
+	 * @post The height is equal to getBottom() - getTop().
+	 * 	| result == getBottom() - getTop()
+	 */
 	public int getHeight() {
 		return this.getBottom() - this.getTop();
 	}
 	
-	/** Returns the top-left corner of this extent. */
+	/** Returns the top-left corner of this extent.
+	 * @creates result 
+	 * @post result.getX() is equal to getLeft().
+	 *  | result.getX() == getLeft()
+	 * @post result.getY() is equal to getTop().
+	 *  | result.getY() == getTop()
+	 */
 	public IntPoint getTopLeft() {
 		IntPoint result = new IntPoint(this.getLeft(),this.getTop());
 		return result;
 	}
 	
-	/** Returns the bottom-right corner of this extent. */
+	/** Returns the bottom-right corner of this extent.
+	 * @creates result 
+	 * @post result.getX() is equal to getRight().
+	 *  | result.getX() == getRight()
+	 * @post result.getY() is equal to getBottom().
+	 *  | result.getY() == getBottom()
+	 */
 	public IntPoint getBottomRight() {
 		IntPoint result = new IntPoint(this.getRight(),this.getBottom());
 		return result;

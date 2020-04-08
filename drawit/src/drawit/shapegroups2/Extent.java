@@ -17,12 +17,18 @@ public class Extent {
 		return this.top;
 	}
 	
-	/** Returns the X coordinate of the right border of this extent. */
+	/** Returns the X coordinate of the right border of this extent.
+	 * @post The getRight() is equal to getLeft() + getWidth().
+	 * 	| result == getLeft() + getWidth()
+	 */
 	public int getRight() {
 		return this.left + this.width;
 	}
 	
-	/** Returns the Y coordinate of the bottom border of this extent. */
+	/** Returns the Y coordinate of the bottom border of this extent.
+	 * @post The getBottom() is equal to getTop() + getHeigth().
+	 * 	| result == getTop() + getHeight()
+	 */
 	public int getBottom() {
 		return this.top + this.height;
 	}
@@ -36,12 +42,24 @@ public class Extent {
 		return this.height;
 	}
 	
-	/** Returns the top-left corner of this extent. */
+	/** Returns the top-left corner of this extent.
+	 * @creates result 
+	 * @post result.getX() is equal to getLeft().
+	 *  | result.getX() == getLeft()
+	 * @post result.getY() is equal to getTop().
+	 *  | result.getY() == getTop()
+	 */
 	public IntPoint getTopLeft() {
 		return new IntPoint(this.getLeft(),this.getTop());
 	}
 	
-	/** Returns the bottom-right corner of this extent. */
+	/** Returns the bottom-right corner of this extent.
+	 * @creates result 
+	 * @post result.getX() is equal to getRight().
+	 *  | result.getX() == getRight()
+	 * @post result.getY() is equal to getBottom().
+	 *  | result.getY() == getBottom()
+	 */
 	public IntPoint getBottomRight() {
 		return new IntPoint(this.getRight(),this.getBottom());
 	}
