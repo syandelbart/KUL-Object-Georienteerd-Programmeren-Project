@@ -2,10 +2,12 @@ package drawit.shapegroups1;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 import drawit.IntPoint;
 import drawit.RoundedPolygon;
 import drawit.IntVector;
+
 public class ShapeGroup {
 	
 	/**
@@ -159,7 +161,7 @@ public class ShapeGroup {
 	 * 	| result.size() == getSubgroupCount()
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
-		ArrayList<ShapeGroup> result = new ArrayList<ShapeGroup>();
+		List<ShapeGroup> result = new ArrayList<ShapeGroup>();
 		for(int i = 0; i < this.getSubgroupCount(); i++) {
 			result.add(this.subgroups[i]);
 		}

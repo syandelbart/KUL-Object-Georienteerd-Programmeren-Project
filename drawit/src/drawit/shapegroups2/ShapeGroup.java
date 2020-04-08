@@ -2,6 +2,7 @@ package drawit.shapegroups2;
 import java.util.ArrayList;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import drawit.IntPoint;
@@ -177,7 +178,7 @@ public class ShapeGroup {
 	 * 	| result.size() == getSubgroupCount()
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
-		ArrayList<ShapeGroup> result = new ArrayList<ShapeGroup>();
+		List<ShapeGroup> result = new ArrayList<ShapeGroup>();
 		ShapeGroup current = this.firstChild;
 		while(current != null) {
 			result.add(current);
