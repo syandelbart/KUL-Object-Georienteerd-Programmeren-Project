@@ -158,9 +158,11 @@ public class ShapeGroup {
 	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
 	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroup(i).equals(result.get(i)))
 	 * @post The returned list of ShapeGroups should remain the same length as the object's list of ShapeGroups.
-	 * 	| result.size() == getSubgroupCount()
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
+		if(this.subgroups == null) {
+			return null;
+		}
 		List<ShapeGroup> result = new ArrayList<ShapeGroup>();
 		for(int i = 0; i < this.getSubgroupCount(); i++) {
 			result.add(this.subgroups[i]);

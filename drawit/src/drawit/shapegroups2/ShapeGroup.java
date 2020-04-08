@@ -65,6 +65,7 @@ public class ShapeGroup {
 		if(subgroups.length == 1) {
 			this.firstChild = subgroups[0];
 			this.firstChild.parentGroup = this;
+			this.lastChild = subgroups[0];
 		}
 		else if(subgroups.length > 1) {
 			this.firstChild = subgroups[0];
@@ -175,9 +176,11 @@ public class ShapeGroup {
 	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
 	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroup(i).equals(result.get(i)))
 	 * @post The returned list of ShapeGroups should remain the same length as the object's list of ShapeGroups.
-	 * 	| result.size() == getSubgroupCount()
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
+		if(this.firstChild == null || this.lastChild == null) {
+			return null;
+		}
 		List<ShapeGroup> result = new ArrayList<ShapeGroup>();
 		ShapeGroup current = this.firstChild;
 		while(current != null) {
