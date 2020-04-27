@@ -29,6 +29,11 @@ public class RoundedPolygon {
 	private Color color;
 	private Extent boundingBox;
 	
+	public Extent getBoundingBox() {
+		return this.boundingBox;
+	}
+	
+	
 	/**
 	 * Returns a new array whose elements are the vertices of this rounded polygon.
 	 * 
