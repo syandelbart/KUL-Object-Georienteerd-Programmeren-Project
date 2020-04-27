@@ -1,6 +1,10 @@
 package drawit;
 
 import java.util.Arrays;
+
+import drawit.shapegroups1.Extent;
+import drawit.shapegroups1.ShapeGroup;
+
 import java.awt.Color;
 /**
  * An instance of this class is a mutable abstraction storing a rounded polygon defined by a set of 2D points with integer coordinates
@@ -23,6 +27,7 @@ public class RoundedPolygon {
 	private IntPoint[] vertices = new IntPoint[0];
 	private int radius;
 	private Color color;
+	private Extent boundingBox;
 	
 	/**
 	 * Returns a new array whose elements are the vertices of this rounded polygon.
@@ -68,7 +73,10 @@ public class RoundedPolygon {
 		String msg = PointArrays.checkDefinesProperPolygon(copy);
 		if (msg != null)
 			throw new IllegalArgumentException(msg);
-		vertices = copy;
+		this.vertices = copy;
+		
+		ShapeGroup shapeGroup = new ShapeGroup(this);
+		this.boundingBox = shapeGroup.getExtent();
 	}
 	
 	/**
