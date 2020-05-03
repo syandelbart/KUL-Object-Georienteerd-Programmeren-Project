@@ -2,8 +2,9 @@ package drawit;
 
 import java.util.Arrays;
 
+
 import drawit.shapegroups1.Extent;
-import drawit.shapegroups1.ShapeGroup;
+import drawit.shapegroups1.LeafShapeGroup;
 
 import java.awt.Color;
 /**
@@ -80,7 +81,7 @@ public class RoundedPolygon {
 			throw new IllegalArgumentException(msg);
 		this.vertices = copy;
 		
-		ShapeGroup shapeGroup = new ShapeGroup(this);
+		LeafShapeGroup shapeGroup = new LeafShapeGroup(this);
 		this.boundingBox = shapeGroup.getExtent();
 	}
 	
