@@ -97,6 +97,9 @@ public class RoundedPolygon {
 		if (radius < 0)
 			throw new IllegalArgumentException("The given radius is negative");
 		this.radius = radius;
+		
+		LeafShapeGroup shapeGroup = new LeafShapeGroup(this);
+		this.boundingBox = shapeGroup.getExtent();
 	}
 	
 	/**

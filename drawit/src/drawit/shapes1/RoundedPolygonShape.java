@@ -31,22 +31,24 @@ public class RoundedPolygonShape implements Shape {
 	}
 	
 	public ControlPoint[] createControlPoints() {
-		ControlPointRoundedPolygon[] result = new ControlPointRoundedPolygon[2];
-		IntPoint topLeft = polygon.getBoundingBox().getTopLeft();
-		ControlPointRoundedPolygon roundedPolygonTopLeft = new ControlPointRoundedPolygon(polygon,topLeft.getX(),topLeft.getY());
-		IntPoint bottomRight = polygon.getBoundingBox().getBottomRight();
-		ControlPointRoundedPolygon roundedPolygonBottomRight = new ControlPointRoundedPolygon(polygon,bottomRight.getX(),bottomRight.getY());
-		result[0] = roundedPolygonTopLeft;
-		result[1] = roundedPolygonBottomRight;
+		IntPoint[] vertices = polygon.getVertices();
+		ControlPointRoundedPolygon[] result = new ControlPointRoundedPolygon[vertices.length];
+		for(int i = 0; i < vertices.length; i++) {
+			IntPoint current = vertices[i];
+			ControlPointRoundedPolygon controlPoint = new ControlPointRoundedPolygon(polygon,current.getX(),current.getY());
+			result[i] = controlPoint;
+		}
 		return result;
 	}
 	
 	public drawit.IntPoint toShapeCoordinates(drawit.IntPoint p){
-		
+		IntPoint result = p;
+    	return result;
 	}
 	
 	public drawit.IntPoint toGlobalCoordinates(drawit.IntPoint p){
-		
+		IntPoint result = p;
+    	return result;
 	}
 }
 

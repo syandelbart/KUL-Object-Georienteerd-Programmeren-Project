@@ -41,11 +41,13 @@ public class ShapeGroupShape implements Shape {
     }
     
     public drawit.IntPoint toShapeCoordinates(drawit.IntPoint p){
-    	
+    	IntPoint result = p;
+    	return result;
     }
     
     public drawit.IntPoint toGlobalCoordinates(drawit.IntPoint p){
-    	
+    	IntPoint result = p;
+    	return result;
     }
 
 }
