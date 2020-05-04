@@ -35,20 +35,28 @@ public class RoundedPolygonShape implements Shape {
 		ControlPointRoundedPolygon[] result = new ControlPointRoundedPolygon[vertices.length];
 		for(int i = 0; i < vertices.length; i++) {
 			IntPoint current = vertices[i];
-			ControlPointRoundedPolygon controlPoint = new ControlPointRoundedPolygon(polygon,current.getX(),current.getY());
+			ControlPointRoundedPolygon controlPoint = new ControlPointRoundedPolygon(polygon,current,i);
 			result[i] = controlPoint;
 		}
 		return result;
 	}
 	
 	public drawit.IntPoint toShapeCoordinates(drawit.IntPoint p){
-		IntPoint result = p;
-    	return result;
+		if(this.getParent() == null) {
+			return p;
+		}
+		else {
+			return this.getParent().toInnerCoordinates(p);
+		}
 	}
 	
 	public drawit.IntPoint toGlobalCoordinates(drawit.IntPoint p){
-		IntPoint result = p;
-    	return result;
+		if(this.getParent() == null) {
+			return p;
+		}
+		else {
+			return this.getParent().toGlobalCoordinates(p);
+		}
 	}
 }
 

@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import drawit.shapegroups1.Extent;
 import drawit.shapegroups1.LeafShapeGroup;
+import drawit.shapegroups1.ShapeGroup;
 
 import java.awt.Color;
 /**
@@ -25,6 +26,7 @@ public class RoundedPolygon {
 	 * @invar | PointArrays.checkDefinesProperPolygon(vertices) == null
 	 * @invar | 0 <= radius
 	 */
+
 	private IntPoint[] vertices = new IntPoint[0];
 	private int radius;
 	private Color color;
@@ -97,9 +99,6 @@ public class RoundedPolygon {
 		if (radius < 0)
 			throw new IllegalArgumentException("The given radius is negative");
 		this.radius = radius;
-		
-		LeafShapeGroup shapeGroup = new LeafShapeGroup(this);
-		this.boundingBox = shapeGroup.getExtent();
 	}
 	
 	/**

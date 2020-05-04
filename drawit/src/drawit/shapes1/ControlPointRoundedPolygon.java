@@ -3,29 +3,28 @@ import drawit.IntPoint;
 import drawit.RoundedPolygon;
 
 public class ControlPointRoundedPolygon implements ControlPoint{
-	int x;
-	int y;
+	int location;
+	IntPoint point;
 	RoundedPolygon shape;
 	
-	public ControlPointRoundedPolygon(RoundedPolygon shape, int x, int y) {
+	public ControlPointRoundedPolygon(RoundedPolygon shape, IntPoint point, int location) {
 		this.shape = shape;
-		this.x = x;
-		this.y = y;
+		this.point = point;
+		this.location = location;
 
 	}
 	public drawit.IntPoint getLocation(){
-		return new IntPoint(x,y);
+		return new IntPoint(point.getX(),point.getY());
 	}
 	public void remove() {
 		IntPoint[] vertices = shape.getVertices();
 		for(int i = 0; i < vertices.length; i++) {
-			if(vertices[i].equals(new IntPoint(this.x,this.y))) {
+			if(vertices[i].equals(this.point)) {
 				shape.remove(i);
 			}
 		}
 	}
 	public void move(drawit.IntVector delta) {
-		this.x += delta.getX();
-		this.y += delta.getY();
+		shape.update(location,this.point.plus(delta));
 	}
 }

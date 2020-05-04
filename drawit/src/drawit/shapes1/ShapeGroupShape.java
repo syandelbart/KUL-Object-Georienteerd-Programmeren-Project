@@ -32,22 +32,20 @@ public class ShapeGroupShape implements Shape {
     public ControlPoint[] createControlPoints() {
     	ControlPointShapeGroup[] result = new ControlPointShapeGroup[2];
     	IntPoint topLeft = referencedShapeGroup.getExtent().getTopLeft();
-    	ControlPointShapeGroup shapeGroupTopLeft = new ControlPointShapeGroup(referencedShapeGroup,topLeft.getX(),topLeft.getY());
+    	ControlPointShapeGroup shapeGroupTopLeft = new ControlPointShapeGroup(referencedShapeGroup,topLeft);
 		IntPoint bottomRight = referencedShapeGroup.getExtent().getBottomRight();
-		ControlPointShapeGroup shapeGroupBottomRight = new ControlPointShapeGroup(referencedShapeGroup,bottomRight.getX(),bottomRight.getY());
+		ControlPointShapeGroup shapeGroupBottomRight = new ControlPointShapeGroup(referencedShapeGroup,bottomRight);
 		result[0] = shapeGroupTopLeft;
 		result[1] = shapeGroupBottomRight;
 		return result;
     }
     
     public drawit.IntPoint toShapeCoordinates(drawit.IntPoint p){
-    	IntPoint result = p;
-    	return result;
+    	return referencedShapeGroup.toInnerCoordinates(p);
     }
     
     public drawit.IntPoint toGlobalCoordinates(drawit.IntPoint p){
-    	IntPoint result = p;
-    	return result;
+    	return referencedShapeGroup.toGlobalCoordinates(p);
     }
 
 }

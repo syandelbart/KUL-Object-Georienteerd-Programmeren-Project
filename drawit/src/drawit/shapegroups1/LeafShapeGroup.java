@@ -33,7 +33,7 @@ public class LeafShapeGroup extends ShapeGroup {
 	
 	/** Returns the shape directly contained by this shape group, or null if this is a non-leaf shape group.*/
 	public RoundedPolygon getShape() {
-		return shape;
+		return this.shape;
 	}
 	
 	public Extent calculateExtent() {
