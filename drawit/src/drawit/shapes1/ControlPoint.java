@@ -7,5 +7,3 @@ public interface ControlPoint {
 	public void remove();
 	public void move(drawit.IntVector delta);
 }
-
-

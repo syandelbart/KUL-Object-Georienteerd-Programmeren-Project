@@ -4,7 +4,7 @@ import drawit.IntPoint;
 import drawit.RoundedPolygon;
 import drawit.shapegroups1.ShapeGroup;
 
-public class RoundedPolygonShape {
+public class RoundedPolygonShape implements Shape {
 	
 	private RoundedPolygon polygon;
 	private ShapeGroup parent;
@@ -31,10 +31,22 @@ public class RoundedPolygonShape {
 	}
 	
 	public ControlPoint[] createControlPoints() {
-		ControlPoint[] result = new ControlPoint[2];
-		for(int i = 0; i < 2; i++) {
-			
-		}
+		ControlPointRoundedPolygon[] result = new ControlPointRoundedPolygon[2];
+		IntPoint topLeft = polygon.getBoundingBox().getTopLeft();
+		ControlPointRoundedPolygon roundedPolygonTopLeft = new ControlPointRoundedPolygon(polygon,topLeft.getX(),topLeft.getY());
+		IntPoint bottomRight = polygon.getBoundingBox().getBottomRight();
+		ControlPointRoundedPolygon roundedPolygonBottomRight = new ControlPointRoundedPolygon(polygon,bottomRight.getX(),bottomRight.getY());
+		result[0] = roundedPolygonTopLeft;
+		result[1] = roundedPolygonBottomRight;
+		return result;
+	}
+	
+	public drawit.IntPoint toShapeCoordinates(drawit.IntPoint p){
+		
+	}
+	
+	public drawit.IntPoint toGlobalCoordinates(drawit.IntPoint p){
+		
 	}
 }
 
