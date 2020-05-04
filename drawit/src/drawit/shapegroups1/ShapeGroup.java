@@ -13,15 +13,21 @@ public class ShapeGroup {
 	private NonleafShapeGroup parentGroup;
 	private Extent originalExtent;
 	private Extent extent;
-	private String drawingCommands;
 	
 	public ShapeGroup(){
 		
     }
 	
-	public void setDrawingCommands(String newDrawingCommands) {
-		this.drawingCommands = newDrawingCommands;
+	public java.lang.String getDrawingCommands() {
+		if(this instanceof LeafShapeGroup) {
+			return ((LeafShapeGroup)this).calculateDrawingCommands();
+		}
+		else {
+			return ((NonleafShapeGroup)this).calculateDrawingCommands();
+		}
 	}
+	
+	
 	
 	public void setOriginalExtent(Extent newOriginalExtent) {
 		this.originalExtent = newOriginalExtent;
@@ -122,15 +128,6 @@ public class ShapeGroup {
 		}
 		
 		this.extent = newExtent;
-	}
-	
-	/** Returns a textual representation of a sequence of drawing commands for drawing the shapes contained directly or indirectly by this shape group, expressed in this shape group's outer coordinate system. For the syntax of the drawing commands, see RoundedPolygon.getDrawingCommands().
-	 * @inspects | this
-	 * @mutates nothing |
-	 * @post | result != null
-	 */
-	public java.lang.String getDrawingCommands(){
-		return this.drawingCommands;
 	}
 }
 

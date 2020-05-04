@@ -5,11 +5,11 @@ import drawit.shapegroups1.LeafShapeGroup;
 import drawit.shapegroups1.ShapeGroup;
 
 public class ShapeGroupShape implements Shape {
-	LeafShapeGroup referencedShapeGroup;
+	ShapeGroup referencedShapeGroup;
 
     //Initializes this object to store the given ShapeGroup reference;
     public ShapeGroupShape(drawit.shapegroups1.ShapeGroup group) {
-        this.referencedShapeGroup = (LeafShapeGroup)group;
+        this.referencedShapeGroup = group;
     }
 
     //Returns the ShapeGruop reference stored by this object.
@@ -32,9 +32,9 @@ public class ShapeGroupShape implements Shape {
     public ControlPoint[] createControlPoints() {
     	ControlPointShapeGroup[] result = new ControlPointShapeGroup[2];
     	IntPoint topLeft = referencedShapeGroup.getExtent().getTopLeft();
-    	ControlPointShapeGroup shapeGroupTopLeft = new ControlPointShapeGroup(referencedShapeGroup,topLeft);
+    	ControlPointShapeGroup shapeGroupTopLeft = new ControlPointShapeGroup(referencedShapeGroup,topLeft,"topleft");
 		IntPoint bottomRight = referencedShapeGroup.getExtent().getBottomRight();
-		ControlPointShapeGroup shapeGroupBottomRight = new ControlPointShapeGroup(referencedShapeGroup,bottomRight);
+		ControlPointShapeGroup shapeGroupBottomRight = new ControlPointShapeGroup(referencedShapeGroup,bottomRight,"bottomright");
 		result[0] = shapeGroupTopLeft;
 		result[1] = shapeGroupBottomRight;
 		return result;

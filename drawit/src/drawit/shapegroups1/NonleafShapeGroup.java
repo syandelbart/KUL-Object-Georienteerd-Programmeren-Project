@@ -3,6 +3,7 @@ package drawit.shapegroups1;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import drawit.IntPoint;
 
@@ -42,8 +43,6 @@ public class NonleafShapeGroup extends ShapeGroup {
         
         super.setExtent(this.calculateExtent());
 		super.setOriginalExtent(this.calculateExtent());
-		
-		super.setDrawingCommands(this.calculateDrawingCommands());
     }
 	
 	public int getSubgroupCount() {
@@ -128,7 +127,6 @@ public class NonleafShapeGroup extends ShapeGroup {
 		}
 		result[0] = this;
 		this.getParentGroup().subgroups = result;
-		super.setDrawingCommands(this.calculateDrawingCommands());
 	}
 	
 	/** Moves this shape group to the back of its parent's list of subgroups.
@@ -157,7 +155,13 @@ public class NonleafShapeGroup extends ShapeGroup {
 		}
 		result[this.getParentGroup().getSubgroupCount() - 1] = this;
 		this.getParentGroup().subgroups = result;
-		super.setDrawingCommands(this.calculateDrawingCommands());
+	}
+	
+	public void setExtent(Extent newExtent){
+		if(!(newExtent != null)) {
+			throw new IllegalArgumentException();
+		}
+		super.setExtent(newExtent);
 	}
 	
 	public Extent calculateExtent() {

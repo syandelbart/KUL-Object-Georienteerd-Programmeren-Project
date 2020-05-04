@@ -27,13 +27,18 @@ public class LeafShapeGroup extends ShapeGroup {
 		this.shape = shape;
 		super.setExtent(this.calculateExtent());
 		super.setOriginalExtent(this.calculateExtent());
-		
-		super.setDrawingCommands(this.calculateDrawingCommands());
 	}
 	
 	/** Returns the shape directly contained by this shape group, or null if this is a non-leaf shape group.*/
 	public RoundedPolygon getShape() {
 		return this.shape;
+	}
+	
+	public void setExtent(Extent newExtent){
+		if(!(newExtent != null)) {
+			throw new IllegalArgumentException();
+		}
+		super.setExtent(newExtent);
 	}
 	
 	public Extent calculateExtent() {

@@ -1,16 +1,19 @@
 package drawit.shapes1;
 import drawit.IntPoint;
 import drawit.RoundedPolygon;
+import drawit.shapegroups1.ShapeGroup;
 
 public class ControlPointRoundedPolygon implements ControlPoint{
 	int location;
 	IntPoint point;
 	RoundedPolygon shape;
+	ShapeGroup parent;
 	
-	public ControlPointRoundedPolygon(RoundedPolygon shape, IntPoint point, int location) {
+	public ControlPointRoundedPolygon(RoundedPolygon shape, IntPoint point, int location, ShapeGroup parent) {
 		this.shape = shape;
 		this.point = point;
 		this.location = location;
+		this.parent = parent;
 
 	}
 	public drawit.IntPoint getLocation(){
@@ -25,6 +28,11 @@ public class ControlPointRoundedPolygon implements ControlPoint{
 		}
 	}
 	public void move(drawit.IntVector delta) {
-		shape.update(location,this.point.plus(delta));
+		if(parent == null) {
+			shape.update(location, this.point.plus(delta));
+		}
+		else {
+			shape.update(location,this.point.plus(parent.toInnerCoordinates(delta)));
+		}
 	}
 }
