@@ -18,20 +18,27 @@ public class Extent {
 			return false;
 		}
 		Extent otherExtent = (Extent)obj;
-		List<Integer> extent1 = new ArrayList<Integer>();
-		List<Integer> extent2 = new ArrayList<Integer>();
-		extent1.add(this.left);
-		extent1.add(this.top);
-		extent1.add(this.right);
-		extent1.add(this.bottom);
-		extent2.add(otherExtent.left);
-		extent2.add(otherExtent.top);
-		extent2.add(otherExtent.right);
-		extent2.add(otherExtent.bottom);
-		Collections.sort(extent1);
-		Collections.sort(extent2);
-		for(int i = 0; i < extent1.size(); i++) {
-			if (extent1.get(i) != extent2.get(i)) {
+		List<Integer> otherextentX = new ArrayList<Integer>();
+		List<Integer> otherextentY = new ArrayList<Integer>();
+		List<Integer> extentX = new ArrayList<Integer>();
+		List<Integer> extentY = new ArrayList<Integer>();
+		extentX.add(this.left);
+		extentY.add(this.top);
+		extentX.add(this.right);
+		extentY.add(this.bottom);
+		otherextentX.add(otherExtent.left);
+		otherextentY.add(otherExtent.top);
+		otherextentX.add(otherExtent.right);
+		otherextentY.add(otherExtent.bottom);
+		Collections.sort(otherextentX);
+		Collections.sort(otherextentY);
+		Collections.sort(extentX);
+		Collections.sort(extentY);
+		for(int i = 0; i < otherextentX.size(); i++) {
+			if (otherextentX.get(i) != extentX.get(i)) {
+				return false;
+			}
+			if (otherextentY.get(i) != extentY.get(i)) {
 				return false;
 			}
 		}
@@ -40,30 +47,38 @@ public class Extent {
 	
 	@Override
 	public int hashCode() {
-		List<Integer> extent = new ArrayList<Integer>();
-		extent.add(this.left);
-		extent.add(this.top);
-		extent.add(this.right);
-		extent.add(this.bottom);
-		Collections.sort(extent);
+		List<Integer> extentX = new ArrayList<Integer>();
+		List<Integer> extentY = new ArrayList<Integer>();
+		extentX.add(this.left);
+		extentY.add(this.top);
+		extentX.add(this.right);
+		extentY.add(this.bottom);
+		Collections.sort(extentY);
+		Collections.sort(extentX);
 		int result = 0;
-		for(int i = 0; i < extent.size(); i++) {
-			result += (extent.get(i) * 10 * i); 
+		for(int i = 0; i < extentX.size(); i++) {
+			result += (extentX.get(i) * 7 * (i + 1));
+			result += (extentY.get(i) * 22 * (i + 1));
 		}
 		return result;
 	}
 	
 	@Override
 	public String toString() {
-		List<Integer> extent = new ArrayList<Integer>();
-		extent.add(this.left);
-		extent.add(this.top);
-		extent.add(this.right);
-		extent.add(this.bottom);
-		Collections.sort(extent);
+		List<Integer> extentX = new ArrayList<Integer>();
+		List<Integer> extentY = new ArrayList<Integer>();
+		extentX.add(this.left);
+		extentY.add(this.top);
+		extentX.add(this.right);
+		extentY.add(this.bottom);
+		Collections.sort(extentY);
+		Collections.sort(extentX);
 		String result = "";
-		for(int i = 0; i < extent.size(); i++) {
-			result += extent.get(i) + " "; 
+		for(int i = 0; i < extentX.size(); i++) {
+			result += extentX.get(i) + " "; 
+		}
+		for(int i = 0; i < extentY.size(); i++) {
+			result += extentY.get(i) + " "; 
 		}
 		return result;
 	}
