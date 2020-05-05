@@ -3,11 +3,12 @@ package drawit.tests;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import drawit.shapegroups1.Extent;
+import drawit.shapegroups1.LeafShapeGroup;
+import drawit.shapegroups1.NonleafShapeGroup;
 import drawit.shapegroups1.ShapeGroup;
 import drawit.RoundedPolygon;
 import drawit.IntVector;
 import drawit.IntPoint;
-
 
 class Shapegroups1ShapeGroupTest {
 
@@ -55,19 +56,19 @@ class Shapegroups1ShapeGroupTest {
 			
 		
 			//creating shapegroups from roundedpolygons
-				ShapeGroup firstShapeGroup = new ShapeGroup(firstRoundedPolygon);
-				ShapeGroup secondShapeGroup = new ShapeGroup(secondRoundedPolygon);
-				ShapeGroup thirdShapeGroup = new ShapeGroup(thirdRoundedPolygon);	
+				LeafShapeGroup firstShapeGroup = new LeafShapeGroup(firstRoundedPolygon);
+				LeafShapeGroup secondShapeGroup = new LeafShapeGroup(secondRoundedPolygon);
+				LeafShapeGroup thirdShapeGroup = new LeafShapeGroup(thirdRoundedPolygon);	
 			
 			
 				
 				
 			//creating shapecollection from shapegroups (first figure is front)
-				ShapeGroup[] shapeCollection = new ShapeGroup[] {firstShapeGroup,secondShapeGroup,thirdShapeGroup};
+				LeafShapeGroup[] shapeCollection = new LeafShapeGroup[] {firstShapeGroup,secondShapeGroup,thirdShapeGroup};
 			
 				
 			//creating parent from shapecollection
-				ShapeGroup parentShapeGroup = new ShapeGroup(shapeCollection);
+				NonleafShapeGroup parentShapeGroup = new NonleafShapeGroup(shapeCollection);
 				
 				
 		//testing objects 
@@ -103,9 +104,12 @@ class Shapegroups1ShapeGroupTest {
 
 			
 			//getShape()
-				//doing operations on object
+				//doing operations on object --> only works if it is a LeafShapeGroup
 					for(int i = 0;i<parentShapeGroup.getSubgroupCount();i++) {
-						assertEquals(true,roundedPolygonCollection[i].equals(parentShapeGroup.getSubgroup(i).getShape()));
+						if(parentShapeGroup.getSubgroup(i) instanceof LeafShapeGroup) {
+							LeafShapeGroup cursor = (LeafShapeGroup) parentShapeGroup.getSubgroup(i);
+							assertEquals(true,roundedPolygonCollection[i].equals(cursor.getShape()));
+						}
 					}
 				
 					
@@ -190,7 +194,9 @@ class Shapegroups1ShapeGroupTest {
 			//bringToFront()
 				//doing operations on objects
 					//third figure to front --> first figure to back 
-					parentShapeGroup.getSubgroup(2).bringToFront();
+					if(parentShapeGroup.getSubgroup(2) instanceof NonleafShapeGroup) {
+						parentShapeGroup.getSubgroup(2).bringToFront();
+					}
 				//testing object values
 					assertEquals(true,thirdShapeGroup.equals(parentShapeGroup.getSubgroup(0)));
 					assertEquals(true,secondShapeGroup.equals(parentShapeGroup.getSubgroup(2)));
@@ -200,7 +206,10 @@ class Shapegroups1ShapeGroupTest {
 			//sendToBack()
 				//doing operations on objects
 					//second figure to back --> first figure to second 
-					parentShapeGroup.getSubgroup(1).sendToBack();
+					if(parentShapeGroup.getSubgroup(1) instanceof NonleafShapeGroup) {
+						NonleafShapeGroup cursor1 = (NonleafShapeGroup) parentShapeGroup.getSubgroup(1);
+						cursor1.sendToBack();
+					}
 				//testing object values
 					assertEquals(true,thirdShapeGroup.equals(parentShapeGroup.getSubgroup(0)));
 					assertEquals(true,firstShapeGroup.equals(parentShapeGroup.getSubgroup(2)));
