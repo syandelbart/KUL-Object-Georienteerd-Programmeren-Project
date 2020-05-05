@@ -1,4 +1,7 @@
 package drawit.shapegroups2;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import drawit.IntPoint;
 
 public class Extent {
@@ -6,6 +9,77 @@ public class Extent {
 	private int top;
 	private int width;
 	private int height;
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof Extent)) {
+			return false;
+		}
+		Extent otherExtent = (Extent)obj;
+		List<Integer> otherextentX = new ArrayList<Integer>();
+		List<Integer> otherextentY = new ArrayList<Integer>();
+		List<Integer> extentX = new ArrayList<Integer>();
+		List<Integer> extentY = new ArrayList<Integer>();
+		extentX.add(this.left);
+		extentY.add(this.top);
+		extentX.add(this.getRight());
+		extentY.add(this.getBottom());
+		otherextentX.add(otherExtent.left);
+		otherextentY.add(otherExtent.top);
+		otherextentX.add(otherExtent.getRight());
+		otherextentY.add(otherExtent.getBottom());
+		Collections.sort(otherextentX);
+		Collections.sort(otherextentY);
+		Collections.sort(extentX);
+		Collections.sort(extentY);
+		for(int i = 0; i < otherextentX.size(); i++) {
+			if (otherextentX.get(i) != extentX.get(i)) {
+				return false;
+			}
+			if (otherextentY.get(i) != extentY.get(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		List<Integer> extentX = new ArrayList<Integer>();
+		List<Integer> extentY = new ArrayList<Integer>();
+		extentX.add(this.left);
+		extentY.add(this.top);
+		extentX.add(this.getRight());
+		extentY.add(this.getBottom());
+		Collections.sort(extentY);
+		Collections.sort(extentX);
+		int result = 0;
+		for(int i = 0; i < extentX.size(); i++) {
+			result += (extentX.get(i) * 7 * (i + 1));
+			result += (extentY.get(i) * 22 * (i + 1));
+		}
+		return result;
+	}
+	
+	@Override
+	public String toString() {
+		List<Integer> extentX = new ArrayList<Integer>();
+		List<Integer> extentY = new ArrayList<Integer>();
+		extentX.add(this.left);
+		extentY.add(this.top);
+		extentX.add(this.getRight());
+		extentY.add(this.getBottom());
+		Collections.sort(extentY);
+		Collections.sort(extentX);
+		String result = "";
+		for(int i = 0; i < extentX.size(); i++) {
+			result += extentX.get(i) + " "; 
+		}
+		for(int i = 0; i < extentY.size(); i++) {
+			result += extentY.get(i) + " "; 
+		}
+		return result;
+	}
 	
 	/** Returns the X coordinate of the left border of this extent.	*/
 	public int getLeft() {

@@ -17,7 +17,6 @@ public class ShapeGroup {
 	 */
 	
 	
-	private RoundedPolygon shape;
 	private ShapeGroup parentGroup;
 	private Extent originalExtent;
 	private Extent extent;
@@ -26,27 +25,8 @@ public class ShapeGroup {
 	private ShapeGroup firstChild;
 	private ShapeGroup lastChild;
 	
-	/**	Initializes this ShapeGroup with the given shape and calculates the extent and originalExtent.
-	 * @mutates | this
-	 * @throws IllegalArgumentException if the argument shape is null
-	 * 	| !(shape != null)
-	 * 
-	 * @post The object's shape is equal to the given shape.
-	 * 	| getShape().equals(shape)
-	 * @post The object's original extent is equal to the extent.
-	 * 	| getOriginalExtent().getTop() == getExtent().getTop()
-	 * 	| && getOriginalExtent().getLeft() == getExtent().getLeft()
-	 * 	| && getOriginalExtent().getBottom() == getExtent().getBottom()
-	 * 	| && getOriginalExtent().getRight() == getExtent().getRight()
-	 */
-	public ShapeGroup(RoundedPolygon shape) {
-		if(!(shape != null)) {
-			throw new IllegalArgumentException("shape is null");
-		}
-		
-		this.shape = shape;
-		this.originalExtent = this.getExtent();
-		this.extent = this.getExtent();
+	public void setOriginalExtent(Extent newExtent) {
+		this.originalExtent = newExtent;
 	}
 	
 	/** Initializes this object to represent a non-leaf shape group that directly contains the given subgroups, in the given order.
