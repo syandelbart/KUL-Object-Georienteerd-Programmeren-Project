@@ -194,9 +194,7 @@ class Shapegroups1ShapeGroupTest {
 			//bringToFront()
 				//doing operations on objects
 					//third figure to front --> first figure to back 
-					if(parentShapeGroup.getSubgroup(2) instanceof NonleafShapeGroup) {
-						parentShapeGroup.getSubgroup(2).bringToFront();
-					}
+					parentShapeGroup.getSubgroup(2).bringToFront();
 				//testing object values
 					assertEquals(true,thirdShapeGroup.equals(parentShapeGroup.getSubgroup(0)));
 					assertEquals(true,secondShapeGroup.equals(parentShapeGroup.getSubgroup(2)));
@@ -206,10 +204,7 @@ class Shapegroups1ShapeGroupTest {
 			//sendToBack()
 				//doing operations on objects
 					//second figure to back --> first figure to second 
-					if(parentShapeGroup.getSubgroup(1) instanceof NonleafShapeGroup) {
-						NonleafShapeGroup cursor1 = (NonleafShapeGroup) parentShapeGroup.getSubgroup(1);
-						cursor1.sendToBack();
-					}
+					parentShapeGroup.getSubgroup(1).sendToBack();
 				//testing object values
 					assertEquals(true,thirdShapeGroup.equals(parentShapeGroup.getSubgroup(0)));
 					assertEquals(true,firstShapeGroup.equals(parentShapeGroup.getSubgroup(2)));
@@ -221,52 +216,52 @@ class Shapegroups1ShapeGroupTest {
 							"pushScale 2.0 2.0\n" +
 							"pushTranslate -0.0 -0.0\n" +
 							"pushScale 1.0 1.0\n" +
-							"line 0 5 0 0\n" +
-							"arc 0 0 0 0.0 0.0\n" +
-							"line 0 0 5 0\n" +
-							"line 5 0 10 0\n" +
-							"arc 10 0 0 0.0 0.0\n" +
-							"line 10 0 10 5\n" +
-							"line 10 5 10 10\n" +
-							"arc 10 10 0 0.0 0.0\n" +
-							"line 10 10 5 10\n" +
-							"line 5 10 0 10\n" +
-							"arc 0 10 0 0.0 0.0\n" +
-							"line 0 10 0 5\n" +
+							"line 0.0 5 0.0 0\n" +
+							"arc 0.0 0 0.0 0.0 0.0\n" +
+							"line 0.0 0 5 0\n" +
+							"line 5 0.0 10.0 0\n" +
+							"arc 10.0 0.0 0 0.0 0.0\n" +
+							"line 10.0 0.0 10.0 5\n" +
+							"line 10.0 5 10.0 10.0\n" +
+							"arc 10.0 10 0.0 0.0 0.0\n" +
+							"line 10.0 10 5 10.0\n" +
+							"line 5 10.0 0.0 10.0\n" +
+							"arc 0.0 10.0 0.0 0.0 0.0\n" +
+							"line 0.0 10.0 0.0 5\n" +
 							"fill 255 255 0\n" +
 							"popTransform\n" +
 							"popTransform\n" +
 							"pushTranslate -0.0 -0.0\n" +
 							"pushScale 1.0 1.0\n" +
-							"line 5 10 5 5\n" +
-							"arc 5 5 0 0.0 0.0\n" +
-							"line 5 5 10 5\n" +
-							"line 10 5 15 5\n" +
-							"arc 15 5 0 0.0 0.0\n" +
-							"line 15 5 15 10\n" +
-							"line 15 10 15 15\n" +
-							"arc 15 15 0 0.0 0.0\n" +
-							"line 15 15 10 15\n" +
-							"line 10 15 5 15\n" +
-							"arc 5 15 0 0.0 0.0\n" +
-							"line 5 15 5 10\n" +
+							"line 5 10.0 5 5\n" +
+							"arc 5 5 0.0 0.0 0.0\n" +
+							"line 5 5 10.0 5\n" +
+							"line 10.0 5 15.0 5\n" +
+							"arc 15.0 5 0.0 0.0 0.0\n" +
+							"line 15.0 5 15.0 10.0\n" +
+							"line 15.0 10.0 15.0 15\n" +
+							"arc 15.0 15.0 0.0 0.0 0.0\n" +
+							"line 15.0 15.0 10.0 15\n" +
+							"line 10.0 15.0 5 15\n" +
+							"arc 5 15.0 0.0 0.0 0.0\n" +
+							"line 5 15.0 5 10.0\n" +
 							"fill 255 255 0\n" +
 							"popTransform\n" +
 							"popTransform\n" +
 							"pushTranslate -0.0 -0.0\n" +
 							"pushScale 1.0 1.0\n" +
-							"line 10 15 10 10\n" +
-							"arc 10 10 0 0.0 0.0\n" +
-							"line 10 10 15 10\n" +
-							"line 15 10 20 10\n" +
-							"arc 20 10 0 0.0 0.0\n" +
-							"line 20 10 20 15\n" +
-							"line 20 15 20 20\n" +
-							"arc 20 20 0 0.0 0.0\n" +
-							"line 20 20 15 20\n" +
-							"line 15 20 10 20\n" +
-							"arc 10 20 0 0.0 0.0\n" +
-							"line 10 20 10 15\n" +
+							"line 10.0 15.0 10.0 10.0\n" +
+							"arc 10.0 10 0.0 0.0 0.0\n" +
+							"line 10.0 10 15.0 10.0\n" +
+							"line 15.0 10.0 20 10.0\n" +
+							"arc 20 10.0 0.0 0.0 0.0\n" +
+							"line 20 10.0 20 15\n" +
+							"line 20 15.0 20 20\n" +
+							"arc 20 20 0.0 0.0 0.0\n" +
+							"line 20 20 15.0 20\n" +
+							"line 15.0 20 10.0 20\n" +
+							"arc 10.0 20 0.0 0.0 0.0\n" +
+							"line 10.0 20 10.0 15\n" +
 							"fill 255 255 0\n" +
 							"popTransform\n" +
 							"popTransform\n" +
