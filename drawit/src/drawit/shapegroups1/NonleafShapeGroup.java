@@ -40,8 +40,8 @@ public class NonleafShapeGroup extends ShapeGroup {
             this.subgroups[i] = subgroups[i];
             this.subgroups[i].setParentGroup(this);
         }
-        super.setExtent(this.CalculateExtent());
-		super.setOriginalExtent(this.CalculateExtent());
+        super.setExtent(this.calculateExtent());
+		super.setOriginalExtent(this.calculateExtent());
     }
 	
     public void setSubgroups(ShapeGroup[] newSubgroups) {
@@ -167,7 +167,7 @@ public class NonleafShapeGroup extends ShapeGroup {
 		super.setExtent(newExtent);
 	}
 	
-	public Extent CalculateExtent() {
+	public Extent calculateExtent() {
 		Extent[] extentArray = new Extent[this.getSubgroupCount()];
 		for(int i = 0; i < this.getSubgroupCount() ; i++) {
 			extentArray[i] = this.subgroups[i].getExtent();

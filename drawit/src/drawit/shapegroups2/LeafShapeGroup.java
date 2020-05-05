@@ -26,8 +26,8 @@ public class LeafShapeGroup extends ShapeGroup {
 			throw new IllegalArgumentException("shape is null");
 		}
 		this.shape = shape;
-		super.setOriginalExtent(this.CalculateExtent());
-		super.setExtent(this.CalculateExtent());
+		super.setOriginalExtent(this.calculateExtent());
+		super.setExtent(this.calculateExtent());
 	}
 	
 	/** Returns the shape directly contained by this shape group, or null if this is a non-leaf shape group.*/
@@ -42,7 +42,7 @@ public class LeafShapeGroup extends ShapeGroup {
 		super.setExtent(newExtent);
 	}
 	
-	public Extent CalculateExtent() {
+	public Extent calculateExtent() {
 		int minimumX = this.shape.getVertices()[0].getX();
 		int maximumX = this.shape.getVertices()[0].getX();
 		int minimumY = this.shape.getVertices()[0].getY();
@@ -72,6 +72,20 @@ public class LeafShapeGroup extends ShapeGroup {
 		return counter;
 	}
 	
+	public java.lang.String getDrawingCommands(){
+		StringBuilder string = new StringBuilder();
+		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
+		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
+		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
+		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
+		string.append("pushTranslate" + " " + translateX + " " + translateY + "\n");
+		string.append("pushScale" + " " + scaleX + " " + scaleY + "\n");
+		string.append(this.shape.getDrawingCommands());
+		string.append("popTransform" + "\n");
+		string.append("popTransform" + "\n");
+		return string.toString();
+	}
+	
 	/** Moves this shape group to the front of its parent's list of subgroups.
 	 * @mutates this
 	 * 
@@ -88,42 +102,66 @@ public class LeafShapeGroup extends ShapeGroup {
 	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
 	 */
 	public void bringToFront() {
-		int location = this.getLocation();
-		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
-		for(int i = 0; i < location; i++) {
-			result[i+1] = this.getParentGroup().getSubgroup(i);
+		if(this.getParentGroup() == null) {
+			throw new IllegalArgumentException("parentgroup is null");
 		}
-		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
-			result[i] = this.getParentGroup().getSubgroup(i);
+		if(this.getParentGroup().getFirstChild() != this) {
+			if(this.getParentGroup().getLastChild() == this) {
+				this.getPreviousSibling().setNextSibling(null);
+				this.getParentGroup().setLastChild(this.getPreviousSibling());
+				this.setPreviousSibling(null);
+				this.setNextSibling(this.getParentGroup().getFirstChild());
+				this.getParentGroup().getFirstChild().setPreviousSibling(this);
+				this.getParentGroup().setFirstChild(this);
+			}
+			else {
+				this.getNextSibling().setPreviousSibling(this.getPreviousSibling());
+				this.getPreviousSibling().setNextSibling(this.getNextSibling());
+				this.setNextSibling(this.getParentGroup().getFirstChild());
+				this.getParentGroup().getFirstChild().setPreviousSibling(this);
+				this.getParentGroup().setFirstChild(this);
+				this.setPreviousSibling(null);
+			}
 		}
-		result[0] = this;
-		this.getParentGroup().setSubgroups(result);
+		
 	}
 	
+	/** Moves this shape group to the back of its parent's list of subgroups.
+	 * @mutates this
+	 * 
+	 * @throws IllegalArgumentException
+	 * 	| getParentGroup() == null
+	 * 
+	 * @post This object is the last child of its getParentGroup().
+	 * 	| getParentGroup().getSubgroup(getParentGroup().getSubgroupCount() - 1) == this
+	 * 
+	 * @post The indexes of the children of getParentGroup that were in front of this object are the same.
+	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
+	 * 
+	 * @post The indexes of the children of getParentGroup that were behind this object are decremented by one.
+	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroups().get(i - 1)))
+	 */
 	public void sendToBack() {
-		int location = this.getLocation();
-		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
-		for(int i = 0; i < location; i++) {
-			result[i] = this.getParentGroup().getSubgroup(i);
+		if(this.getParentGroup() == null) {
+			throw new IllegalArgumentException("parentgroup is null");
 		}
-		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
-			result[i - 1] = this.getParentGroup().getSubgroup(i);
+		if(this.getParentGroup().getLastChild() != this) {
+			if(this.getParentGroup().getFirstChild() == this) {
+				this.getNextSibling().setPreviousSibling(null);
+				this.getParentGroup().setFirstChild(this.getNextSibling());
+				this.setNextSibling(null);
+				this.setPreviousSibling(this.getParentGroup().getLastChild());
+				this.getParentGroup().getLastChild().setNextSibling(this);
+				this.getParentGroup().setLastChild(this);
+			}
+			else {
+				this.getPreviousSibling().setNextSibling(this.getNextSibling());
+				this.getNextSibling().setPreviousSibling(this.getPreviousSibling());
+				this.setPreviousSibling(this.getParentGroup().getLastChild());
+				this.getParentGroup().getLastChild().setNextSibling(this);
+				this.getParentGroup().setLastChild(this);
+				this.setNextSibling(null);
+			}
 		}
-		result[this.getParentGroup().getSubgroupCount() - 1] = this;
-		this.getParentGroup().setSubgroups(result);
-	}
-	
-	public java.lang.String getDrawingCommands(){
-		StringBuilder string = new StringBuilder();
-		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
-		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
-		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
-		string.append("pushTranslate" + " " + translateX + " " + translateY + "\n");
-		string.append("pushScale" + " " + scaleX + " " + scaleY + "\n");
-		string.append(this.shape.getDrawingCommands());
-		string.append("popTransform" + "\n");
-		string.append("popTransform" + "\n");
-		return string.toString();
 	}
 }

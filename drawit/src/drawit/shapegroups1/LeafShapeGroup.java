@@ -27,8 +27,8 @@ public class LeafShapeGroup extends ShapeGroup {
 			throw new IllegalArgumentException("shape is null");
 		}
 		this.shape = shape;
-		super.setOriginalExtent(this.CalculateExtent());
-		super.setExtent(this.CalculateExtent());
+		super.setOriginalExtent(this.calculateExtent());
+		super.setExtent(this.calculateExtent());
 	}
 	
 	/** Returns the shape directly contained by this shape group, or null if this is a non-leaf shape group.*/
@@ -43,7 +43,7 @@ public class LeafShapeGroup extends ShapeGroup {
 		super.setExtent(newExtent);
 	}
 	
-	public Extent CalculateExtent() {
+	public Extent calculateExtent() {
 		int minimumX = this.shape.getVertices()[0].getX();
 		int maximumX = this.shape.getVertices()[0].getX();
 		int minimumY = this.shape.getVertices()[0].getY();
