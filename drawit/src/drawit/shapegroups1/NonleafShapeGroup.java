@@ -40,11 +40,14 @@ public class NonleafShapeGroup extends ShapeGroup {
             this.subgroups[i] = subgroups[i];
             this.subgroups[i].setParentGroup(this);
         }
-        
-        super.setExtent(this.calculateExtent());
-		super.setOriginalExtent(this.calculateExtent());
+        super.setExtent(this.CalculateExtent());
+		super.setOriginalExtent(this.CalculateExtent());
     }
 	
+    public void setSubgroups(ShapeGroup[] newSubgroups) {
+    	this.subgroups = newSubgroups;
+    }
+    
 	public int getSubgroupCount() {
 		if(this.subgroups == null) {
 			return 0;
@@ -164,7 +167,7 @@ public class NonleafShapeGroup extends ShapeGroup {
 		super.setExtent(newExtent);
 	}
 	
-	public Extent calculateExtent() {
+	public Extent CalculateExtent() {
 		Extent[] extentArray = new Extent[this.getSubgroupCount()];
 		for(int i = 0; i < this.getSubgroupCount() ; i++) {
 			extentArray[i] = this.subgroups[i].getExtent();
@@ -203,7 +206,7 @@ public class NonleafShapeGroup extends ShapeGroup {
 		return (Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY));
 	}
 	
-	public java.lang.String calculateDrawingCommands(){
+	public java.lang.String getDrawingCommands(){
 		StringBuilder string = new StringBuilder();
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();

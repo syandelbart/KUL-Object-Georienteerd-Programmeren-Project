@@ -308,7 +308,7 @@ public class RoundedPolygon {
 			double baSize = ba.getSize();
 			double bcSize = bc.getSize();
 			if (ba.crossProduct(bc) == 0) {
-				commands.append("line " + (int)bcCenter.getX() + " " + (int)bcCenter.getY() + " " + (int)b.getX() + " " + (int)b.getY() + "\n");
+				commands.append("line " + bcCenter.getX() + " " + bcCenter.getY() + " " + b.getX() + " " + b.getY() + "\n");
 				commands.append("line " + b.getX() + " " + (int)b.getY() + " " + (int)baCenter.getX() + " " + (int)baCenter.getY() + "\n");
 			} else {
 				DoubleVector baUnit = ba.scale(1/baSize);
@@ -329,9 +329,9 @@ public class RoundedPolygon {
 					angleExtent += 2 * Math.PI;
 				else if (Math.PI < angleExtent)
 					angleExtent -= 2 * Math.PI;
-				commands.append("line " + (int)baCenter.getX() + " " + (int)baCenter.getY() + " " + (int)baCornerStart.getX() + " " + (int)baCornerStart.getY() + "\n");
-				commands.append("arc " + (int)center.getX() + " " + (int)center.getY() + " " + (int)radius + " " + baAngle + " " + angleExtent + "\n");
-				commands.append("line " + (int)bcCornerStart.getX() + " " + (int)bcCornerStart.getY() + " " + (int)bcCenter.getX() + " " + (int)bcCenter.getY() + "\n");
+				commands.append("line " + baCenter.getX() + " " + baCenter.getY() + " " + baCornerStart.getX() + " " + baCornerStart.getY() + "\n");
+				commands.append("arc " + center.getX() + " " + center.getY() + " " + radius + " " + baAngle + " " + angleExtent + "\n");
+				commands.append("line " + bcCornerStart.getX() + " " + bcCornerStart.getY() + " " + bcCenter.getX() + " " + bcCenter.getY() + "\n");
 			}
 		}
 		int red = this.color.getRed();

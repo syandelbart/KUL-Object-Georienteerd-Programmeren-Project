@@ -1,12 +1,72 @@
 package drawit.shapegroups1;
 
 import drawit.IntPoint;
+import java.lang.Object;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Extent {
 	private int left;
 	private int top;
 	private int right;
 	private int bottom;
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof Extent)) {
+			return false;
+		}
+		Extent otherExtent = (Extent)obj;
+		List<Integer> extent1 = new ArrayList<Integer>();
+		List<Integer> extent2 = new ArrayList<Integer>();
+		extent1.add(this.left);
+		extent1.add(this.top);
+		extent1.add(this.right);
+		extent1.add(this.bottom);
+		extent2.add(otherExtent.left);
+		extent2.add(otherExtent.top);
+		extent2.add(otherExtent.right);
+		extent2.add(otherExtent.bottom);
+		Collections.sort(extent1);
+		Collections.sort(extent2);
+		for(int i = 0; i < extent1.size(); i++) {
+			if (extent1.get(i) != extent2.get(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		List<Integer> extent = new ArrayList<Integer>();
+		extent.add(this.left);
+		extent.add(this.top);
+		extent.add(this.right);
+		extent.add(this.bottom);
+		Collections.sort(extent);
+		int result = 0;
+		for(int i = 0; i < extent.size(); i++) {
+			result += (extent.get(i) * 10 * i); 
+		}
+		return result;
+	}
+	
+	@Override
+	public String toString() {
+		List<Integer> extent = new ArrayList<Integer>();
+		extent.add(this.left);
+		extent.add(this.top);
+		extent.add(this.right);
+		extent.add(this.bottom);
+		Collections.sort(extent);
+		String result = "";
+		for(int i = 0; i < extent.size(); i++) {
+			result += extent.get(i) + " "; 
+		}
+		return result;
+	}
 	
 	/** Returns the X coordinate of the left border of this extent.	*/
 	public int getLeft() {

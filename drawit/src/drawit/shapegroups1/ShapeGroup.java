@@ -8,7 +8,7 @@ import drawit.IntPoint;
 import drawit.RoundedPolygon;
 import drawit.IntVector;
 
-public class ShapeGroup {
+abstract public class ShapeGroup {
 	
 	private NonleafShapeGroup parentGroup;
 	private Extent originalExtent;
@@ -18,16 +18,13 @@ public class ShapeGroup {
 		
     }
 	
-	public java.lang.String getDrawingCommands() {
-		if(this instanceof LeafShapeGroup) {
-			return ((LeafShapeGroup)this).calculateDrawingCommands();
-		}
-		else {
-			return ((NonleafShapeGroup)this).calculateDrawingCommands();
-		}
+	abstract public java.lang.String getDrawingCommands();
+	abstract public void bringToFront();
+	abstract public void sendToBack();
+	
+	public Extent getExtent() {
+		return this.extent;
 	}
-	
-	
 	
 	public void setOriginalExtent(Extent newOriginalExtent) {
 		this.originalExtent = newOriginalExtent;
@@ -44,9 +41,6 @@ public class ShapeGroup {
 	 * 	|result != null
 	 * @post The returned extent contains the shape or subgroups' shapes of this object.
 	 */
-	public Extent getExtent() {
-		return this.extent;
-	}
 		
 	/** Returns the extent of this shape group, expressed in its inner coordinate system. This coincides with the extent expressed in outer coordinates at the time of creation of the shape group. The shape transformation defined by this shape group is the one that transforms the original extent to the current extent. This method returns an equal result throughout the lifetime of this object.*/
 	public Extent getOriginalExtent() {
@@ -126,7 +120,6 @@ public class ShapeGroup {
 		if(!(newExtent != null)) {
 			throw new IllegalArgumentException();
 		}
-		
 		this.extent = newExtent;
 	}
 }

@@ -1,5 +1,7 @@
 package drawit.shapegroups1;
 
+import java.util.stream.IntStream;
+
 import drawit.RoundedPolygon;
 
 public class LeafShapeGroup extends ShapeGroup {
@@ -25,8 +27,8 @@ public class LeafShapeGroup extends ShapeGroup {
 			throw new IllegalArgumentException("shape is null");
 		}
 		this.shape = shape;
-		super.setExtent(this.calculateExtent());
-		super.setOriginalExtent(this.calculateExtent());
+		super.setOriginalExtent(this.CalculateExtent());
+		super.setExtent(this.CalculateExtent());
 	}
 	
 	/** Returns the shape directly contained by this shape group, or null if this is a non-leaf shape group.*/
@@ -41,7 +43,7 @@ public class LeafShapeGroup extends ShapeGroup {
 		super.setExtent(newExtent);
 	}
 	
-	public Extent calculateExtent() {
+	public Extent CalculateExtent() {
 		int minimumX = this.shape.getVertices()[0].getX();
 		int maximumX = this.shape.getVertices()[0].getX();
 		int minimumY = this.shape.getVertices()[0].getY();
@@ -63,7 +65,56 @@ public class LeafShapeGroup extends ShapeGroup {
 		return (Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY));
 	}
 	
-	public java.lang.String calculateDrawingCommands(){
+	private int getLocation() {
+		int counter = 0;
+		while(!this.getParentGroup().getSubgroup(counter).equals(this)) {
+			counter++;
+		}
+		return counter;
+	}
+	
+	/** Moves this shape group to the front of its parent's list of subgroups.
+	 * @mutates this
+	 * 
+	 * @throws IllegalArgumentException
+	 * 	| getParentGroup() == null
+	 * 
+	 * @post This object is the first child of its getParentGroup().
+	 * 	| getParentGroup().getSubgroup(0) == this
+	 * 
+	 * @post The indexes of the children of getParentGroup that were in front of this object are incremented by one.
+	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i + 1)))
+	 * 
+	 * @post The indexes of the children of getParentGroup that were behind this object are the same.
+	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
+	 */
+	public void bringToFront() {
+		int location = this.getLocation();
+		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
+		for(int i = 0; i < location; i++) {
+			result[i+1] = this.getParentGroup().getSubgroup(i);
+		}
+		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
+			result[i] = this.getParentGroup().getSubgroup(i);
+		}
+		result[0] = this;
+		this.getParentGroup().setSubgroups(result);
+	}
+	
+	public void sendToBack() {
+		int location = this.getLocation();
+		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
+		for(int i = 0; i < location; i++) {
+			result[i] = this.getParentGroup().getSubgroup(i);
+		}
+		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
+			result[i - 1] = this.getParentGroup().getSubgroup(i);
+		}
+		result[this.getParentGroup().getSubgroupCount() - 1] = this;
+		this.getParentGroup().setSubgroups(result);
+	}
+	
+	public java.lang.String getDrawingCommands(){
 		StringBuilder string = new StringBuilder();
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
