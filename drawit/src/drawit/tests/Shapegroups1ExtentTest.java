@@ -1,6 +1,7 @@
 package drawit.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import drawit.shapegroups1.*;
 
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ class Shapegroups1ExtentTest {
 
 	@Test
 	void test() {
+		//extent is unchanged compared to previous interface
 		
 		//testing constructors
 		Extent extent1 = Extent.ofLeftTopRightBottom(10,10,20,20);

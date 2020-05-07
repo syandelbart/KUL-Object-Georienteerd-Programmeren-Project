@@ -11,6 +11,8 @@ import drawit.IntVector;
 import drawit.IntPoint;
 
 class Shapegroups1ShapeGroupTest {
+	//since we assume that the shapegroup is unchanged, and is only made more clear compared to the older version
+	//we can use the old test functions and change them to work the updated interface
 
 	@Test
 	void test() {
@@ -212,11 +214,7 @@ class Shapegroups1ShapeGroupTest {
 			
 			
 			//getDrawingCommands()
-					assertEquals("pushTranslate -0.0 -0.0\n" +
-							"pushScale 2.0 2.0\n" +
-							"pushTranslate -0.0 -0.0\n" +
-							"pushScale 1.0 1.0\n" +
-							"line 0.0 5 0.0 0\n" +
+					assertEquals("line 0.0 5 0.0 0\n" +
 							"arc 0.0 0 0.0 0.0 0.0\n" +
 							"line 0.0 0 5 0\n" +
 							"line 5 0.0 10.0 0\n" +
@@ -266,7 +264,7 @@ class Shapegroups1ShapeGroupTest {
 							"popTransform\n" +
 							"popTransform\n" +
 							"popTransform\n" +
-							"popTransform\n",parentShapeGroup.getDrawingCommands());
+							"popTransform",parentShapeGroup.getDrawingCommands());
 					
 	}
 

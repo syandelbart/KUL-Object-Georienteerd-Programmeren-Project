@@ -1,16 +1,22 @@
 package drawit.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import drawit.shapegroups2.Extent;
 import drawit.shapegroups2.ShapeGroup;
 import drawit.RoundedPolygon;
+import drawit.shapegroups2.LeafShapeGroup;
+import drawit.shapegroups2.NonleafShapeGroup;
 import drawit.IntPoint;
 import drawit.IntVector;
 
 
 class Shapegroups2ShapeGroupTest {
-
+	//since we assume that the shapegroup is unchanged, and is only made more clear compared to the older version
+	//we can use the old test functions and change them to work the updated interface
+	
+	
 	@Test
 	void test() {
 		//creating objects to experiment with
@@ -55,19 +61,19 @@ class Shapegroups2ShapeGroupTest {
 			
 		
 			//creating shapegroups from roundedpolygons
-				ShapeGroup firstShapeGroup = new ShapeGroup(firstRoundedPolygon);
-				ShapeGroup secondShapeGroup = new ShapeGroup(secondRoundedPolygon);
-				ShapeGroup thirdShapeGroup = new ShapeGroup(thirdRoundedPolygon);	
+				LeafShapeGroup firstShapeGroup = new LeafShapeGroup(firstRoundedPolygon);
+				LeafShapeGroup secondShapeGroup = new LeafShapeGroup(secondRoundedPolygon);
+				LeafShapeGroup thirdShapeGroup = new LeafShapeGroup(thirdRoundedPolygon);	
 			
 			
 				
 				
 			//creating shapecollection from shapegroups (first figure is front)
-				ShapeGroup[] shapeCollection = new ShapeGroup[] {firstShapeGroup,secondShapeGroup,thirdShapeGroup};
+				LeafShapeGroup[] shapeCollection = new LeafShapeGroup[] {firstShapeGroup,secondShapeGroup,thirdShapeGroup};
 			
 				
 			//creating parent from shapecollection
-				ShapeGroup parentShapeGroup = new ShapeGroup(shapeCollection);
+				NonleafShapeGroup parentShapeGroup = new NonleafShapeGroup(shapeCollection);
 				
 				
 		//testing objects 
@@ -103,9 +109,12 @@ class Shapegroups2ShapeGroupTest {
 
 			
 			//getShape()
-				//doing operations on object
+				//doing operations on object --> only works if it is a LeafShapeGroup
 					for(int i = 0;i<parentShapeGroup.getSubgroupCount();i++) {
-						assertEquals(true,roundedPolygonCollection[i].equals(parentShapeGroup.getSubgroup(i).getShape()));
+						if(parentShapeGroup.getSubgroup(i) instanceof LeafShapeGroup) {
+							LeafShapeGroup cursor = (LeafShapeGroup) parentShapeGroup.getSubgroup(i);
+							assertEquals(true,roundedPolygonCollection[i].equals(cursor.getShape()));
+						}
 					}
 				
 					
@@ -208,62 +217,57 @@ class Shapegroups2ShapeGroupTest {
 			
 			
 			//getDrawingCommands()
-					assertEquals("pushTranslate -0.0 -0.0\n" +
-							"pushScale 2.0 2.0\n" +
-							"pushTranslate -0.0 -0.0\n" +
-							"pushScale 1.0 1.0\n" +
-							"line 0 5 0 0\n" +
-							"arc 0 0 0 0.0 0.0\n" +
-							"line 0 0 5 0\n" +
-							"line 5 0 10 0\n" +
-							"arc 10 0 0 0.0 0.0\n" +
-							"line 10 0 10 5\n" +
-							"line 10 5 10 10\n" +
-							"arc 10 10 0 0.0 0.0\n" +
-							"line 10 10 5 10\n" +
-							"line 5 10 0 10\n" +
-							"arc 0 10 0 0.0 0.0\n" +
-							"line 0 10 0 5\n" +
+					assertEquals("line 0.0 5 0.0 0\n" +
+							"arc 0.0 0 0.0 0.0 0.0\n" +
+							"line 0.0 0 5 0\n" +
+							"line 5 0.0 10.0 0\n" +
+							"arc 10.0 0.0 0 0.0 0.0\n" +
+							"line 10.0 0.0 10.0 5\n" +
+							"line 10.0 5 10.0 10.0\n" +
+							"arc 10.0 10 0.0 0.0 0.0\n" +
+							"line 10.0 10 5 10.0\n" +
+							"line 5 10.0 0.0 10.0\n" +
+							"arc 0.0 10.0 0.0 0.0 0.0\n" +
+							"line 0.0 10.0 0.0 5\n" +
 							"fill 255 255 0\n" +
 							"popTransform\n" +
 							"popTransform\n" +
 							"pushTranslate -0.0 -0.0\n" +
 							"pushScale 1.0 1.0\n" +
-							"line 5 10 5 5\n" +
-							"arc 5 5 0 0.0 0.0\n" +
-							"line 5 5 10 5\n" +
-							"line 10 5 15 5\n" +
-							"arc 15 5 0 0.0 0.0\n" +
-							"line 15 5 15 10\n" +
-							"line 15 10 15 15\n" +
-							"arc 15 15 0 0.0 0.0\n" +
-							"line 15 15 10 15\n" +
-							"line 10 15 5 15\n" +
-							"arc 5 15 0 0.0 0.0\n" +
-							"line 5 15 5 10\n" +
+							"line 5 10.0 5 5\n" +
+							"arc 5 5 0.0 0.0 0.0\n" +
+							"line 5 5 10.0 5\n" +
+							"line 10.0 5 15.0 5\n" +
+							"arc 15.0 5 0.0 0.0 0.0\n" +
+							"line 15.0 5 15.0 10.0\n" +
+							"line 15.0 10.0 15.0 15\n" +
+							"arc 15.0 15.0 0.0 0.0 0.0\n" +
+							"line 15.0 15.0 10.0 15\n" +
+							"line 10.0 15.0 5 15\n" +
+							"arc 5 15.0 0.0 0.0 0.0\n" +
+							"line 5 15.0 5 10.0\n" +
 							"fill 255 255 0\n" +
 							"popTransform\n" +
 							"popTransform\n" +
 							"pushTranslate -0.0 -0.0\n" +
 							"pushScale 1.0 1.0\n" +
-							"line 10 15 10 10\n" +
-							"arc 10 10 0 0.0 0.0\n" +
-							"line 10 10 15 10\n" +
-							"line 15 10 20 10\n" +
-							"arc 20 10 0 0.0 0.0\n" +
-							"line 20 10 20 15\n" +
-							"line 20 15 20 20\n" +
-							"arc 20 20 0 0.0 0.0\n" +
-							"line 20 20 15 20\n" +
-							"line 15 20 10 20\n" +
-							"arc 10 20 0 0.0 0.0\n" +
-							"line 10 20 10 15\n" +
+							"line 10.0 15.0 10.0 10.0\n" +
+							"arc 10.0 10 0.0 0.0 0.0\n" +
+							"line 10.0 10 15.0 10.0\n" +
+							"line 15.0 10.0 20 10.0\n" +
+							"arc 20 10.0 0.0 0.0 0.0\n" +
+							"line 20 10.0 20 15\n" +
+							"line 20 15.0 20 20\n" +
+							"arc 20 20 0.0 0.0 0.0\n" +
+							"line 20 20 15.0 20\n" +
+							"line 15.0 20 10.0 20\n" +
+							"arc 10.0 20 0.0 0.0 0.0\n" +
+							"line 10.0 20 10.0 15\n" +
 							"fill 255 255 0\n" +
 							"popTransform\n" +
 							"popTransform\n" +
 							"popTransform\n" +
-							"popTransform\n",parentShapeGroup.getDrawingCommands());
+							"popTransform",parentShapeGroup.getDrawingCommands());
 					
 	}
-
 }
