@@ -56,6 +56,36 @@ class Shapegroups1ExtentTest {
 		extent1 = extent1.withWidth(20);
 		assertEquals(20,extent1.getWidth());
 		assertEquals(50,extent1.getRight());
+		
+		
+		//testing added functions (part 3)
+		Extent equalExtent1 = Extent.ofLeftTopRightBottom(10,20,30,40);
+		Extent equalExtent2 = Extent.ofLeftTopRightBottom(10,20,30,40);
+		Extent NonequalExtent3 = Extent.ofLeftTopRightBottom(40,30,20,10);
+		Extent rotatedExtent4 = Extent.ofLeftTopRightBottom(30,40,10,20);
+		Extent LRrotatedSidesExtent1 = Extent.ofLeftTopRightBottom(30,50,30,50);
+		Extent TBrotatedSidesExtent2 = Extent.ofLeftTopRightBottom(50,30,50,30);
+			//hashCode
+				//equal extents
+				assertEquals(true,equalExtent1.hashCode() == equalExtent2.hashCode());
+				//non-equal extents
+				assertEquals(false,equalExtent1.hashCode() == NonequalExtent3.hashCode());
+				//left is right and bottom is top (inverted)
+				assertEquals(true,equalExtent1.hashCode() == rotatedExtent4.hashCode());
+			//equals
+				//equal extents
+				assertEquals(true,equalExtent1.equals(equalExtent2));
+				//non-equal extents
+				assertEquals(false,equalExtent1.equals(NonequalExtent3));
+				//left is right and bottom is top (inverted)
+				assertEquals(true,equalExtent1.equals(rotatedExtent4));
+			//toString
+				//equal extents
+				assertEquals("10 30 20 40",equalExtent1.toString());
+				//non-equal extents
+				assertEquals("20 40 10 30",NonequalExtent3.toString());
+				//left is right and bottom is top (inverted)
+				assertEquals("10 30 20 40",rotatedExtent4.toString());
 	}
 
 }
