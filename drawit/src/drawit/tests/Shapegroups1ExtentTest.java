@@ -3,6 +3,7 @@ package drawit.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import drawit.shapegroups1.*;
+import drawit.shapegroups2.Extent;
 
 import org.junit.jupiter.api.Test;
 
@@ -63,8 +64,8 @@ class Shapegroups1ExtentTest {
 		Extent equalExtent2 = Extent.ofLeftTopRightBottom(10,20,30,40);
 		Extent NonequalExtent3 = Extent.ofLeftTopRightBottom(40,30,20,10);
 		Extent rotatedExtent4 = Extent.ofLeftTopRightBottom(30,40,10,20);
-		Extent LRrotatedSidesExtent1 = Extent.ofLeftTopRightBottom(30,50,30,50);
-		Extent TBrotatedSidesExtent2 = Extent.ofLeftTopRightBottom(50,30,50,30);
+		Extent LRrotatedSidesExtent1 = Extent.ofLeftTopRightBottom(30,30,50,50);
+		Extent TBrotatedSidesExtent2 = Extent.ofLeftTopRightBottom(50,50,30,30);
 			//hashCode
 				//equal extents
 				assertEquals(true,equalExtent1.hashCode() == equalExtent2.hashCode());
@@ -72,6 +73,7 @@ class Shapegroups1ExtentTest {
 				assertEquals(false,equalExtent1.hashCode() == NonequalExtent3.hashCode());
 				//left is right and bottom is top (inverted)
 				assertEquals(true,equalExtent1.hashCode() == rotatedExtent4.hashCode());
+				assertEquals(true,LRrotatedSidesExtent1.hashCode() == TBrotatedSidesExtent2.hashCode());
 			//equals
 				//equal extents
 				assertEquals(true,equalExtent1.equals(equalExtent2));
@@ -79,6 +81,7 @@ class Shapegroups1ExtentTest {
 				assertEquals(false,equalExtent1.equals(NonequalExtent3));
 				//left is right and bottom is top (inverted)
 				assertEquals(true,equalExtent1.equals(rotatedExtent4));
+				assertEquals(true,TBrotatedSidesExtent2.equals(LRrotatedSidesExtent1));
 			//toString
 				//equal extents
 				assertEquals("10 30 20 40",equalExtent1.toString());

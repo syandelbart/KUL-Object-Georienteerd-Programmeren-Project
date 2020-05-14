@@ -1,5 +1,6 @@
 package drawit.shapegroups2;
 import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.List;
 import drawit.IntPoint;
@@ -15,32 +16,8 @@ public class Extent {
 		if(!(obj instanceof Extent)) {
 			return false;
 		}
-		Extent otherExtent = (Extent)obj;
-		List<Integer> otherextentX = new ArrayList<Integer>();
-		List<Integer> otherextentY = new ArrayList<Integer>();
-		List<Integer> extentX = new ArrayList<Integer>();
-		List<Integer> extentY = new ArrayList<Integer>();
-		extentX.add(this.left);
-		extentY.add(this.top);
-		extentX.add(this.getRight());
-		extentY.add(this.getBottom());
-		otherextentX.add(otherExtent.left);
-		otherextentY.add(otherExtent.top);
-		otherextentX.add(otherExtent.getRight());
-		otherextentY.add(otherExtent.getBottom());
-		Collections.sort(otherextentX);
-		Collections.sort(otherextentY);
-		Collections.sort(extentX);
-		Collections.sort(extentY);
-		for(int i = 0; i < otherextentX.size(); i++) {
-			if (otherextentX.get(i) != extentX.get(i)) {
-				return false;
-			}
-			if (otherextentY.get(i) != extentY.get(i)) {
-				return false;
-			}
-		}
-		return true;
+		Extent other = (Extent)obj;
+		return other.hashCode() == this.hashCode();
 	}
 	
 	@Override
@@ -53,11 +30,11 @@ public class Extent {
 		extentY.add(this.getBottom());
 		Collections.sort(extentY);
 		Collections.sort(extentX);
-		int result = 0;
-		for(int i = 0; i < extentX.size(); i++) {
-			result += (extentX.get(i) * 7 * (i + 1));
-			result += (extentY.get(i) * 22 * (i + 1));
-		}
+		int result = 17;
+		result = result * 11 + extentX.get(0);
+		result = result * 11 + extentX.get(1);
+		result = result * 11 + extentY.get(0);
+		result = result * 11 + extentY.get(1);
 		return result;
 	}
 	
@@ -72,12 +49,10 @@ public class Extent {
 		Collections.sort(extentY);
 		Collections.sort(extentX);
 		String result = "";
-		for(int i = 0; i < extentX.size(); i++) {
-			result += extentX.get(i) + " "; 
-		}
-		for(int i = 0; i < extentY.size(); i++) {
-			result += extentY.get(i) + " "; 
-		}
+		result += extentX.get(0) + " ";
+		result += extentX.get(1) + " ";
+		result += extentY.get(0) + " ";
+		result += extentY.get(1);
 		return result;
 	}
 	

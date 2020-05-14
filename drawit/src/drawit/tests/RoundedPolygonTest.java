@@ -104,34 +104,34 @@ class RoundedPolygonTest {
 			//done here are correct, and we will assume that this works for every shape)
 					//testing getDrawingCommands with radius of 0
 					roundedPolygonTest.setRadius(0);
-					assertEquals("line 2 6 2 4\n" +
-							"arc 2 4 0 0.0 0.0\n" +
-							"line 2 4 3 4\n" +
-							"line 3 4 4 4\n" +
-							"arc 4 4 0 0.0 0.0\n" +
-							"line 4 4 4 6\n" +
-							"line 4 6 4 8\n" +
-							"arc 4 8 0 0.0 0.0\n" +
-							"line 4 8 3 8\n" +
-							"line 3 8 2 8\n" +
-							"arc 2 8 0 0.0 0.0\n" +
-							"line 2 8 2 6\n" +
-							"fill 255 255 0\n",roundedPolygonTest.getDrawingCommands());
+					assertEquals("line 2.0 6.0 2.0 4.0\n" +
+					"arc 2.0 4.0 0.0 0.0 0.0\n" +
+					"line 2.0 4.0 3.0 4.0\n" +
+					"line 3.0 4.0 4.0 4.0\n" +
+					"arc 4.0 4.0 0.0 0.0 0.0\n" +
+					"line 4.0 4.0 4.0 6.0\n" +
+					"line 4.0 6.0 4.0 8.0\n" +
+					"arc 4.0 8.0 0.0 0.0 0.0\n" +
+					"line 4.0 8.0 3.0 8.0\n" +
+					"line 3.0 8.0 2.0 8.0\n" +
+					"arc 2.0 8.0 0.0 0.0 0.0\n" +
+					"line 2.0 8.0 2.0 6.0\n" +
+					"fill 255 255 0\n",roundedPolygonTest.getDrawingCommands());
 					//testing getDrawingCommands with radius of 10
 					roundedPolygonTest.setRadius(10);
-					assertEquals("line 2 6 2 5\n" +
-							"arc 3 5 1 3.141592653589793 1.5707963267948966\n" +
-							"line 3 4 3 4\n" +
-							"line 3 4 3 4\n" +
-							"arc 3 5 1 -1.5707963267948966 1.5707963267948966\n" +
-							"line 4 5 4 6\n" +
-							"line 4 6 4 7\n" +
-							"arc 3 7 1 0.0 1.5707963267948966\n" +
-							"line 3 8 3 8\n" +
-							"line 3 8 3 8\n" +
-							"arc 3 7 1 1.5707963267948966 1.5707963267948966\n" +
-							"line 2 7 2 6\n" +
-							"fill 255 255 0\n",roundedPolygonTest.getDrawingCommands());
+					assertEquals("line 2.0 6.0 2.0 5.0\n" +
+					"arc 3.0 5.0 1.0 3.141592653589793 1.5707963267948966\n" +
+					"line 3.0 4.0 3.0 4.0\n" +
+					"line 3.0 4.0 3.0 4.0\n" +
+					"arc 3.0 5.0 1.0 -1.5707963267948966 1.5707963267948966\n" +
+					"line 4.0 5.0 4.0 6.0\n" +
+					"line 4.0 6.0 4.0 7.0\n" +
+					"arc 3.0 7.0 1.0 0.0 1.5707963267948966\n" +
+					"line 3.0 8.0 3.0 8.0\n" +
+					"line 3.0 8.0 3.0 8.0\n" +
+					"arc 3.0 7.0 1.0 1.5707963267948966 1.5707963267948966\n" +
+					"line 2.0 7.0 2.0 6.0\n" +
+					"fill 255 255 0\n",roundedPolygonTest.getDrawingCommands());
 			//testing setVertices
 					IntPoint[] testArray1 = new IntPoint[0];
 					testArray1 = PointArrays.insert(testArray1, 0, pointA);

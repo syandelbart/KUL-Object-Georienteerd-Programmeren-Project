@@ -214,57 +214,61 @@ class Shapegroups1ShapeGroupTest {
 			
 			
 			//getDrawingCommands()
-					assertEquals("line 0.0 5 0.0 0\n" +
-							"arc 0.0 0 0.0 0.0 0.0\n" +
-							"line 0.0 0 5 0\n" +
-							"line 5 0.0 10.0 0\n" +
-							"arc 10.0 0.0 0 0.0 0.0\n" +
-							"line 10.0 0.0 10.0 5\n" +
-							"line 10.0 5 10.0 10.0\n" +
-							"arc 10.0 10 0.0 0.0 0.0\n" +
-							"line 10.0 10 5 10.0\n" +
-							"line 5 10.0 0.0 10.0\n" +
-							"arc 0.0 10.0 0.0 0.0 0.0\n" +
-							"line 0.0 10.0 0.0 5\n" +
-							"fill 255 255 0\n" +
-							"popTransform\n" +
-							"popTransform\n" +
-							"pushTranslate -0.0 -0.0\n" +
-							"pushScale 1.0 1.0\n" +
-							"line 5 10.0 5 5\n" +
-							"arc 5 5 0.0 0.0 0.0\n" +
-							"line 5 5 10.0 5\n" +
-							"line 10.0 5 15.0 5\n" +
-							"arc 15.0 5 0.0 0.0 0.0\n" +
-							"line 15.0 5 15.0 10.0\n" +
-							"line 15.0 10.0 15.0 15\n" +
-							"arc 15.0 15.0 0.0 0.0 0.0\n" +
-							"line 15.0 15.0 10.0 15\n" +
-							"line 10.0 15.0 5 15\n" +
-							"arc 5 15.0 0.0 0.0 0.0\n" +
-							"line 5 15.0 5 10.0\n" +
-							"fill 255 255 0\n" +
-							"popTransform\n" +
-							"popTransform\n" +
-							"pushTranslate -0.0 -0.0\n" +
-							"pushScale 1.0 1.0\n" +
-							"line 10.0 15.0 10.0 10.0\n" +
-							"arc 10.0 10 0.0 0.0 0.0\n" +
-							"line 10.0 10 15.0 10.0\n" +
-							"line 15.0 10.0 20 10.0\n" +
-							"arc 20 10.0 0.0 0.0 0.0\n" +
-							"line 20 10.0 20 15\n" +
-							"line 20 15.0 20 20\n" +
-							"arc 20 20 0.0 0.0 0.0\n" +
-							"line 20 20 15.0 20\n" +
-							"line 15.0 20 10.0 20\n" +
-							"arc 10.0 20 0.0 0.0 0.0\n" +
-							"line 10.0 20 10.0 15\n" +
-							"fill 255 255 0\n" +
-							"popTransform\n" +
-							"popTransform\n" +
-							"popTransform\n" +
-							"popTransform",parentShapeGroup.getDrawingCommands());
+					assertEquals("pushTranslate -0.0 -0.0\n" + 
+					"pushScale 2.0 2.0\n" +
+					"pushTranslate -0.0 -0.0\n" +
+					"pushScale 1.0 1.0\n" +
+					"line 0.0 5.0 0.0 0.0\n" +
+					"arc 0.0 0.0 0.0 0.0 0.0\n" +
+					"line 0.0 0.0 5.0 0.0\n" +
+					"line 5.0 0.0 10.0 0.0\n" +
+					"arc 10.0 0.0 0.0 0.0 0.0\n" +
+					"line 10.0 0.0 10.0 5.0\n" +
+					"line 10.0 5.0 10.0 10.0\n" +
+					"arc 10.0 10.0 0.0 0.0 0.0\n" +
+					"line 10.0 10.0 5.0 10.0\n" +
+					"line 5.0 10.0 0.0 10.0\n" +
+					"arc 0.0 10.0 0.0 0.0 0.0\n" +
+					"line 0.0 10.0 0.0 5.0\n" +
+					"fill 255 255 0\n" +
+					"popTransform\n" +
+					"popTransform\n" +
+					"pushTranslate -0.0 -0.0\n" +
+					"pushScale 1.0 1.0\n" +
+					"line 5.0 10.0 5.0 5.0\n" +
+					"arc 5.0 5.0 0.0 0.0 0.0\n" +
+					"line 5.0 5.0 10.0 5.0\n" +
+					"line 10.0 5.0 15.0 5.0\n" +
+					"arc 15.0 5.0 0.0 0.0 0.0\n" +
+					"line 15.0 5.0 15.0 10.0\n" +
+					"line 15.0 10.0 15.0 15.0\n" +
+					"arc 15.0 15.0 0.0 0.0 0.0\n" +
+					"line 15.0 15.0 10.0 15.0\n" +
+					"line 10.0 15.0 5.0 15.0\n" +
+					"arc 5.0 15.0 0.0 0.0 0.0\n" +
+					"line 5.0 15.0 5.0 10.0\n" +
+					"fill 255 255 0\n" +
+					"popTransform\n" +
+					"popTransform\n" +
+					"pushTranslate -0.0 -0.0\n" +
+					"pushScale 1.0 1.0\n" +
+					"line 10.0 15.0 10.0 10.0\n" +
+					"arc 10.0 10.0 0.0 0.0 0.0\n" +
+					"line 10.0 10.0 15.0 10.0\n" +
+					"line 15.0 10.0 20.0 10.0\n" +
+					"arc 20.0 10.0 0.0 0.0 0.0\n" +
+					"line 20.0 10.0 20.0 15.0\n" +
+					"line 20.0 15.0 20.0 20.0\n" +
+					"arc 20.0 20.0 0.0 0.0 0.0\n" +
+					"line 20.0 20.0 15.0 20.0\n" +
+					"line 15.0 20.0 10.0 20.0\n" +
+					"arc 10.0 20.0 0.0 0.0 0.0\n" +
+					"line 10.0 20.0 10.0 15.0\n" +
+					"fill 255 255 0\n" +
+					"popTransform\n" +
+					"popTransform\n" +
+					"popTransform\n" +
+					"popTransform\n",parentShapeGroup.getDrawingCommands());
 					
 	}
 

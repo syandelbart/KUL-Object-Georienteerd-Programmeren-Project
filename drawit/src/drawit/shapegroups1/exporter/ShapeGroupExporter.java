@@ -36,7 +36,6 @@ public class ShapeGroupExporter {
 		}
 		else {
 			NonleafShapeGroup nonleafShape = (NonleafShapeGroup)shapeGroup;
-			
 			List<ShapeGroup> subgroups = nonleafShape.getSubgroups();
 			List<Object> subgroupsMapList = new ArrayList<Object>();
 			for(int i = 0; i < nonleafShape.getSubgroupCount(); i++) {
