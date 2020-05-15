@@ -65,7 +65,12 @@ abstract public class ShapeGroup {
 		if(!(globalCoordinates != null)) {
 			throw new IllegalArgumentException("globalCoordinates is null");
 		}
-		
+		if(globalCoordinates.equals(this.getExtent().getBottomRight())) {
+			return this.getOriginalExtent().getBottomRight();
+		}
+		if(globalCoordinates.equals(this.getExtent().getTopLeft())) {
+			return this.getOriginalExtent().getTopLeft();
+		}
 		IntPoint result;
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();

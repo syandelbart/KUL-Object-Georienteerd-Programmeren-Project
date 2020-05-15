@@ -57,7 +57,12 @@ abstract public class ShapeGroup {
 		if(!(globalCoordinates != null)) {
 			throw new IllegalArgumentException("globalCoordinates is null");
 		}
-		
+		if(globalCoordinates.equals(this.getExtent().getBottomRight())) {
+			return this.getOriginalExtent().getBottomRight();
+		}
+		if(globalCoordinates.equals(this.getExtent().getTopLeft())) {
+			return this.getOriginalExtent().getTopLeft();
+		}
 		IntPoint result;
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
@@ -78,7 +83,6 @@ abstract public class ShapeGroup {
 		if(!(innerCoordinates != null)) {
 			throw new IllegalArgumentException("innerCoordinates is null");
 		}
-		
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
 		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
@@ -95,7 +99,6 @@ abstract public class ShapeGroup {
 		if(!(relativeGlobalCoordinates != null)) {
 			throw new IllegalArgumentException("relativeGlobalCoordinates is null");
 		}
-		
 		IntVector result;
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
 		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();

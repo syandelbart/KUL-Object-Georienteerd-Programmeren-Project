@@ -32,8 +32,8 @@ public class ShapeGroupShape implements Shape {
     public ControlPoint[] createControlPoints() {
     	ControlPointShapeGroup[] result = new ControlPointShapeGroup[2];
     	IntPoint topLeft = referencedShapeGroup.getExtent().getTopLeft();
-    	ControlPointShapeGroup shapeGroupTopLeft = new ControlPointShapeGroup(referencedShapeGroup,topLeft,"topleft");
 		IntPoint bottomRight = referencedShapeGroup.getExtent().getBottomRight();
+		ControlPointShapeGroup shapeGroupTopLeft = new ControlPointShapeGroup(referencedShapeGroup,topLeft,"topleft");
 		ControlPointShapeGroup shapeGroupBottomRight = new ControlPointShapeGroup(referencedShapeGroup,bottomRight,"bottomright");
 		result[0] = shapeGroupTopLeft;
 		result[1] = shapeGroupBottomRight;
