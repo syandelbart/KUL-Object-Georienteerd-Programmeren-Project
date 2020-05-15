@@ -60,66 +60,181 @@ abstract public class ShapeGroup {
 		return this.parentGroup;
 	}
 	
-	/** Returns the coordinates in this shape group's inner coordinate system of the point whose coordinates in the global coordinate system are the given coordinates.*/
+
+	/**
+	 * Returns the coordinates in this shape group's inner coordinate system of the point
+	 * whose coordinates in the global coordinate system are the given coordinates.
+	 * 
+	 * The global coordinate system is the outer coordinate system of this shape group's root ancestor,
+	 * i.e. the ancestor that has no parent.
+	 * 
+	 * This shape group's inner coordinate system is defined by the fact that the coordinates of its extent
+	 * in its inner coordinate system are constant and given by {@code this.getOriginalExtent()}.
+	 * 
+	 * Its outer coordinate system is defined by the fact that the coordinates of its extent in its outer
+	 * coordinate system are as given by {@code this.getExtent()}.
+	 * 
+	 * When a shape group is created, its inner coordinate system coincides with its outer coordinate system
+	 * (and with the global coordinate system). Subsequent calls of {@code this.setExtent()} may cause the
+	 * inner and outer coordinate systems to no longer coincide.
+	 * 
+	 * The inner coordinate system of a non-leaf shape group always coincides with the outer coordinate
+	 * systems of its subgroups. Furthermore, the coordinates of the vertices of a shape contained by a leaf
+	 * shape group are interpreted in the inner coordinate system of the shape group.
+	 * 
+	 * @throws IllegalArgumentException if {@code globalCoordinates} is null
+	 *    | globalCoordinates == null
+	 * @inspects | this
+	 * @post | result != null
+	 * @post | result.equals(outerToInnerCoordinates(globalToOuterCoordinates(globalCoordinates)))
+	 */
 	public IntPoint toInnerCoordinates(IntPoint globalCoordinates) {
-		if(!(globalCoordinates != null)) {
+		if (globalCoordinates == null)
 			throw new IllegalArgumentException("globalCoordinates is null");
-		}
-		if(globalCoordinates.equals(this.getExtent().getBottomRight())) {
-			return this.getOriginalExtent().getBottomRight();
-		}
-		if(globalCoordinates.equals(this.getExtent().getTopLeft())) {
-			return this.getOriginalExtent().getTopLeft();
-		}
-		IntPoint result;
-		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
-		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
-		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
-		if(this.getParentGroup() != null) {
-			result = this.getParentGroup().toInnerCoordinates(globalCoordinates);
-			result = new IntPoint((int)((result.getX() - translateX) / scaleX), (int)((result.getY() - translateY) / scaleY));
-		}
-		else {
-			result = new IntPoint((int)((globalCoordinates.getX() - translateX) / scaleX), (int)((globalCoordinates.getY() - translateY) / scaleY));
-		}
-		return result;
+		
+		return outerToInnerCoordinates(globalToOuterCoordinates(globalCoordinates));
+	}
+
+	/**
+	 * @throws IllegalArgumentException if {@code outerCoordinates} is null
+	 *    | outerCoordinates == null
+	 * @inspects | this
+	 * @post | result != null
+	 * @post | result.equals(getOriginalExtent().getTopLeft().plus(
+	 *       |     outerToInnerCoordinates(outerCoordinates.minus(getExtent().getTopLeft()))))
+	 */
+	public IntPoint outerToInnerCoordinates(IntPoint outerCoordinates) {
+		if (outerCoordinates == null)
+			throw new IllegalArgumentException("outerCoordinates is null");
+		
+		return originalExtent.getTopLeft().plus(
+				outerToInnerCoordinates(outerCoordinates.minus(this.getExtent().getTopLeft())));
 	}
 	
-	/** Returns the coordinates in the global coordinate system of the point whose coordinates in this shape group's inner coordinate system are the given coordinates. */
-	public IntPoint toGlobalCoordinates(IntPoint innerCoordinates) {
-		if(!(innerCoordinates != null)) {
+	/**
+	 * @throws IllegalArgumentException if {@code relativeOuterCoordinates} is null
+	 * @inspects | this
+	 * @post | result != null
+	 */
+	public IntVector outerToInnerCoordinates(IntVector relativeOuterCoordinates) {
+		if (relativeOuterCoordinates == null)
+			throw new IllegalArgumentException("relativeOuterCoordinates is null");
+		
+		return new IntVector(
+				(int)((long)relativeOuterCoordinates.getX() * this.getOriginalExtent().getWidth() / this.getExtent().getWidth()),
+				(int)((long)relativeOuterCoordinates.getY() * this.getOriginalExtent().getHeight() / this.getExtent().getHeight()));
+	}
+	
+	/**
+	 * @throws IllegalArgumentException if {@code globalCoordinates} is null
+	 *    | globalCoordinates == null
+	 * @inspects | this
+	 * @post | result != null
+	 * @post | result.equals(
+	 *       |     getParentGroup() == null ?
+	 *       |         globalCoordinates
+	 *       |     :
+	 *       |         getParentGroup().toInnerCoordinates(globalCoordinates)
+	 *       | )
+	 */
+	public IntPoint globalToOuterCoordinates(IntPoint globalCoordinates) {
+		if (globalCoordinates == null)
+			throw new IllegalArgumentException("globalCoordinates is null");
+		
+		return this.getParentGroup() == null ? globalCoordinates : this.getParentGroup().toInnerCoordinates(globalCoordinates);
+	}
+	
+	/**
+	 * @throws IllegalArgumentException if {@code relativeInnerCoordinates} is null
+	 *    | relativeInnerCoordinates == null
+	 * @inspects | this
+	 * @post | result != null
+	 */
+	public IntVector innerToOuterCoordinates(IntVector relativeInnerCoordinates) {
+		if (relativeInnerCoordinates == null)
+			throw new IllegalArgumentException("relativeInnerCoordinates is null");
+		
+		return new IntVector(
+				(int)((long)relativeInnerCoordinates.getX() * this.getExtent().getWidth() / originalExtent.getWidth()),
+				(int)((long)relativeInnerCoordinates.getY() * this.getExtent().getHeight() / originalExtent.getHeight()));
+	}
+	
+	/**
+	 * @throws IllegalArgumentException if {@code innerCoordinates} is null
+	 *    | innerCoordinates == null
+	 * @inspects | this
+	 * @post | result != null
+	 * @post | result.equals(getExtent().getTopLeft().plus(
+	 *       |     innerToOuterCoordinates(innerCoordinates.minus(getOriginalExtent().getTopLeft()))))
+	 */
+	public IntPoint innerToOuterCoordinates(IntPoint innerCoordinates) {
+		if (innerCoordinates == null)
 			throw new IllegalArgumentException("innerCoordinates is null");
-		}
 		
-		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
-		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		double translateX = -1 * (((scaleX - 1) * (double)this.getOriginalExtent().getLeft()) + this.getOriginalExtent().getLeft() - this.getExtent().getLeft());
-		double translateY = -1 * (((scaleY - 1) * (double)this.getOriginalExtent().getTop()) + this.getOriginalExtent().getTop() - this.getExtent().getTop());
-		IntPoint result = new IntPoint((int)((innerCoordinates.getX() * scaleX) + translateX),(int)((innerCoordinates.getY() * scaleY) + translateY));
-		if(this.getParentGroup() != null) {
-			result = this.getParentGroup().toGlobalCoordinates(result);
-		}
-		return result;
+		return getExtent().getTopLeft().plus(
+				innerToOuterCoordinates(innerCoordinates.minus(getOriginalExtent().getTopLeft())));
 	}
 	
-	/** Returns the coordinates in this shape group's inner coordinate system of the vector whose coordinates in the global coordinate system are the given coordinates. This transformation is affected only by mutations of the width or height of this shape group's extent, not by mutations of this shape group's extent that preserve its width and height. */
-	public IntVector toInnerCoordinates(IntVector relativeGlobalCoordinates) {
-		if(!(relativeGlobalCoordinates != null)) {
-			throw new IllegalArgumentException("relativeGlobalCoordinates is null");
-		}
+	/**
+	 * @throws IllegalArgumentException if {@code outerCoordinates} is null
+	 * @inspects | this
+	 * @post | result != null
+	 * @post | result.equals(
+	 *       |     getParentGroup() == null ?
+	 *       |         outerCoordinates
+	 *       |     :
+	 *       |         getParentGroup().toGlobalCoordinates(outerCoordinates)
+	 *       | )
+	 */
+	public IntPoint outerToGlobalCoordinates(IntPoint outerCoordinates) {
+		if (outerCoordinates == null)
+			throw new IllegalArgumentException("outerCoordinates is null");
 		
-		IntVector result;
-		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
-		double scaleY = (double)this.getExtent().getHeight() / (double)this.getOriginalExtent().getHeight();
-		if(this.getParentGroup() != null) {
-			result = this.getParentGroup().toInnerCoordinates(relativeGlobalCoordinates);
-			result = new IntVector((int)((result.getX()) / scaleX), (int)((result.getY()) / scaleY));
-		}
-		else {
-			result = new IntVector((int)((relativeGlobalCoordinates.getX()) / scaleX), (int)((relativeGlobalCoordinates.getY()) / scaleY));
-		}
-		return result;
+		return this.getParentGroup() == null ? outerCoordinates : this.getParentGroup().toGlobalCoordinates(outerCoordinates);
+	}
+	
+	/**
+	 * Returns the coordinates in the global coordinate system of the point whose coordinates
+	 * in this shape group's inner coordinate system are the given coordinates.
+	 * 
+	 * @throws IllegalArgumentException if {@code innerCoordinates} is null
+	 * @inspects | this
+	 * @post | result != null
+	 * @post | result.equals(outerToGlobalCoordinates(innerToOuterCoordinates(innerCoordinates)))
+	 */
+	public IntPoint toGlobalCoordinates(IntPoint innerCoordinates) {
+		if (innerCoordinates == null)
+			throw new IllegalArgumentException("innerCoordinates is null");
+		
+		return outerToGlobalCoordinates(innerToOuterCoordinates(innerCoordinates));
+	}
+	
+	/**
+	 * @inspects | this
+	 * @post | result != null
+	 */
+	public IntVector globalToOuterCoordinates(IntVector relativeGlobalCoordinates) {
+		if (relativeGlobalCoordinates == null)
+			throw new IllegalArgumentException("relativeGlobalCoordinates is null");
+		
+		return this.getParentGroup() == null ? relativeGlobalCoordinates : this.getParentGroup().toInnerCoordinates(relativeGlobalCoordinates);
+	}
+	
+	/**
+	 * Returns the coordinates in this shape group's inner coordinate system of the vector
+	 * whose coordinates in the global coordinate system are the given coordinates.
+	 * 
+	 * This transformation is affected only by mutations of the width or height of this shape group's
+	 * extent, not by mutations of this shape group's extent that preserve its width and height.
+	 * 
+	 * @inspects | this
+	 * @post | result != null
+	 */
+	public IntVector toInnerCoordinates(IntVector relativeGlobalCoordinates) {
+		if (relativeGlobalCoordinates == null)
+			throw new IllegalArgumentException("relativeGlobalCoordinates is null");
+
+		return outerToInnerCoordinates(globalToOuterCoordinates(relativeGlobalCoordinates));
 	}
 	
 	/** Registers the given extent as this shape group's extent, expressed in this shape group's outer coordinate system.

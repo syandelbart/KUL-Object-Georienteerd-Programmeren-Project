@@ -16,7 +16,12 @@ public class ControlPointShapeGroup implements ControlPoint{
 	}
 	
 	public drawit.IntPoint getLocation(){
-		return this.shape.toInnerCoordinates(this.point);
+		if(this.location.equals("topleft")) {
+			return this.shape.getOriginalExtent().getTopLeft();
+		}
+		else {
+			return this.shape.getOriginalExtent().getBottomRight();
+		}
 	}
 	
 	public void remove() {
