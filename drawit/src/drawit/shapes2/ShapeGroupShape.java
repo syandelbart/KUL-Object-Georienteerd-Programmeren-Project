@@ -41,11 +41,21 @@ public class ShapeGroupShape implements Shape {
     }
     
     public drawit.IntPoint toShapeCoordinates(drawit.IntPoint p){
-    	return referencedShapeGroup.toInnerCoordinates(p);
+    	if(this.referencedShapeGroup.getParentGroup() == null) {
+    		return p;
+    	}
+    	else {
+    		return referencedShapeGroup.getParentGroup().toInnerCoordinates(p);
+    	}
     }
     
     public drawit.IntPoint toGlobalCoordinates(drawit.IntPoint p){
-    	return referencedShapeGroup.toGlobalCoordinates(p);
+    	if(this.referencedShapeGroup.getParentGroup() == null) {
+    		return p;
+    	}
+    	else {
+    		return referencedShapeGroup.getParentGroup().toGlobalCoordinates(p);
+    	}
     }
 
 }

@@ -8,20 +8,17 @@ public class ControlPointShapeGroup implements ControlPoint{
 	IntPoint point;
 	ShapeGroup shape;
 	String location;
+	ShapeGroupShape shapeGroupShape;
 	
-	public ControlPointShapeGroup(ShapeGroup shape, IntPoint point, String location) {
-		this.shape = shape;
+	public ControlPointShapeGroup(ShapeGroupShape shapeGroupShape, IntPoint point, String location) {
+		this.shape = shapeGroupShape.referencedShapeGroup;
 		this.point = point;
 		this.location = location;
+		this.shapeGroupShape = shapeGroupShape;
 	}
 	
 	public drawit.IntPoint getLocation(){
-		if(this.location.equals("topleft")) {
-			return this.shape.getOriginalExtent().getTopLeft();
-		}
-		else {
-			return this.shape.getOriginalExtent().getBottomRight();
-		}
+		return new IntPoint(this.point.getX(),this.point.getY());
 	}
 	
 	public void remove() {
@@ -41,6 +38,5 @@ public class ControlPointShapeGroup implements ControlPoint{
 			Extent newExtent = Extent.ofLeftTopRightBottom(extent.getLeft(), extent.getTop(),this.point.getX() + delta.getX(), this.point.getY() + delta.getY());
 			shape.setExtent(newExtent);
 		}
-		
 	}
 }
