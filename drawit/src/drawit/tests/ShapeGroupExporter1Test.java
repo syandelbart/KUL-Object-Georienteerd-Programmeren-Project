@@ -2,6 +2,11 @@ package drawit.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 import drawit.IntPoint;
@@ -9,6 +14,7 @@ import drawit.RoundedPolygon;
 import drawit.shapegroups1.LeafShapeGroup;
 import drawit.shapegroups1.NonleafShapeGroup;
 import drawit.shapegroups1.exporter.ShapeGroupExporter;
+import drawit.shapegroups1.Extent;
 
 class ShapeGroupExporter1Test {
 
@@ -72,10 +78,101 @@ class ShapeGroupExporter1Test {
 		//creating parent from shapecollection
 			NonleafShapeGroup parentShapeGroup = new NonleafShapeGroup(shapeCollection);
 			
+		//testing data against handmade model
+		//first we create the actual data, then compare it to the data made by the function
 			
-			Object actualShapeGroupExporterOutput = ShapeGroupExporter.toPlainData(parentShapeGroup);
-			String expectedShapeGroupExporterToStringOutput = "{extent={bottom=20, right=20, top=0, left=0}, originalExtent={bottom=20, right=20, top=0, left=0}, subgroups=[{extent={bottom=10, right=10, top=0, left=0}, originalExtent={bottom=10, right=10, top=0, left=0}, shape={vertices=[{x=0, y=0}, {x=10, y=0}, {x=10, y=10}, {x=0, y=10}], radius=0, color={blue=0, green=255, red=255}}}, {extent={bottom=15, right=15, top=5, left=5}, originalExtent={bottom=15, right=15, top=5, left=5}, shape={vertices=[{x=5, y=5}, {x=15, y=5}, {x=15, y=15}, {x=5, y=15}], radius=0, color={blue=0, green=255, red=255}}}, {extent={bottom=20, right=20, top=10, left=10}, originalExtent={bottom=20, right=20, top=10, left=10}, shape={vertices=[{x=10, y=10}, {x=20, y=10}, {x=20, y=20}, {x=10, y=20}], radius=0, color={blue=0, green=255, red=255}}}]}";
-			System.out.println(actualShapeGroupExporterOutput.toString());
+			//first subgroup
+				//create first vertices collection in maplist
+					List<Map<String,Integer>> firstVerticeMapList = new ArrayList<Map<String,Integer>>();
+					for(int i = 0; i < firstVerticeArray.length; i++) {
+						firstVerticeMapList.add(Map.of("x",firstVerticeArray[i].getX(),"y",firstVerticeArray[i].getY()));
+					}
+				//get extent
+				Extent firstExtent = firstShapeGroup.getExtent();
+				//get originalExtent
+				Extent firstOriginalExtent = firstShapeGroup.getOriginalExtent();
+				//get color
+				Color firstColor = firstRoundedPolygon.getColor();
+				
+				//set resulting Object of this subgroups toPlaindata
+				Object firstSubgroup = Map.of("originalExtent", Map.of("left", firstOriginalExtent.getLeft(), "top", firstOriginalExtent.getTop(), "right", firstOriginalExtent.getRight(), "bottom", firstOriginalExtent.getBottom()),
+					    "extent", Map.of("left", firstExtent.getLeft(), "top", firstExtent.getTop(), "right", firstExtent.getRight(), "bottom", firstExtent.getBottom()),
+			            "shape", Map.of(
+			                "vertices", firstVerticeMapList,
+			                "radius", firstRoundedPolygon.getRadius(),
+			                "color", Map.of("red", firstColor.getRed(), "green", firstColor.getGreen(), "blue", firstColor.getBlue())));
+			
+			
+			//second subgroup
+				//create first vertices collection in maplist
+					List<Map<String,Integer>> secondVerticeMapList = new ArrayList<Map<String,Integer>>();
+					for(int i = 0; i < secondVerticeArray.length; i++) {
+						secondVerticeMapList.add(Map.of("x",secondVerticeArray[i].getX(),"y",secondVerticeArray[i].getY()));
+					}
+				//get extent
+				Extent secondExtent = secondShapeGroup.getExtent();
+				//get originalExtent
+				Extent secondOriginalExtent = secondShapeGroup.getOriginalExtent();
+				//get color
+				Color secondColor = secondRoundedPolygon.getColor();
+				
+				//set resulting Object of this subgroups toPlaindata
+				Object secondSubgroup = Map.of("originalExtent", Map.of("left", secondOriginalExtent.getLeft(), "top", secondOriginalExtent.getTop(), "right", secondOriginalExtent.getRight(), "bottom", secondOriginalExtent.getBottom()),
+					    "extent", Map.of("left", secondExtent.getLeft(), "top", secondExtent.getTop(), "right", secondExtent.getRight(), "bottom", secondExtent.getBottom()),
+			            "shape", Map.of(
+			                "vertices", secondVerticeMapList,
+			                "radius", secondRoundedPolygon.getRadius(),
+			                "color", Map.of("red", secondColor.getRed(), "green", secondColor.getGreen(), "blue", secondColor.getBlue())));
+				
+				
+			//third subgroup
+				//create first vertices collection in maplist
+					List<Map<String,Integer>> thirdVerticeMapList = new ArrayList<Map<String,Integer>>();
+					for(int i = 0; i < thirdVerticeArray.length; i++) {
+						thirdVerticeMapList.add(Map.of("x",thirdVerticeArray[i].getX(),"y",thirdVerticeArray[i].getY()));
+					}
+				//get extent
+				Extent thirdExtent = thirdShapeGroup.getExtent();
+				//get originalExtent
+				Extent thirdOriginalExtent = thirdShapeGroup.getOriginalExtent();
+				//get color
+				Color thirdColor = thirdRoundedPolygon.getColor();
+				
+				//set resulting Object of this subgroups toPlaindata
+				Object thirdSubgroup = Map.of("originalExtent", Map.of("left", thirdOriginalExtent.getLeft(), "top", thirdOriginalExtent.getTop(), "right", thirdOriginalExtent.getRight(), "bottom", thirdOriginalExtent.getBottom()),
+					    "extent", Map.of("left", thirdExtent.getLeft(), "top", thirdExtent.getTop(), "right", thirdExtent.getRight(), "bottom", thirdExtent.getBottom()),
+			            "shape", Map.of(
+			                "vertices", thirdVerticeMapList,
+			                "radius", thirdRoundedPolygon.getRadius(),
+			                "color", Map.of("red", thirdColor.getRed(), "green", thirdColor.getGreen(), "blue", thirdColor.getBlue())));
+			
+			
+				
+				
+			//main object
+				//get main object's original extent (we assume that this method is tested already)
+				Extent originalExtent = parentShapeGroup.getOriginalExtent();
+				//get main object's currect extent ( we assume that this method is tested already)
+				Extent extent = parentShapeGroup.getExtent();
+				//set main object's subgroups
+				List<Object> subgroupsMapList = new ArrayList<Object>();
+				subgroupsMapList.add(firstSubgroup);
+				subgroupsMapList.add(secondSubgroup);
+				subgroupsMapList.add(thirdSubgroup);
+			
+				//actual expected
+				Object expectedShapeGroupExporterOutput = Map.of("originalExtent", Map.of("left", originalExtent.getLeft(), "top", originalExtent.getTop(), "right", originalExtent.getRight(), "bottom", originalExtent.getBottom()),
+					    "extent", Map.of("left", extent.getLeft(), "top", extent.getTop(), "right", extent.getRight(), "bottom", extent.getBottom()),
+					    "subgroups",subgroupsMapList);
+			
+				
+				//expected
+				Object actualShapeGroupExporterOutput = ShapeGroupExporter.toPlainData(parentShapeGroup);
+				
+				
+				//test if is equal
+				assertEquals(true,expectedShapeGroupExporterOutput.equals(actualShapeGroupExporterOutput));
+				
 			//assertEquals(actualShapeGroupExporterOutput.toString(),expectedShapeGroupExporterToStringOutput);
 			
 	}
