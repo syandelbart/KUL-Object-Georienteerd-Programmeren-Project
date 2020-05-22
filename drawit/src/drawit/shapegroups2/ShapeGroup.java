@@ -22,6 +22,10 @@ abstract public class ShapeGroup {
 	abstract public void bringToFront();
 	abstract public void sendToBack();
 	
+	/*
+	 * MISSCHIEN DEZE FUNCTIES NAAR PRIVATE OMZETTEN
+	 */
+	
 	public void setNextSibling(ShapeGroup newNextSibling) {
 		this.nextSibling = newNextSibling;
 	}

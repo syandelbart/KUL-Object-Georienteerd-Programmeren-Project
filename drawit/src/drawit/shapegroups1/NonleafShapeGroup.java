@@ -26,7 +26,6 @@ public class NonleafShapeGroup extends ShapeGroup {
      *     | && getOriginalExtent().getBottom() == getExtent().getBottom()
      *     | && getOriginalExtent().getRight() == getExtent().getRight()
      */
-	
     public NonleafShapeGroup(ShapeGroup[] subgroups) {
     	super();
         if(!(subgroups != null)) {
@@ -44,10 +43,22 @@ public class NonleafShapeGroup extends ShapeGroup {
 		super.setOriginalExtent(this.calculateExtent());
     }
 	
+    /** Sets the subgroups for this non-leaf shape group
+     * @post MAYBE ADD IllegalArgumentException for if there is a null element in the subgroups 
+     * | 5 == "expresserror"
+     * @post This non-leaf shapegroup's subgroups are equal to the given parameter newSubgroups
+     * | IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroup(i).equals(newSubgroups[i]))
+     */
     public void setSubgroups(ShapeGroup[] newSubgroups) {
+		if(!(newSubgroups != null)) {
+			throw new IllegalArgumentException("Subgroups argument is null");
+		}
+    	
     	this.subgroups = newSubgroups;
     }
     
+   /** Returns the amount of subgroups this non-leaf shapegroup has
+    */
 	public int getSubgroupCount() {
 		if(this.subgroups == null) {
 			return 0;
@@ -68,6 +79,10 @@ public class NonleafShapeGroup extends ShapeGroup {
 		return this.subgroups[index];
 	}
 	
+	/** Returns the subgroup at the given innerCoordinate
+	 * @throws IllegalArgumentException
+	 * 	| !(innerCoordinates != null)
+	 */
 	public ShapeGroup getSubgroupAt(IntPoint innerCoordinates) {
 		if(!(innerCoordinates != null)) {
 			throw new IllegalArgumentException("innerCoordinates is null");
@@ -85,6 +100,7 @@ public class NonleafShapeGroup extends ShapeGroup {
 	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
 	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroup(i).equals(result.get(i)))
 	 * @post The returned list of ShapeGroups should remain the same length as the object's list of ShapeGroups.
+	 *  | result.length == getSubgroupCount()
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
 		if(this.subgroups == null) {
@@ -160,6 +176,13 @@ public class NonleafShapeGroup extends ShapeGroup {
 		this.getParentGroup().subgroups = result;
 	}
 	
+	/** Sets the extent to the given parameter newExtent
+	 * @throws IllegalArgumentException
+	 * | !(newExtent != null)
+	 * @post This non-leaf shapegroup's extent is equal to the newExtent parameter
+	 * | getExtent() == newExtent
+	 * 
+	 */
 	public void setExtent(Extent newExtent){
 		if(!(newExtent != null)) {
 			throw new IllegalArgumentException();
@@ -167,6 +190,16 @@ public class NonleafShapeGroup extends ShapeGroup {
 		super.setExtent(newExtent);
 	}
 	
+	/** Returns the extent of this shape group, expressed in its outer coordinate system.
+	 * @creates result
+	 * 
+	 * @post The result can't be null
+	 * 	| result != null
+	 * @post The returned extent contains all subgroups of this non-leaf shapegroup
+	 *  | IntStream.range(0, getSubgroupCount()).allMatch(i -> ( ( getSubgroup(i).getExtent().getLeft() >= result.getLeft() && getSubgroup(i).getExtent().getRight() <= result.getRight() ) || ( getSubgroup(i).getExtent().getRight() >= result.getLeft() && getSubgroup(i).getExtent().getLeft() <= result.getRight() ) ) && ( ( getSubgroup(i).getExtent().getTop() >= result.getTop() && getSubgroup(i).getExtent().getBottom() <= result.getBottom() ) || ( getSubgroup(i).getExtent().getBottom() >= result.getTop() && getSubgroup(i).getExtent().getTop() <= result.getBottom() ) ) )
+	 *  
+	 *  )
+	 */
 	public Extent calculateExtent() {
 		Extent[] extentArray = new Extent[this.getSubgroupCount()];
 		for(int i = 0; i < this.getSubgroupCount() ; i++) {

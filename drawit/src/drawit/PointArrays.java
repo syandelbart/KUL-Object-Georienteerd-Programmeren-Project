@@ -1,4 +1,3 @@
-
 package drawit;
 import java.util.stream.IntStream;
 

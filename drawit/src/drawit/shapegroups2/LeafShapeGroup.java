@@ -30,11 +30,18 @@ public class LeafShapeGroup extends ShapeGroup {
 		super.setExtent(this.calculateExtent());
 	}
 	
-	/** Returns the shape directly contained by this shape group, or null if this is a non-leaf shape group.*/
+	/** Returns the shape directly contained by this shape group.*/
 	public RoundedPolygon getShape() {
 		return this.shape;
 	}
 	
+	/** Sets the extent to the given parameter newExtent
+	 * @throws IllegalArgumentException
+	 * | !(newExtent != null)
+	 * @post This non-leaf shapegroup's extent is equal to the newExtent parameter
+	 * | getExtent() == newExtent
+	 * 
+	 */
 	public void setExtent(Extent newExtent){
 		if(!(newExtent != null)) {
 			throw new IllegalArgumentException();
@@ -64,7 +71,15 @@ public class LeafShapeGroup extends ShapeGroup {
 		return (Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY));
 	}
 	
+	/** Returns this ShapeGroups position in his parent
+	 * @throws IllegalArgumentException
+	 * | !(getParentGroup() != null)
+	 */
 	private int getLocation() {
+		if(!(getParentGroup() != null)) {
+			throw new IllegalArgumentException();
+		}
+		
 		int counter = 0;
 		while(!this.getParentGroup().getSubgroup(counter).equals(this)) {
 			counter++;

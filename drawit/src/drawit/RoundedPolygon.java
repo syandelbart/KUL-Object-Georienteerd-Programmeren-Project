@@ -1,8 +1,6 @@
 package drawit;
-
+import java.util.stream.IntStream;
 import java.util.Arrays;
-
-
 import drawit.shapegroups1.Extent;
 import drawit.shapegroups1.LeafShapeGroup;
 import drawit.shapegroups1.ShapeGroup;
@@ -57,7 +55,8 @@ public class RoundedPolygon {
 	 * @post | getRadius() == 0
 	 */
 	public RoundedPolygon() {
-		color = new Color(255,255,0);
+		this.radius = 0;
+		this.color = new Color(255,255,0);
 	}
 	
 	/**

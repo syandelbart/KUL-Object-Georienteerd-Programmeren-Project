@@ -22,18 +22,6 @@ abstract public class ShapeGroup {
 	abstract public void bringToFront();
 	abstract public void sendToBack();
 	
-	public Extent getExtent() {
-		return this.extent;
-	}
-	
-	public void setOriginalExtent(Extent newOriginalExtent) {
-		this.originalExtent = newOriginalExtent;
-	}
-	
-	public void setParentGroup(NonleafShapeGroup newParentGroup) {
-		this.parentGroup = newParentGroup;
-	}
-	
 	/** Returns the extent of this shape group, expressed in its outer coordinate system.
 	 * @creates result
 	 * 
@@ -41,6 +29,30 @@ abstract public class ShapeGroup {
 	 * 	|result != null
 	 * @post The returned extent contains the shape or subgroups' shapes of this object.
 	 */
+	public Extent getExtent() {
+		return this.extent;
+	}
+	
+	/** Sets the original extent of this shapegroup.
+	 * @creates result
+	 * 
+	 * @post This shapegroup's originalExtent should be the provided newOriginalExtent
+	 * 	| getOriginalExtent() == newOriginalExtent
+	 */
+	public void setOriginalExtent(Extent newOriginalExtent) {
+		this.originalExtent = newOriginalExtent;
+	}
+	
+	/** Sets the parentgroup of this shapegroup.
+	 * @creates result
+	 * 
+	 * @post This shapegroup's originalExtent should be the provided newOriginalExtent
+	 * 	| getParentGroup() == newParentGroup
+	 */
+	public void setParentGroup(NonleafShapeGroup newParentGroup) {
+		this.parentGroup = newParentGroup;
+	}
+	
 		
 	/** Returns the extent of this shape group, expressed in its inner coordinate system. This coincides with the extent expressed in outer coordinates at the time of creation of the shape group. The shape transformation defined by this shape group is the one that transforms the original extent to the current extent. This method returns an equal result throughout the lifetime of this object.*/
 	public Extent getOriginalExtent() {

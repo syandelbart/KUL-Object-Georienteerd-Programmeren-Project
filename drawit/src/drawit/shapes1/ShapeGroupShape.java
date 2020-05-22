@@ -12,7 +12,7 @@ public class ShapeGroupShape implements Shape {
         this.referencedShapeGroup = group;
     }
 
-    //Returns the ShapeGruop reference stored by this object.
+    //Returns the ShapeGroupp reference stored by this object.
     public ShapeGroup getShapeGroup() {
         return referencedShapeGroup;
     }
