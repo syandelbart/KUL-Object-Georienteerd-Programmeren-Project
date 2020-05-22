@@ -36,13 +36,15 @@ public class LeafShapeGroup extends ShapeGroup {
 		return this.shape;
 	}
 	
-	public void setExtent(Extent newExtent){
-		if(!(newExtent != null)) {
-			throw new IllegalArgumentException();
-		}
-		super.setExtent(newExtent);
-	}
-	
+	/** Returns the extent of this shape group, expressed in its outer coordinate system.
+	 * @creates result
+	 * 
+	 * @post The result can't be null
+	 * 	| result != null
+	 * @post The returned extent contains all vertices of this leaf shapegroup
+	 *  | IntStream.range(0, getShape().getVertices().length).allMatch(i -> (result.contains(getShape().getVertices()[i])))
+	 *  
+	 */
 	public Extent calculateExtent() {
 		int minimumX = this.shape.getVertices()[0].getX();
 		int maximumX = this.shape.getVertices()[0].getX();
@@ -65,55 +67,16 @@ public class LeafShapeGroup extends ShapeGroup {
 		return (Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY));
 	}
 	
-	private int getLocation() {
-		int counter = 0;
-		while(!this.getParentGroup().getSubgroup(counter).equals(this)) {
-			counter++;
-		}
-		return counter;
-	}
-	
-	/** Moves this shape group to the front of its parent's list of subgroups.
-	 * @mutates this
+	/**
+	 * Returns a textual representation of a sequence of drawing commands for drawing
+	 * the shapes contained directly or indirectly by this shape group, expressed in this
+	 * shape group's outer coordinate system.
 	 * 
-	 * @throws IllegalArgumentException
-	 * 	| getParentGroup() == null
+	 * For the syntax of the drawing commands, see {@code RoundedPolygon.getDrawingCommands()}.
 	 * 
-	 * @post This object is the first child of its getParentGroup().
-	 * 	| getParentGroup().getSubgroup(0) == this
-	 * 
-	 * @post The indexes of the children of getParentGroup that were in front of this object are incremented by one.
-	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i + 1)))
-	 * 
-	 * @post The indexes of the children of getParentGroup that were behind this object are the same.
-	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
+	 * @inspects | this
+	 * @post | result != null
 	 */
-	public void bringToFront() {
-		int location = this.getLocation();
-		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
-		for(int i = 0; i < location; i++) {
-			result[i+1] = this.getParentGroup().getSubgroup(i);
-		}
-		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
-			result[i] = this.getParentGroup().getSubgroup(i);
-		}
-		result[0] = this;
-		this.getParentGroup().setSubgroups(result);
-	}
-	
-	public void sendToBack() {
-		int location = this.getLocation();
-		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
-		for(int i = 0; i < location; i++) {
-			result[i] = this.getParentGroup().getSubgroup(i);
-		}
-		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
-			result[i - 1] = this.getParentGroup().getSubgroup(i);
-		}
-		result[this.getParentGroup().getSubgroupCount() - 1] = this;
-		this.getParentGroup().setSubgroups(result);
-	}
-	
 	public java.lang.String getDrawingCommands(){
 		StringBuilder string = new StringBuilder();
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();

@@ -19,37 +19,155 @@ abstract public class ShapeGroup {
 	private ShapeGroup previousSibling;
 	
 	abstract public java.lang.String getDrawingCommands();
-	abstract public void bringToFront();
-	abstract public void sendToBack();
 	
-	/*
-	 * MISSCHIEN DEZE FUNCTIES NAAR PRIVATE OMZETTEN
+	/** Moves this shape group to the front of its parent's list of subgroups.
+	 * @mutates this
+	 * 
+	 * @throws IllegalArgumentException
+	 * 	| getParentGroup() == null
+	 * 
+	 * @post This object is the first child of its getParentGroup().
+	 * 	| getParentGroup().getSubgroup(0) == this
+	 * 
+	 * @post The indexes of the children of getParentGroup that were in front of this object are incremented by one.
+	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i + 1)))
+	 * 
+	 * @post The indexes of the children of getParentGroup that were behind this object are the same.
+	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
 	 */
+	public void bringToFront() {
+		if(this.getParentGroup() == null) {
+			throw new IllegalArgumentException("parentgroup is null");
+		}
+		if(this.getParentGroup().getFirstChild() != this) {
+			if(this.getParentGroup().getLastChild() == this) {
+				this.getPreviousSibling().setNextSibling(null);
+				this.getParentGroup().setLastChild(this.getPreviousSibling());
+				this.setPreviousSibling(null);
+				this.setNextSibling(this.getParentGroup().getFirstChild());
+				this.getParentGroup().getFirstChild().setPreviousSibling(this);
+				this.getParentGroup().setFirstChild(this);
+			}
+			else {
+				this.getNextSibling().setPreviousSibling(this.getPreviousSibling());
+				this.getPreviousSibling().setNextSibling(this.getNextSibling());
+				this.setNextSibling(this.getParentGroup().getFirstChild());
+				this.getParentGroup().getFirstChild().setPreviousSibling(this);
+				this.getParentGroup().setFirstChild(this);
+				this.setPreviousSibling(null);
+			}
+		}
+		
+	}
 	
+	/** Moves this shape group to the back of its parent's list of subgroups.
+	 * @mutates this
+	 * 
+	 * @throws IllegalArgumentException
+	 * 	| getParentGroup() == null
+	 * 
+	 * @post This object is the last child of its getParentGroup().
+	 * 	| getParentGroup().getSubgroup(getParentGroup().getSubgroupCount() - 1) == this
+	 * 
+	 * @post The indexes of the children of getParentGroup that were in front of this object are the same.
+	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
+	 * 
+	 * @post The indexes of the children of getParentGroup that were behind this object are decremented by one.
+	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroups().get(i - 1)))
+	 */
+	public void sendToBack() {
+		if(this.getParentGroup() == null) {
+			throw new IllegalArgumentException("parentgroup is null");
+		}
+		if(this.getParentGroup().getLastChild() != this) {
+			if(this.getParentGroup().getFirstChild() == this) {
+				this.getNextSibling().setPreviousSibling(null);
+				this.getParentGroup().setFirstChild(this.getNextSibling());
+				this.setNextSibling(null);
+				this.setPreviousSibling(this.getParentGroup().getLastChild());
+				this.getParentGroup().getLastChild().setNextSibling(this);
+				this.getParentGroup().setLastChild(this);
+			}
+			else {
+				this.getPreviousSibling().setNextSibling(this.getNextSibling());
+				this.getNextSibling().setPreviousSibling(this.getPreviousSibling());
+				this.setPreviousSibling(this.getParentGroup().getLastChild());
+				this.getParentGroup().getLastChild().setNextSibling(this);
+				this.getParentGroup().setLastChild(this);
+				this.setNextSibling(null);
+			}
+		}
+	}
+	
+	/** Returns this ShapeGroups position in his parent
+	 * @throws IllegalArgumentException
+	 * | !(getParentGroup() != null)
+	 */
+	private int getLocation() {
+		if(!(getParentGroup() != null)) {
+			throw new IllegalArgumentException();
+		}
+		
+		int counter = 0;
+		while(!this.getParentGroup().getSubgroup(counter).equals(this)) {
+			counter++;
+		}
+		return counter;
+	}
+	
+	/** Sets a new next sibling
+	 *  @post the new next sibling is equal to the parameter
+	 *  | getNextSibling() == newNextSibling
+	 */
 	public void setNextSibling(ShapeGroup newNextSibling) {
 		this.nextSibling = newNextSibling;
 	}
 	
+	/** Return the previous sibling */
 	public ShapeGroup getPreviousSibling() {
 		return this.previousSibling;
 	}
 	
+	/** Sets a new previous sibling
+	 *  @post the new previous sibling is equal to the parameter
+	 *  | getPreviousSibling() == newPreviousSibling
+	 */
 	public void setPreviousSibling(ShapeGroup newPreviousSibling) {
 		this.previousSibling = newPreviousSibling;
 	}
 	
+	/** Return the next sibling */
 	public ShapeGroup getNextSibling(){
 		return this.nextSibling;
 	}
 	
+	/** Returns the extent of this shape group, expressed in its outer coordinate system.
+	 * @creates result
+	 * 
+	 * @post The result can't be null
+	 * 	|result != null
+	 * @post The returned extent contains the shape or subgroups' shapes of this object.
+	 */
 	public Extent getExtent() {
 		return this.extent;
 	}
 	
+	/** Sets the original extent of this shapegroup.
+	 * @creates result
+	 * 
+	 * @post This shapegroup's originalExtent should be the provided newOriginalExtent
+	 * 	| getOriginalExtent() == newOriginalExtent
+	 */
 	public void setOriginalExtent(Extent newOriginalExtent) {
 		this.originalExtent = newOriginalExtent;
 	}
 	
+	/** Sets the parentgroup of this shapegroup.
+	 * @creates result
+	 * 
+	 * @post This shapegroup's originalExtent should be the provided newOriginalExtent
+	 * 	| getParentGroup() == newParentGroup
+	 */
 	public void setParentGroup(NonleafShapeGroup newParentGroup) {
 		this.parentGroup = newParentGroup;
 	}

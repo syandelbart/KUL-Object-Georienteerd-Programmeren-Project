@@ -17,10 +17,87 @@ abstract public class ShapeGroup {
 	public ShapeGroup(){
 		
     }
-	
+	/**
+	 * Returns a textual representation of a sequence of drawing commands for drawing
+	 * the shapes contained directly or indirectly by this shape group, expressed in this
+	 * shape group's outer coordinate system.
+	 * 
+	 * For the syntax of the drawing commands, see {@code RoundedPolygon.getDrawingCommands()}.
+	 * 
+	 * @inspects | this
+	 * @post | result != null
+	 */
 	abstract public java.lang.String getDrawingCommands();
-	abstract public void bringToFront();
-	abstract public void sendToBack();
+	
+	/** Moves this shape group to the front of its parent's list of subgroups.
+	 * @mutates this
+	 * 
+	 * @throws IllegalArgumentException
+	 * 	| getParentGroup() == null
+	 * 
+	 * @post This object is the first child of its getParentGroup().
+	 * 	| getParentGroup().getSubgroup(0) == this
+	 * 
+	 * @post The indexes of the children of getParentGroup that were in front of this object are incremented by one.
+	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i + 1)))
+	 * 
+	 * @post The indexes of the children of getParentGroup that were behind this object are the same.
+	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
+	 */
+	public void bringToFront() {
+		int location = this.getLocation();
+		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
+		for(int i = 0; i < location; i++) {
+			result[i+1] = this.getParentGroup().getSubgroup(i);
+		}
+		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
+			result[i] = this.getParentGroup().getSubgroup(i);
+		}
+		result[0] = this;
+		this.getParentGroup().setSubgroups(result);
+	}
+	/** Returns this ShapeGroups position in his parent
+     * @throws IllegalArgumentException
+     * | !(getParentGroup() != null)
+     */
+	private int getLocation() {
+		if(!(getParentGroup() != null)) {
+	       throw new IllegalArgumentException();
+	    }
+		int counter = 0;
+		while(!this.getParentGroup().getSubgroup(counter).equals(this)) {
+			counter++;
+		}
+		return counter;
+	}
+	
+	/** Moves this shape group to the back of its parent's list of subgroups.
+	 * @mutates this
+	 * 
+	 * @throws IllegalArgumentException
+	 * 	| getParentGroup() == null
+	 * 
+	 * @post This object is the last child of its getParentGroup().
+	 * 	| getParentGroup().getSubgroup(getParentGroup().getSubgroupCount() - 1) == this
+	 * 
+	 * @post The indexes of the children of getParentGroup that were in front of this object are the same.
+	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
+	 * 
+	 * @post The indexes of the children of getParentGroup that were behind this object are decremented by one.
+	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroups().get(i - 1)))
+	 */
+	public void sendToBack() {
+		int location = this.getLocation();
+		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
+		for(int i = 0; i < location; i++) {
+			result[i] = this.getParentGroup().getSubgroup(i);
+		}
+		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
+			result[i - 1] = this.getParentGroup().getSubgroup(i);
+		}
+		result[this.getParentGroup().getSubgroupCount() - 1] = this;
+		this.getParentGroup().setSubgroups(result);
+	}
 	
 	/** Returns the extent of this shape group, expressed in its outer coordinate system.
 	 * @creates result

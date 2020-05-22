@@ -44,20 +44,25 @@ public class NonleafShapeGroup extends ShapeGroup {
     }
 	
     /** Sets the subgroups for this non-leaf shape group
-     * @post MAYBE ADD IllegalArgumentException for if there is a null element in the subgroups 
-     * | 5 == "expresserror"
+     * @throws IllegalArgumentException if there is a null element in the subgroups 
+     * | Arrays.stream(newSubgroups).anyMatch(v -> v == null)
+     * @throws IllegalArgumentException if the parameter is null 
+     * |!(newSubgroups != null)
      * @post This non-leaf shapegroup's subgroups are equal to the given parameter newSubgroups
      * | IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroup(i).equals(newSubgroups[i]))
      */
     public void setSubgroups(ShapeGroup[] newSubgroups) {
 		if(!(newSubgroups != null)) {
 			throw new IllegalArgumentException("Subgroups argument is null");
-		}
+		} else if(Arrays.stream(newSubgroups).anyMatch(v -> v == null)) {
+            throw new IllegalArgumentException("subgroups contains a null element");
+        }
     	
     	this.subgroups = newSubgroups;
     }
     
    /** Returns the amount of subgroups this non-leaf shapegroup has
+    * @post result is zero if subgroups is null, otherwise it is equal to subgroups.length
     */
 	public int getSubgroupCount() {
 		if(this.subgroups == null) {
@@ -100,7 +105,7 @@ public class NonleafShapeGroup extends ShapeGroup {
 	 * @post The returned list of ShapeGroups should be equal to the object's list of ShapeGroups (subgroups).
 	 * 	| IntStream.range(0, getSubgroupCount()).allMatch(i -> getSubgroup(i).equals(result.get(i)))
 	 * @post The returned list of ShapeGroups should remain the same length as the object's list of ShapeGroups.
-	 *  | result.length == getSubgroupCount()
+	 *  | result.size() == getSubgroupCount()
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
 		if(this.subgroups == null) {
@@ -113,83 +118,6 @@ public class NonleafShapeGroup extends ShapeGroup {
 		return result;
 	}
 	
-	private int getLocation() {
-		int counter = 0;
-		while(!this.getParentGroup().getSubgroup(counter).equals(this)) {
-			counter++;
-		}
-		return counter;
-	}
-	/** Moves this shape group to the front of its parent's list of subgroups.
-	 * @mutates this
-	 * 
-	 * @throws IllegalArgumentException
-	 * 	| getParentGroup() == null
-	 * 
-	 * @post This object is the first child of its getParentGroup().
-	 * 	| getParentGroup().getSubgroup(0) == this
-	 * 
-	 * @post The indexes of the children of getParentGroup that were in front of this object are incremented by one.
-	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i + 1)))
-	 * 
-	 * @post The indexes of the children of getParentGroup that were behind this object are the same.
-	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
-	 */
-	public void bringToFront() {
-		int location = this.getLocation();
-		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
-		for(int i = 0; i < location; i++) {
-			result[i+1] = this.getParentGroup().getSubgroup(i);
-		}
-		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
-			result[i] = this.getParentGroup().getSubgroup(i);
-		}
-		result[0] = this;
-		this.getParentGroup().subgroups = result;
-	}
-	
-	/** Moves this shape group to the back of its parent's list of subgroups.
-	 * @mutates this
-	 * 
-	 * @throws IllegalArgumentException
-	 * 	| getParentGroup() == null
-	 * 
-	 * @post This object is the last child of its getParentGroup().
-	 * 	| getParentGroup().getSubgroup(getParentGroup().getSubgroupCount() - 1) == this
-	 * 
-	 * @post The indexes of the children of getParentGroup that were in front of this object are the same.
-	 * 	| IntStream.range(0,old(getLocation())).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroup(i)))
-	 * 
-	 * @post The indexes of the children of getParentGroup that were behind this object are decremented by one.
-	 * 	| IntStream.range(old(getLocation()) + 1, getParentGroup().getSubgroupCount()).allMatch(i -> old(getParentGroup().getSubgroups()).get(i).equals(getParentGroup().getSubgroups().get(i - 1)))
-	 */
-	public void sendToBack() {
-		int location = this.getLocation();
-		ShapeGroup[] result = new ShapeGroup[this.getParentGroup().getSubgroupCount()];
-		for(int i = 0; i < location; i++) {
-			result[i] = this.getParentGroup().getSubgroup(i);
-		}
-		for(int i = location + 1; i < this.getParentGroup().getSubgroupCount(); i++) {
-			result[i - 1] = this.getParentGroup().getSubgroup(i);
-		}
-		result[this.getParentGroup().getSubgroupCount() - 1] = this;
-		this.getParentGroup().subgroups = result;
-	}
-	
-	/** Sets the extent to the given parameter newExtent
-	 * @throws IllegalArgumentException
-	 * | !(newExtent != null)
-	 * @post This non-leaf shapegroup's extent is equal to the newExtent parameter
-	 * | getExtent() == newExtent
-	 * 
-	 */
-	public void setExtent(Extent newExtent){
-		if(!(newExtent != null)) {
-			throw new IllegalArgumentException();
-		}
-		super.setExtent(newExtent);
-	}
-	
 	/** Returns the extent of this shape group, expressed in its outer coordinate system.
 	 * @creates result
 	 * 
@@ -198,7 +126,6 @@ public class NonleafShapeGroup extends ShapeGroup {
 	 * @post The returned extent contains all subgroups of this non-leaf shapegroup
 	 *  | IntStream.range(0, getSubgroupCount()).allMatch(i -> ( ( getSubgroup(i).getExtent().getLeft() >= result.getLeft() && getSubgroup(i).getExtent().getRight() <= result.getRight() ) || ( getSubgroup(i).getExtent().getRight() >= result.getLeft() && getSubgroup(i).getExtent().getLeft() <= result.getRight() ) ) && ( ( getSubgroup(i).getExtent().getTop() >= result.getTop() && getSubgroup(i).getExtent().getBottom() <= result.getBottom() ) || ( getSubgroup(i).getExtent().getBottom() >= result.getTop() && getSubgroup(i).getExtent().getTop() <= result.getBottom() ) ) )
 	 *  
-	 *  )
 	 */
 	public Extent calculateExtent() {
 		Extent[] extentArray = new Extent[this.getSubgroupCount()];
@@ -239,6 +166,16 @@ public class NonleafShapeGroup extends ShapeGroup {
 		return (Extent.ofLeftTopRightBottom(minimumX, minimumY, maximumX, maximumY));
 	}
 	
+	/**
+	 * Returns a textual representation of a sequence of drawing commands for drawing
+	 * the shapes contained directly or indirectly by this shape group, expressed in this
+	 * shape group's outer coordinate system.
+	 * 
+	 * For the syntax of the drawing commands, see {@code RoundedPolygon.getDrawingCommands()}.
+	 * 
+	 * @inspects | this
+	 * @post | result != null
+	 */
 	public java.lang.String getDrawingCommands(){
 		StringBuilder string = new StringBuilder();
 		double scaleX = (double)this.getExtent().getWidth() / (double)this.getOriginalExtent().getWidth();
